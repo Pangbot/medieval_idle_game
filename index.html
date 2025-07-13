@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Back to the Present</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="top-bar">
+    <div class="title">Back to the Present</div>
+    <div class="date">In-game Date</div>
+    <div class="top-buttons">
+      <button id="helpBtn">?</button>
+      <button id="journalBtn">Journal</button>
+      <button id="settingsBtn">Settings</button>
+    </div>
+  </header>
+
+  <!-- Main game layout -->
+  <main class="game-layout">
+    <!-- Left: Resources -->
+    <aside class="resources">
+      <h2>Resources</h2>
+      <div id="resource1">Resource 1</div>
+      <div id="resource2">Resource 2</div>
+      <div id="resource3">Resource 3</div>
+      <!-- More as needed -->
+    </aside>
+
+    <!-- Center: Research -->
+    <section class="research">
+      <h2>Research</h2>
+      <div class="tabs" id="researchTabs">
+        <!-- Tabs and buttons inserted dynamically -->
+      </div>
+    </section>
+
+    <!-- Right: Tasks -->
+    <section class="tasks">
+      <h2>Tasks</h2>
+      <div class="tabs" id="taskTabs">
+        <!-- Tabs and buttons inserted dynamically -->
+      </div>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
