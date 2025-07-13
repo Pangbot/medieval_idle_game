@@ -11,4 +11,4 @@ Scientific Method
 
 Hm, 40 years may not be enough for this. That's if some plague doesn't get you first. That being said, where are you going to sleep tonight? Where's your next meal coming from? You need to actually survive as well. You remember how to make penicillin, right? Or paracetamol?
 
-Worse comes to worst, you could always journal your life. With enough luck, your future (past?) self will read it and you'll give yourself a leg up for the next go around.
+Worse comes to worst, you could always journal your life. With enough luck, your pastfuture self will read it and you'll give yourself a leg up for the next go around.
