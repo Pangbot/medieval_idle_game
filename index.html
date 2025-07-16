@@ -23,13 +23,13 @@
     <!-- Left: Resources -->
     <aside class="resources">
       <h2>Resources</h2>
-      <div id="resource1">Resource 1</div>
-      <div id="resource2">Resource 2</div>
-      <div id="resource3">Resource 3</div>
-      <!-- More as needed -->
+      <div id="money">Money:</div>
+      <div id="health">Health:</div>
+      <div id="motivation">Motivation:</div>
+      <div id="DBH">DBH:</div>
     </aside>
 
-    <!-- Center: Research -->
+    <!-- Centre-left: Research -->
     <section class="research">
       <h2>Research</h2>
       <div class="tabs" id="researchTabs">
@@ -37,15 +37,30 @@
       </div>
     </section>
 
-    <!-- Right: Tasks -->
+    <!-- Centre-right: Tasks -->
     <section class="tasks">
       <h2>Tasks</h2>
       <div class="tabs" id="taskTabs">
         <!-- Tabs and buttons inserted dynamically -->
       </div>
     </section>
+
+    <!-- Right: Log -->
+    <section class="log">
+      <h2>Log</h2>
+      <div class="logEntries">
+        <!-- Logs inserted dynamically -->
+      </div>
+    </section>
   </main>
 
-  <script src="game.js"></script>
+  <script type="module">
+    import { startGame } from './game.js';
+
+    // Start after DOM is ready
+    window.addEventListener('DOMContentLoaded', () => {
+      startGame();
+    });
+  </script>
 </body>
 </html>
