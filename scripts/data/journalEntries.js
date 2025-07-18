@@ -1,4 +1,4 @@
-export const journal = [
+export const entries = [
     {
         id: "start_young",
         conditions: 

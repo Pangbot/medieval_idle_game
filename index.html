@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Back to the Present</title>
   <link rel="stylesheet" href="styles.css" />
@@ -9,19 +10,20 @@
 <body>
   <!-- Top bar -->
   <header class="top-bar">
-    <div class="title">Back to the Present</div>
-    <div class="date">In-game Date</div>
+    <div class="title" data-help-id="title-help">Back to the Present</div>
+    <div class="date" data-help-id="date-help">In-game Date</div>
     <div class="top-buttons">
-      <button id="helpBtn">?</button>
-      <button id="journalBtn">Journal</button>
-      <button id="settingsBtn">Settings</button>
+      <button id="saveBtn" data-help-id="save-button-help">Save</button>
+      <button id="helpBtn" data-help-id="help-button-help">?</button>
+      <button id="journalBtn" data-help-id="journal-button-help">Journal</button>
+      <button id="settingsBtn" data-help-id="settings-button-help">Settings</button>
     </div>
   </header>
 
   <!-- Main game layout -->
   <main class="game-layout">
     <!-- Left: Resources -->
-    <aside class="resources">
+    <aside class="resources" data-help-id="resources-panel-help">
       <h2>Resources</h2>
       <div id="money">Money:</div>
       <div id="health">Health:</div>
@@ -30,7 +32,7 @@
     </aside>
 
     <!-- Centre-left: Research -->
-    <section class="research">
+    <section class="research" data-help-id="research-panel-help">
       <h2>Research</h2>
       <div class="tabs" id="researchTabs">
         <!-- Tabs and buttons inserted dynamically -->
@@ -38,7 +40,7 @@
     </section>
 
     <!-- Centre-right: Tasks -->
-    <section class="tasks">
+    <section class="tasks" data-help-id="tasks-panel-help">
       <h2>Tasks</h2>
       <div class="tabs" id="taskTabs">
         <!-- Tabs and buttons inserted dynamically -->
@@ -46,7 +48,7 @@
     </section>
 
     <!-- Right: Log -->
-    <section class="log">
+    <section class="log" data-help-id="log-panel-help">
       <h2>Log</h2>
       <div class="logEntries">
         <!-- Logs inserted dynamically -->
@@ -54,8 +56,13 @@
     </section>
   </main>
 
+  <div id="helpOverlay" class="help-overlay">
+      <div id="helpTextContainer"></div>
+      <svg id="helpArrows" class="help-arrows"></svg>
+  </div>
+
   <script type="module">
-    import { startGame } from './game.js';
+    import { startGame } from './scripts/game.js';
 
     // Start after DOM is ready
     window.addEventListener('DOMContentLoaded', () => {

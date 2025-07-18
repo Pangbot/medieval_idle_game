@@ -1,4 +1,4 @@
-export const log = [
+export const entries = [
     {
         id: "log_1",
         conditions: 
