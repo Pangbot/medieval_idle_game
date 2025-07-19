@@ -1,5 +1,6 @@
 // Handles the help overlay
 import common from "./common.js";
+import { stopClock, restartClockCheck } from "./time.js";
 
 const helpOverlay = document.getElementById("helpOverlay");
 const helpTextContainer = document.getElementById("helpTextContainer");
@@ -71,6 +72,7 @@ function createArrowhead() {
 export function showHelp() {
 
     common.pauseGame();
+    stopClock();
     helpOverlay.classList.add("active");
     helpTextContainer.innerHTML = ""; 
     helpArrowsSvg.innerHTML = ""; 
@@ -95,6 +97,7 @@ export function hideHelp() {
     helpArrowsSvg.innerHTML = "";
     helpOverlay.removeEventListener("click", hideHelp);
     common.unpauseGame();
+    restartClockCheck();
 }
 
 function addHelpEntry(targetElement, message, offset) {
