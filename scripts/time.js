@@ -23,7 +23,12 @@ function advanceGameTime() {
     while (accumulatedTime >= common.dayInMilliseconds) {
         adjustResource('day', 1);
         updateDate();
-        updateResearchProgress();
+        if (player.selectedResearchID) {
+            updateResearchProgress();
+        }
+        else {
+            stopClock();
+        }
         updateResources();
         accumulatedTime -= common.dayInMilliseconds;
     }
