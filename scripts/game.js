@@ -1,15 +1,18 @@
 import common from './common.js';
 import { addMainListeners } from './buttons.js';
-import { updateTaskList } from './tasks.js';
+import { updateTasks } from './tasks.js';
+import { updateResearches } from './research.js';
+import { updateDate } from './time.js';
+import { updateResources } from './resources.js';
 
 export function startGame() {
-    console.log("Loaded!")
+    
+    common.unpauseGame();
+    addMainListeners();
+    updateDate();
+    updateResources();
+    updateResearches();
+    updateTasks();
 
-    addMainListeners()
-    updateTaskList()
-
-    if (!common.getIsPaused()) {
-        common.pauseGame()
-    }
-
+    console.log("Loaded!");
 }

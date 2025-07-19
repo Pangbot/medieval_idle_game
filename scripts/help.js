@@ -1,11 +1,10 @@
 // Handles the help overlay
-import { addMainListeners, removeMainListeners } from "./buttons.js";
+import common from "./common.js";
 
 const helpOverlay = document.getElementById("helpOverlay");
 const helpTextContainer = document.getElementById("helpTextContainer");
 const helpArrowsSvg = document.getElementById("helpArrows");
 
-// Help messages
 const helpData = {
     "title-help": { 
         message: "This is the game's name!",
@@ -49,7 +48,6 @@ const helpData = {
     },
 };
 
-// Arrowhead Definition for SVG
 function createArrowhead() {
     const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
@@ -71,9 +69,8 @@ function createArrowhead() {
 }
 
 export function showHelp() {
-    
-    removeMainListeners();
 
+    common.pauseGame();
     helpOverlay.classList.add("active");
     helpTextContainer.innerHTML = ""; 
     helpArrowsSvg.innerHTML = ""; 
@@ -97,8 +94,7 @@ export function hideHelp() {
     helpTextContainer.innerHTML = "";
     helpArrowsSvg.innerHTML = "";
     helpOverlay.removeEventListener("click", hideHelp);
-
-    addMainListeners();
+    common.unpauseGame();
 }
 
 function addHelpEntry(targetElement, message, offset) {

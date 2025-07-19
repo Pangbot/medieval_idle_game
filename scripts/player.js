@@ -1,10 +1,12 @@
 // Handles the player's resources and stats
 
+import { restartClockCheck } from "./time.js";
+
 let player = {
     age: null,
     day: 0,
-    selectedTask: null,
-    selectedResearch: null,
+    selectedTaskID: null,
+    selectedResearchID: null,
     researched: new Set(),
     money: 0,
     health: 100,
@@ -25,16 +27,24 @@ function adjustResource(resource, amount) {
     }
 }
 
-function changeTask(task) {
-    player.selectedTask = task;
+function changeTask(taskID) {
+    if (taskID === player.selectedTaskID) {
+        player.selectedTaskID = null;
+    }
+    else {
+        player.selectedTaskID = taskID;
+    }
+    restartClockCheck();
 }
 
-function changeResearch(research) {
-    player.selectedResearch = research;
+function changeResearch(researchID) {
+    if (researchID === player.selectedResearchID) {
+        player.selectedResearchID = null;
+    }
+    else {
+        player.selectedResearchID = researchID;
+    }
+    restartClockCheck();
 }
 
-function addResearched(research) {
-    player.researched.add(research)
-}
-
-export { player, loadPlayer, adjustResource, changeTask, changeResearch, addResearched };
+export { player, loadPlayer, adjustResource, changeTask, changeResearch };

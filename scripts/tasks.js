@@ -1,43 +1,44 @@
 // Handles the tasks area
 import { changeTask, adjustResource } from "./player.js"
-import { allTasks } from "./data/taskList.js"
+import { allTasks, taskTabs } from "./data/taskList.js"
+import { createTabTaskButtons } from './buttons.js'
 
+let currentTaskTab = taskTabs[0];
 let availableTasks = allTasks.filter(task => task.available === true);
+let tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
 
 function loadTasks(data) {
     availableTasks = data;
-    createAvailableTasks();
+    createTabTasks();
 }
 
-function updateTaskList() {
+function loadCurrentTaskTab(tab) {
+    currentTaskTab = tab;
+}
+
+function updateTasks() {
     availableTasks = allTasks.filter(task => task.available === true);
-    createAvailableTasks();
+    tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
+    createTabTasks();
 }
 
-function createAvailableTasks() {
-    const taskTabsContainer = document.getElementById("taskTabs");
-    if (!taskTabsContainer) {
-        console.error("Task tabs container not found!");
-        return;
+function createTabTasks() {
+    const taskInTabContainer = document.getElementById("taskInTabBtns");
+
+    taskInTabContainer.innerHTML = '';
+
+    createTabTaskButtons(taskInTabContainer, tasksInTab);
+}
+
+function changeTaskTab(targetTab) {
+    if (!taskTabs.includes(targetTab)) {
+        console.error(`Tab ${targetTab} not found in taskTabs (${taskTabs}).`)
     }
 
-    taskTabsContainer.innerHTML = '';
-
-    availableTasks.forEach(task => {
-        const button = document.createElement("button");
-
-        button.textContent = task.buttonName;
-        button.classList.add("task-button");
-        button.dataset.taskId = task.id;
-        button.title = task.description;
-
-        button.addEventListener("click", () => {
-            console.log(`Task button clicked: ${task.id}`);
-            changeTask(task.id);
-        });
-
-        taskTabsContainer.appendChild(button);
-    });
+    if (!(currentTaskTab === targetTab)) {
+        currentTaskTab = targetTab;
+        updateTasks();
+    }
 }
 
-export { availableTasks, loadTasks, updateTaskList }
+export { availableTasks, loadTasks, loadCurrentTaskTab, updateTasks, currentTaskTab, changeTaskTab }

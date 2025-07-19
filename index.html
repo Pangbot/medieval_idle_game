@@ -1,73 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Back to the Present</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Back to the Present</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Top bar -->
-  <header class="top-bar">
-    <div class="title" data-help-id="title-help">Back to the Present</div>
-    <div class="date" data-help-id="date-help">In-game Date</div>
-    <div class="top-buttons">
-      <button id="saveBtn" data-help-id="save-button-help">Save</button>
-      <button id="helpBtn" data-help-id="help-button-help">?</button>
-      <button id="journalBtn" data-help-id="journal-button-help">Journal</button>
-      <button id="settingsBtn" data-help-id="settings-button-help">Settings</button>
-    </div>
-  </header>
+    <div id="customTooltip" class="custom-tooltip"></div>
+    <!-- Top bar -->
+    <header class="top-bar">
+        <div class="title" data-help-id="title-help">Back to the Present</div>
+        <div class="date" id="date" data-help-id="date-help">In-game Date</div>
+        <div class="top-buttons">
+            <button id="saveBtn" data-help-id="save-button-help">Save</button>
+            <button id="helpBtn" data-help-id="help-button-help">?</button>
+            <button id="journalBtn" data-help-id="journal-button-help">Journal</button>
+            <button id="settingsBtn" data-help-id="settings-button-help">Settings</button>
+        </div>
+    </header>
 
-  <!-- Main game layout -->
-  <main class="game-layout">
+    <!-- Main game layout -->
+    <main class="game-layout">
     <!-- Left: Resources -->
-    <aside class="resources" data-help-id="resources-panel-help">
-      <h2>Resources</h2>
-      <div id="money">Money:</div>
-      <div id="health">Health:</div>
-      <div id="motivation">Motivation:</div>
-      <div id="DBH">DBH:</div>
-    </aside>
+    <section class="resources" data-help-id="resources-panel-help">
+        <h2>Resources</h2>
+        <p>Money: <span id="money"></span></p>
+
+    <div class="resource-bar-container">
+        <label for="healthBar">Health:</label>
+        <div id="healthBarContainer" class="bar-background">
+            <div id="healthBarFill" class="bar-fill"></div>
+            <span id="healthBarText" class="bar-text"></span>
+        </div>
+    </div>
+
+    <div class="resource-bar-container">
+        <label for="motivationBar">Motivation:</label>
+        <div id="motivationBarContainer" class="bar-background">
+            <div id="motivationBarFill" class="bar-fill"></div>
+            <span id="motivationBarText" class="bar-text"></span>
+        </div>
+    </div>
+
+    <div class="resource-bar-container">
+        <label for="DBHBar">DBH:</label>
+        <div id="DBHBarContainer" class="bar-background">
+            <div id="DBHBarFill" class="bar-fill"></div>
+            <span id="DBHBarText" class="bar-text"></span>
+        </div>
+    </div>
+    </section>
 
     <!-- Centre-left: Research -->
     <section class="research" data-help-id="research-panel-help">
-      <h2>Research</h2>
-      <div class="tabs" id="researchTabs">
-        <!-- Tabs and buttons inserted dynamically -->
-      </div>
+        <h2>Research</h2>
+        <div class="tabs" id="researchTabs">
+            <!-- Research tabs shown here -->
+            <button id="resTabOne">1</button>
+            <button id="resTabTwo">2</button>
+            <button id="resTabThree">3</button>
+            <button id="resTabFour">4</button>
+        </div>
+        <div class="buttons" id="resInTabBtns">
+            <!-- Buttons of a specfic tab shown here -->
+        </div>
     </section>
 
     <!-- Centre-right: Tasks -->
     <section class="tasks" data-help-id="tasks-panel-help">
-      <h2>Tasks</h2>
-      <div class="tabs" id="taskTabs">
-        <!-- Tabs and buttons inserted dynamically -->
-      </div>
+        <h2>Tasks</h2>
+        <div class="tabs" id="taskTabs">
+            <!-- Task tabs shown here -->
+            <button id="taskTabOne">1</button>
+            <button id="taskTabTwo">2</button>
+            <button id="taskTabThree">3</button>
+            <button id="taskTabFour">4</button>
+        </div>
+        <div class="buttons" id="taskInTabBtns">
+            <!-- Buttons of a specfic tab shown here -->
+        </div>
     </section>
 
     <!-- Right: Log -->
     <section class="log" data-help-id="log-panel-help">
-      <h2>Log</h2>
-      <div class="logEntries">
-        <!-- Logs inserted dynamically -->
-      </div>
+        <h2>Log</h2>
+        <div class="logEntries">
+            <!-- Logs inserted dynamically -->
+        </div>
     </section>
-  </main>
+    </main>
 
-  <div id="helpOverlay" class="help-overlay">
-      <div id="helpTextContainer"></div>
-      <svg id="helpArrows" class="help-arrows"></svg>
-  </div>
+    <div id="helpOverlay" class="help-overlay">
+        <div id="helpTextContainer"></div>
+        <svg id="helpArrows" class="help-arrows"></svg>
+    </div>
 
-  <script type="module">
-    import { startGame } from './scripts/game.js';
+    <script type="module">
+        import { startGame } from './scripts/game.js';
 
-    // Start after DOM is ready
-    window.addEventListener('DOMContentLoaded', () => {
-      startGame();
-    });
-  </script>
+        // Start after DOM is ready
+        window.addEventListener('DOMContentLoaded', () => {
+        startGame();
+        });
+    </script>
 </body>
 </html>
