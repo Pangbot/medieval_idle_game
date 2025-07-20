@@ -54,6 +54,12 @@ h2 {
     border-right: 1px solid #ccc;
 }
 
+/* The Inventory header */
+.resources h2:last-of-type {
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
 .inventory-box {
     background-color: black;
     border: 1px solid #333;
@@ -103,10 +109,23 @@ h2 {
     border-right: 1px solid #ccc;
 }
 
-/* Tabs and log entries */
-.tabs .logEntries {
-    margin-top: 10px;
-    margin-bottom: 10px;
+/* Tabs and tab buttons */
+#resInTabBtns,
+#taskInTabBtns {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px;
+    margin: 0 auto;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 5px;
+    justify-content: center;
 }
 
 /* Log section */

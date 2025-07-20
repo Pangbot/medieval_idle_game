@@ -14,29 +14,32 @@ export function addMainListeners() {
     const helpButton = document.getElementById("helpBtn");
     helpButton.addEventListener("click", showHelp);
 
-    const taskTabOneButton = document.getElementById("taskTabOne");
-    taskTabOneButton.addEventListener("click", () => changeTaskTab(taskTabs[0]));
+    createTabButtons("researchTabs", researchTabs, changeResearchTab, "researchTab");
 
-    const taskTabTwoButton = document.getElementById("taskTabTwo");
-    taskTabTwoButton.addEventListener("click", () => changeTaskTab(taskTabs[1]));
+    createTabButtons("taskTabs", taskTabs, changeTaskTab, "taskTab");
+}
 
-    const taskTabThreeButton = document.getElementById("taskTabThree");
-    taskTabThreeButton.addEventListener("click", () => changeTaskTab(taskTabs[2]));
+function createTabButtons(containerId, tabDataArray, changeTabFunction, buttonIdPrefix) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error(`Container with ID '${containerId}' not found for tab buttons.`);
+        return;
+    }
 
-    const taskTabFourButton = document.getElementById("taskTabFour");
-    taskTabFourButton.addEventListener("click", () => changeTaskTab(taskTabs[3]));
+    container.innerHTML = '';
 
-    const researchTabOneButton = document.getElementById("resTabOne");
-    researchTabOneButton.addEventListener("click", () => changeResearchTab(researchTabs[0]));
+    tabDataArray.forEach((_, index) => {
+        const button = document.createElement("button");
+        button.id = `${buttonIdPrefix}${index + 1}`;
+        button.textContent = `${index + 1}`;
+        button.classList.add("tab-button");
 
-    const researchTabTwoButton = document.getElementById("resTabTwo");
-    researchTabTwoButton.addEventListener("click", () => changeResearchTab(researchTabs[1]));
+        button.addEventListener("click", () => {
+            changeTabFunction(tabDataArray[index]);
+        });
 
-    const researchTabThreeButton = document.getElementById("resTabThree");
-    researchTabThreeButton.addEventListener("click", () => changeResearchTab(researchTabs[2]));
-
-    const researchTabFourButton = document.getElementById("resTabFour");
-    researchTabFourButton.addEventListener("click", () => changeResearchTab(researchTabs[3]));
+        container.appendChild(button);
+    });
 }
 
 export function createTabResearchButtons(container, researches) {

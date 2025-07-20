@@ -2,6 +2,7 @@
 
 export const taskTabs = [
     "daily life",
+    "comforts",
     "science",
     "big projects",
     "travel"

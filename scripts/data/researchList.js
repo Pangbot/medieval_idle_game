@@ -2,6 +2,7 @@
 
 export const researchTabs = [
     "daily life",
+    "comforts",
     "science",
     "big projects",
     "travel"
