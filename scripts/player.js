@@ -4,27 +4,34 @@ import { restartClockCheck } from "./time.js";
 
 let player = {
     age: null,
-    day: 0,
     selectedTaskID: null,
     selectedResearchID: null,
-    researched: new Set(),
-    money: 0,
-    health: 100,
-    motivation: 100,
-    DBH: 0
+    completed: new Set(),
+    resources: [
+        { name: "day", amount: 0 },
+        { name: "money", amount: 0 },
+        { name: "health", amount: 100 },
+        { name: "motivation", amount: 100 },
+        { name: "DBH", amount: 0 }
+    ],
 };
 
 function loadPlayer(data) {
     player = data
 }
 
-function adjustResource(resource, amount) { 
-    if (resource in player) {
-        player[resource] += amount;
+function adjustResource(resourceName, amount) {
+    const resourceObj = player.resources.find(resource => resource.name === resourceName);
+
+    if (resourceObj) {
+        resourceObj.amount += amount;
+    } else {
+        newResource(resourceName, amount);
     }
-    else {
-        console.log(`Resource ${resource} not found in player struct (${player}).`)
-    }
+}
+
+function newResource(resource, amount) {
+    player.resources.push({name: resource, amount: amount});
 }
 
 function changeTask(taskID) {

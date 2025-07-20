@@ -3,6 +3,7 @@ import { player, adjustResource } from "./player.js"
 import { researchTabs, allResearches } from "./data/researchList.js"
 import { createTabResearchButtons } from "./buttons.js";
 import { stopClock } from './time.js';
+import { updateTasks } from "./tasks.js";
 
 let currentResearchTab = researchTabs[0];
 let availableResearches = allResearches.filter(research => research.available === true);
@@ -27,13 +28,11 @@ function updateResearches() {
 
         if (research.requires === null) {
             research.available = true;
-        } else if (Array.isArray(research.requires)) {
+        } else {
             const allRequiredCompleted = research.requires.every(requiredId =>
-                player.researched.has(requiredId)
+                player.completed.has(requiredId)
             );
             research.available = allRequiredCompleted;
-        } else {
-            research.available = player.researched.has(research.requires);
         }
     });
     availableResearches = allResearches.filter(research => research.available === true);
@@ -69,23 +68,21 @@ function updateResearchProgress() {
     }
 
     currentResearch.progress += 1;
-    currentResearch.resourceProgress += 1;
 
-    if (currentResearch.resourceProgress >= currentResearch.resourcePeriod) {
-        adjustResource('money', currentResearch.money);
-        adjustResource('health', currentResearch.health);
-        adjustResource('motivation', currentResearch.motivation);
-        adjustResource('DBH', currentResearch.DBH);
-        currentResearch.resourceProgress = 0;
+    if (currentResearch.progress % currentResearch.resourcePeriod == 0) {
+        currentResearch.resources.forEach(resourceObj => {
+            adjustResource(resourceObj.name, resourceObj.amount);
+        });
     }
 
     if (currentResearch.progress >= currentResearch.daysToComplete) {
         currentResearch.completed = true;
         currentResearch.available = false;
-        player.researched.add(player.selectedResearchID)
+        player.completed.add(player.selectedResearchID)
 
         player.selectedResearchID = null;
         updateResearches();
+        updateTasks();
         stopClock();
     }
 }

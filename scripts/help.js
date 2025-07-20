@@ -32,8 +32,20 @@ const helpData = {
         offset: [-100, 40]
     },
     "resources-panel-help": {
-        message: "Here are your various resources, if any of them hit 0 you're in for a bad time.",
-        offset: [-200, 200]
+        message: "Here is your money, health, and motivation.",
+        offset: [-150, 50]
+    },
+    "health-bar-help": {
+        message: "If your health is low, you're more likely to get sick. If it hits 0, you die.",
+        offset: [0, 200]
+    },
+    "motivation-bar-help": {
+        message: "If your motivation is low, your productivity will decrease. If it hits 0, you will not work on progress to a time machine.",
+        offset: [0, 200]
+    },
+    "DBH-bar-help": {
+        message: "This is the Dimensional Breakpoint Horizon. Almost anything you do will increase this. Weird things will happen as this gets high and if it reaches 1 the Universe will kill you off.",
+        offset: [0, 200]
     },
     "research-panel-help": {
         message: "Select an idea to research, the bottom bar shows how far along you are.",
@@ -70,8 +82,6 @@ function createArrowhead() {
 }
 
 export function showHelp() {
-
-    common.pauseGame();
     stopClock();
     helpOverlay.classList.add("active");
     helpTextContainer.innerHTML = ""; 
@@ -80,6 +90,9 @@ export function showHelp() {
 
     // Display text next to each element and draw arrows
     Object.keys(helpData).forEach(helpId => {
+        if (helpId === "DBH-bar-help" && !common.unlockedDBH) {
+            return;
+        }
         const targetElement = document.querySelector(`[data-help-id="${helpId}"]`);
         if (targetElement) {
             const message = helpData[helpId].message;
@@ -96,7 +109,6 @@ export function hideHelp() {
     helpTextContainer.innerHTML = "";
     helpArrowsSvg.innerHTML = "";
     helpOverlay.removeEventListener("click", hideHelp);
-    common.unpauseGame();
     restartClockCheck();
 }
 
@@ -124,11 +136,27 @@ function drawArrow(sourceElement, targetElement) {
     const sourceRect = sourceElement.getBoundingClientRect();
     const targetRect = targetElement.getBoundingClientRect();
 
-    const startX = sourceRect.left + sourceRect.width / 2;
-    const startY = sourceRect.top + sourceRect.height / 2;
+    let startX = sourceRect.left + sourceRect.width / 2;
+    let startY = sourceRect.top + sourceRect.height / 2;
+    let endX = targetRect.left + targetRect.width / 2;
+    let endY = targetRect.top + targetRect.height / 2;
 
-    const endX = targetRect.left + targetRect.width / 2 - 5;
-    const endY = targetRect.top + targetRect.height / 2 + 10;
+    // Check if the targetElement is one of the panel elements
+    const helpId = targetElement.getAttribute('data-help-id');
+    const isPanel = [
+        "resources-panel-help",
+        "research-panel-help",
+        "tasks-panel-help",
+        "log-panel-help"
+    ].includes(helpId);
+
+    if (isPanel) {
+        endX = targetRect.left + targetRect.width / 2;
+        endY = targetRect.top + 130;
+    } else {
+        endX = targetRect.left + targetRect.width / 2 - 5;
+        endY = targetRect.top + targetRect.height / 2 + 10;
+    }
 
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.setAttribute("x1", startX);

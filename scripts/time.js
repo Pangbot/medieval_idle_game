@@ -1,18 +1,15 @@
 // Handles the in-game date
 import { player, adjustResource } from './player.js';
-import common from './common.js';
 import { updateResources } from './resources.js';
 import { updateResearchProgress } from './research.js';
+import { updateTaskProgress } from './tasks.js';
+import common from './common.js';
 
 let gameInterval = null;
 let lastTickTime = 0;
 let accumulatedTime = 0;
 
 function advanceGameTime() {
-    if (common.getIsPaused()) {
-        return;
-    }
-
     const now = performance.now();
     let deltaTime = now - lastTickTime;
 
@@ -23,8 +20,9 @@ function advanceGameTime() {
     while (accumulatedTime >= common.dayInMilliseconds) {
         adjustResource('day', 1);
         updateDate();
-        if (player.selectedResearchID) {
+        if (player.selectedResearchID && player.selectedTaskID) {
             updateResearchProgress();
+            updateTaskProgress();
         }
         else {
             stopClock();
@@ -57,22 +55,17 @@ function gameLoop() {
 
 export function restartClockCheck() {
     if( player.selectedResearchID && player.selectedTaskID ) {
-        if (common.getIsPaused()) {
-            common.unpauseGame();
-        }
         startClock();
     } 
     else {
-        if (!common.getIsPaused()) {
-            common.pauseGame(); 
-        }
         stopClock();
     }
 }
 
 export function updateDate() {
     const dateElement = document.getElementById("date");
-    dateElement.innerHTML = calculateGameDate(player.day);
+    const dayResource = player.resources.find(resource => resource.name === "day");
+    dateElement.innerHTML = calculateGameDate(dayResource.amount);
 }
 
 function calculateGameDate(dayNumber) {

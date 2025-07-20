@@ -1,11 +1,31 @@
 // Handles the visual aspect of the resources panel
-import { player } from "./player.js"; // Ensure correct relative path
+import { player } from "./player.js";
+import common from "./common.js";
 
 export function updateResources() {
     updateMoneyDisplay();
-    updateBar("health", player.health, 100);
-    updateBar("motivation", player.motivation, 100);
-    updateBar("DBH", player.DBH, 1);
+
+    const getResourceAmount = (name) => {
+        const resource = player.resources.find(resource => resource.name === name);
+        return resource.amount;
+    };
+
+    updateBar("health", getResourceAmount("health"), 100);
+    updateBar("motivation", getResourceAmount("motivation"), 100);
+
+    // Check if DBH bar unlocked
+    const dbhBarWrapper = document.getElementById("dbhBarContainerWrapper");
+    if (dbhBarWrapper) {
+        if (common.unlockedDBH) {
+            dbhBarWrapper.removeAttribute("hidden");
+            updateBar("DBH", getResourceAmount("DBH"), 1);
+        } else {
+            dbhBarWrapper.setAttribute("hidden", "true");
+        }
+    } else {
+        console.error("DBH bar wrapper element with ID 'dbhBarContainerWrapper' not found.");
+    }
+    updateInventory();
 }
 
 function updateMoneyDisplay() {
@@ -15,12 +35,13 @@ function updateMoneyDisplay() {
         return;
     }
 
-    let totalPence = player.money;
+    const moneyResource = player.resources.find(resource => resource.name === "money");
+    let totalPence = moneyResource.amount;
 
     const pounds = Math.floor(totalPence / 240);
     totalPence %= 240;
 
-    const shillings = Math.floor(totalPence / 12); 
+    const shillings = Math.floor(totalPence / 12);
     const pence = totalPence % 12;
 
     moneyElement.innerText = `£${pounds} ${shillings}s ${pence}d`;
@@ -31,7 +52,7 @@ function updateBar(resourceName, currentValue, maxValue) {
     const barTextElement = document.getElementById(`${resourceName}BarText`);
 
     if (!barFillElement) {
-        console.error(`Bar fill element with ID '${resourceName}' not found.`);
+        console.error(`Bar fill element with ID '${resourceName}BarFill' not found.`);
         return;
     }
 
@@ -48,7 +69,7 @@ function updateBar(resourceName, currentValue, maxValue) {
             barTextElement.innerText = `${clampedValue.toFixed(3)}/${maxValue}`;
         }
     }
-    
+
     // Health formatting
     if (resourceName === "health" && percentage < 25) {
         barFillElement.style.backgroundColor = 'red';
@@ -74,5 +95,27 @@ function updateBar(resourceName, currentValue, maxValue) {
         barFillElement.style.backgroundColor = 'grey';
     } else if (resourceName === "DBH") {
         barFillElement.style.backgroundColor = 'black';
+    }
+}
+
+function updateInventory() {
+    if (player.resources.length < 6) {
+        return;
+    }
+    const inventoryContainer = document.querySelector(".inventory-items");
+    if (!inventoryContainer) {
+        console.error("Inventory container element with class 'inventory-items' not found.");
+        return;
+    }
+
+    inventoryContainer.innerHTML = '';
+
+    for (let i = 5; i < player.resources.length; i++) {
+        const item = player.resources[i];
+        
+        const itemElement = document.createElement("div");
+        itemElement.classList.add("inventory-item");
+        itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
+        inventoryContainer.appendChild(itemElement);
     }
 }

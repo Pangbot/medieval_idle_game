@@ -5,24 +5,17 @@ import { availableTasks, loadTasks, currentTaskTab, loadCurrentTaskTab } from '.
 import { journal, loadJournal } from './journal.js';
 
 const common = {
-    isPaused: true,
     dayInMilliseconds: 1000,
+    unlockedDBH: false,
 
-    getIsPaused() {
-        return this.isPaused;
-    },
-
-    pauseGame() {
-        this.isPaused = true;
-    },
-
-    unpauseGame() {
-        this.isPaused = false;
+    setDBHUnlocked(state) {
+        this.unlockedDBH = state;
     },
 
     getGameState() {
         return {
             player,
+            unlockedDBH: this.unlockedDBH,
             currentResearchTab,
             currentTaskTab,
             availableResearches,
@@ -33,6 +26,7 @@ const common = {
 
     setGameState(state) {
         loadPlayer(state.player);
+        this.setDBHUnlocked(state.unlockedDBH);
         loadCurrentResearchTab(state.currentResearchTab);
         loadCurrentTaskTab(state.currentTaskTab);
         loadResearches(state.availableResearches);
@@ -41,7 +35,7 @@ const common = {
         console.log("Loaded state.");
     },
 
-    // Make custom notification at some point
+    // Make custom notifications at some point
     notify(message) {
         alert(message)
     }

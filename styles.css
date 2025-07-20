@@ -1,97 +1,127 @@
 /* styles.css */
 
 body {
-  margin: 0;
-  font-family: sans-serif;
-  background-color: #000000;
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #000000;
+}
+
+h2 {
+    margin-bottom: 50px;
+    font-size: 30px;
 }
 
 /* Top bar */
 .top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #31004a;
-  color: white;
-  padding: 10px;
-  border-bottom: 2px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #31004a;
+    color: white;
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
 }
 
 .top-bar .title {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .top-bar .date {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 1em;
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1em;
 }
 
 .top-bar .top-buttons button {
-  margin-left: 10px;
-  padding: 5px 10px;
+    margin-left: 10px;
+    padding: 5px 10px;
 }
 
 /* Main layout */
 .game-layout {
-  display: flex;
-  height: calc(100vh - 52px);
+    display: flex;
+    height: calc(100vh - 52px);
 }
 
 /* Resources panel */
 .resources {
-  width: 25%;
-  text-align: center;
-  color: white;
-  background: #4c00a4;
-  padding: 10px;
-  box-sizing: border-box;
-  border-right: 1px solid #ccc;
+    width: 25%;
+    text-align: center;
+    color: white;
+    background: #4c00a4;
+    padding: 10px;
+    box-sizing: border-box;
+    border-right: 1px solid #ccc;
+}
+
+.inventory-box {
+    background-color: black;
+    border: 1px solid #333;
+    height: 160px;
+    padding: 10px; 
+    margin-top: 15px;
+    border-radius: 5px;
+}
+
+.inventory-container {
+    width: 100%;
+    text-align: left;
+    color:white;
+}
+
+.inventory-items {
+    max-height: 80px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.inventory-item {
+    padding: 3px;
 }
 
 /* Research section */
 .research {
-  width: 25%;
-  text-align: center;
-  color: white;
-  background: #33007b;
-  padding: 10px;
-  box-sizing: border-box;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+    width: 25%;
+    text-align: center;
+    color: white;
+    background: #33007b;
+    padding: 10px;
+    box-sizing: border-box;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
 
 /* Tasks section */
 .tasks {
-  width: 25%;
-  text-align: center;
-  color: white;
-  background: #4c00a4;
-  padding: 10px;
-  box-sizing: border-box;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+    width: 25%;
+    text-align: center;
+    color: white;
+    background: #4c00a4;
+    padding: 10px;
+    box-sizing: border-box;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
 
 /* Tabs and log entries */
 .tabs .logEntries {
-  margin-top: 10px;
-  margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 /* Log section */
 .log {
-  width: 25%;
-  text-align: center;
-  color: white;
-  background: #33007b;
-  padding: 10px;
-  box-sizing: border-box;
-  border-left: 1px solid #ccc;
+    width: 25%;
+    text-align: center;
+    color: white;
+    background: #33007b;
+    padding: 10px;
+    box-sizing: border-box;
+    border-left: 1px solid #ccc;
 }
 
 button {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 /* Help overlay */
@@ -171,12 +201,12 @@ button {
 
 /* resource bars */
 .resource-bar-container {
-    margin-bottom: 10px;
+    margin-top: 30px;
 }
 
 .bar-background {
     width: 100%; 
-    height: 20px;
+    height: 40px;
     background-color: #555; 
     border: 1px solid #777;
     border-radius: 5px;
