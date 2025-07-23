@@ -128,6 +128,56 @@ h2 {
     justify-content: center;
 }
 
+.progress-button {
+    background-color: lightblue;
+    border: 1px solid #007bff;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden; 
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    margin: 5px;
+    min-width: 150px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.progress-button:hover {
+    background-color: #90d4ff;
+}
+
+.progress-button .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: darkblue;
+    z-index: 1;
+}
+
+.progress-button.in-progress .progress-fill {
+    width: 100%;
+}
+
+.progress-button span {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.progress-button.selected-button {
+    background-color: #ffff00;
+    border-color: #eeee00;
+}
+
+.progress-button.selected-button:hover {
+    background-color: #dddd00;
+}
+
 /* Log section */
 .log {
     width: 25%;

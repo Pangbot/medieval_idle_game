@@ -68,6 +68,7 @@ function updateTaskProgress() {
     }
 
     currentTask.progress += 1;
+    currentTask.workProgress = 0;
 
     if (currentTask.progress % currentTask.resourcePeriod == 0) {
         currentTask.resources.forEach(resourceObj => {

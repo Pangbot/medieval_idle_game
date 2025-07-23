@@ -4,6 +4,9 @@ import { updateResources } from './resources.js';
 import { updateResearchProgress } from './research.js';
 import { updateTaskProgress } from './tasks.js';
 import common from './common.js';
+import { updateAnimations } from './animations.js';
+import { allResearches } from './data/researchList.js';
+import { allTasks } from './data/taskList.js';
 
 let gameInterval = null;
 let lastTickTime = 0;
@@ -14,8 +17,15 @@ function advanceGameTime() {
     let deltaTime = now - lastTickTime;
 
     lastTickTime = now;
-
     accumulatedTime += deltaTime;
+
+    const currentResearch = allResearches.find(research => research.id === player.selectedResearchID);
+    const currentTask = allTasks.find(task => task.id === player.selectedTaskID);
+
+    currentResearch.workProgress += deltaTime;
+    currentTask.workProgress += deltaTime;
+
+    updateAnimations(currentResearch, currentTask);
 
     while (accumulatedTime >= common.dayInMilliseconds) {
         adjustResource('day', 1);

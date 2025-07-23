@@ -68,6 +68,7 @@ function updateResearchProgress() {
     }
 
     currentResearch.progress += 1;
+    currentResearch.workProgress = 0;
 
     if (currentResearch.progress % currentResearch.resourcePeriod == 0) {
         currentResearch.resources.forEach(resourceObj => {

@@ -3,9 +3,10 @@ import { saveGame } from "./save.js"
 import { showHelp } from "./help.js"
 import { taskTabs } from "./data/taskList.js";
 import { researchTabs } from "./data/researchList.js";
-import { changeResearch, changeTask } from "./player.js";
+import { changeResearch, changeTask, player } from "./player.js";
 import { changeTaskTab } from "./tasks.js";
 import { changeResearchTab } from "./research.js";
+import { addProgressElements } from "./animations.js";
 
 export function addMainListeners() {
     const saveButton = document.getElementById("saveBtn");
@@ -53,13 +54,32 @@ export function createTabResearchButtons(container, researches) {
     researches.forEach(research => {
         const button = document.createElement("button");
 
-        button.textContent = research.buttonName;
-        button.classList.add("research-button");
-        button.dataset.researchId = research.id;
+        const span = document.createElement('span');
+        span.textContent = research.buttonName;
+        button.appendChild(span);
+
+        button.classList.add("progress-button");
+        button.dataset.researchID = research.id;
         button.dataset.description = research.description;
 
+        addProgressElements(button, research);
+
+        if (button.dataset.researchID === player.selectedResearchID) {
+            button.classList.add('selected-button');
+        }
+
         button.addEventListener("click", () => {
-            console.log(`Research button clicked: ${research.id}`);
+            if (button.classList.contains('selected-button')) {
+                button.classList.remove('selected-button');
+            } else {
+                const researchButtonsContainer = document.getElementById('resInTabBtns');
+                const allSelectableButtons = researchButtonsContainer.querySelectorAll('.progress-button');
+                allSelectableButtons.forEach(btn => {
+                    btn.classList.remove('selected-button');
+                });
+
+                button.classList.add('selected-button');
+            }
             changeResearch(research.id);
         });
 
@@ -93,13 +113,32 @@ export function createTabTaskButtons(container, tasks) {
     tasks.forEach(task => {
         const button = document.createElement("button");
 
-        button.textContent = task.buttonName;
-        button.classList.add("task-button");
-        button.dataset.taskId = task.id;
+        const span = document.createElement('span');
+        span.textContent = task.buttonName;
+        button.appendChild(span);
+
+        button.classList.add("progress-button");
+        button.dataset.taskID = task.id;
         button.dataset.description = task.description;
 
+        addProgressElements(button, task);
+
+        if (button.dataset.taskID === player.selectedTaskID) {
+            button.classList.add('selected-button');
+        }
+
         button.addEventListener("click", () => {
-            console.log(`Task button clicked: ${task.id}`);
+            if (button.classList.contains('selected-button')) {
+                button.classList.remove('selected-button');
+            } else {
+                const taskButtonsContainer = document.getElementById('taskInTabBtns');
+                const allSelectableButtons = taskButtonsContainer.querySelectorAll('.progress-button');
+                allSelectableButtons.forEach(btn => {
+                    btn.classList.remove('selected-button');
+                });
+
+                button.classList.add('selected-button');
+            }
             changeTask(task.id);
         });
 
