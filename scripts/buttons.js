@@ -6,7 +6,8 @@ import { researchTabs } from "./data/researchList.js";
 import { changeResearch, changeTask, player } from "./player.js";
 import { changeTaskTab } from "./tasks.js";
 import { changeResearchTab } from "./research.js";
-import { addProgressElements } from "./animations.js";
+import { addProgressElements, addCompletionProgressBar } from "./animations.js";
+import common from "./common.js";
 
 export function addMainListeners() {
     const saveButton = document.getElementById("saveBtn");
@@ -15,12 +16,11 @@ export function addMainListeners() {
     const helpButton = document.getElementById("helpBtn");
     helpButton.addEventListener("click", showHelp);
 
-    createTabButtons("researchTabs", researchTabs, changeResearchTab, "researchTab");
-
-    createTabButtons("taskTabs", taskTabs, changeTaskTab, "taskTab");
+    createTabButtons("researchTabs", researchTabs, changeResearchTab);
+    createTabButtons("taskTabs", taskTabs, changeTaskTab);
 }
 
-function createTabButtons(containerId, tabDataArray, changeTabFunction, buttonIdPrefix) {
+function createTabButtons(containerId, tabDataArray, changeTabFunction) {
     const container = document.getElementById(containerId);
     if (!container) {
         console.error(`Container with ID '${containerId}' not found for tab buttons.`);
@@ -31,9 +31,51 @@ function createTabButtons(containerId, tabDataArray, changeTabFunction, buttonId
 
     tabDataArray.forEach((_, index) => {
         const button = document.createElement("button");
-        button.id = `${buttonIdPrefix}${index + 1}`;
+        button.id = tabDataArray[index];
         button.textContent = `${index + 1}`;
         button.classList.add("tab-button");
+
+        button.addEventListener("click", () => {
+            changeTabFunction(tabDataArray[index]);
+        });
+
+        container.appendChild(button);
+    });
+}
+
+export function updateTabButtons(containerId, tabDataArray, changeTabFunction) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error(`Container with ID '${containerId}' not found for tab buttons.`);
+        return;
+    }
+
+    container.innerHTML = '';
+
+    let chosen = null;
+
+    if (containerId === "researchTabs") {
+        chosen = common.researchMap.get(player.selectedResearchID);
+    }
+
+    if (containerId === "taskTabs") {
+        chosen = common.taskMap.get(player.selectedTaskID);
+    }
+
+    tabDataArray.forEach((_, index) => {
+        const button = document.createElement("button");
+        button.id = tabDataArray[index];
+        button.textContent = `${index + 1}`;
+        button.classList.add("tab-button");
+
+        if (chosen != null) {
+            if (chosen.tab === button.id) {
+                button.style.backgroundColor = 'yellow';
+            }
+        }
+        else {
+            button.style.removeProperty('background-color');
+        }
 
         button.addEventListener("click", () => {
             changeTabFunction(tabDataArray[index]);
@@ -63,6 +105,7 @@ export function createTabResearchButtons(container, researches) {
         button.dataset.description = research.description;
 
         addProgressElements(button, research);
+        addCompletionProgressBar(button, research);
 
         if (button.dataset.researchID === player.selectedResearchID) {
             button.classList.add('selected-button');
@@ -122,6 +165,7 @@ export function createTabTaskButtons(container, tasks) {
         button.dataset.description = task.description;
 
         addProgressElements(button, task);
+        addCompletionProgressBar(button, task);
 
         if (button.dataset.taskID === player.selectedTaskID) {
             button.classList.add('selected-button');

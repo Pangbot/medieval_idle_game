@@ -1,6 +1,7 @@
 // Handles the visual aspect of the resources panel
 import { player } from "./player.js";
 import common from "./common.js";
+import { addGlowEffect } from "./animations.js";
 
 export function updateResources() {
     updateMoneyDisplay();
@@ -81,20 +82,20 @@ function updateBar(resourceName, currentValue, maxValue) {
 
     // Motivation formatting
     if (resourceName === "motivation" && percentage < 25) {
-        barFillElement.style.backgroundColor = 'purple';
+        barFillElement.style.backgroundColor = 'red';
     } else if (resourceName === "motivation" && percentage < 50) {
-        barFillElement.style.backgroundColor = 'darkblue';
+        barFillElement.style.backgroundColor = 'orange';
     } else if (resourceName === "motivation") {
-        barFillElement.style.backgroundColor = 'lightblue';
+        barFillElement.style.backgroundColor = 'green';
     }
 
     // DBH formatting
-    if (resourceName === "DBH" && percentage < 25) {
-        barFillElement.style.backgroundColor = 'white';
-    } else if (resourceName === "DBH" && percentage < 50) {
-        barFillElement.style.backgroundColor = 'grey';
+    if (resourceName === "DBH" && percentage < 50) {
+        barFillElement.style.backgroundColor = 'green';
+    } else if (resourceName === "DBH" && percentage < 75) {
+        barFillElement.style.backgroundColor = 'orange';
     } else if (resourceName === "DBH") {
-        barFillElement.style.backgroundColor = 'black';
+        barFillElement.style.backgroundColor = 'red';
     }
 }
 
@@ -108,6 +109,14 @@ function updateInventory() {
         return;
     }
 
+    // Record current inventory state for comparison later
+    const currentInventoryState = {};
+    inventoryContainer.querySelectorAll('.inventory-item').forEach(itemElement => {
+        const name = itemElement.dataset.itemName;
+        const amount = parseFloat(itemElement.dataset.itemAmount);
+        currentInventoryState[name] = amount;
+    });
+
     inventoryContainer.innerHTML = '';
 
     for (let i = 5; i < player.resources.length; i++) {
@@ -116,6 +125,14 @@ function updateInventory() {
         const itemElement = document.createElement("div");
         itemElement.classList.add("inventory-item");
         itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
+        itemElement.dataset.itemName = item.name;
+        itemElement.dataset.itemAmount = item.amount;
+
         inventoryContainer.appendChild(itemElement);
+
+        // Glow if the item is new or its amount has changed
+        if (!currentInventoryState[item.name] || currentInventoryState[item.name] !== item.amount) {
+            addGlowEffect(itemElement);
+        }
     }
 }

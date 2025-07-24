@@ -1,10 +1,11 @@
 // Handles the tasks area
-import { player, adjustResource } from "./player.js"
+import { player, adjustResource, changeTask } from "./player.js"
 import { allTasks, taskTabs } from "./data/taskList.js"
 import { createTabTaskButtons } from './buttons.js'
 import common from "./common.js";
 import { stopClock } from "./time.js";
 import { updateResearches } from "./research.js";
+import { updateCompletionProgressBar } from "./animations.js";
 
 let currentTaskTab = taskTabs[0];
 let availableTasks = allTasks.filter(task => task.available === true);
@@ -58,17 +59,17 @@ function changeTaskTab(targetTab) {
 }
 
 function updateTaskProgress() {
-    const currentTask = allTasks.find(task => task.id === player.selectedTaskID);
+    const currentTask = common.taskMap.get(player.selectedTaskID);
 
     if (!currentTask) {
-        console.error(`Selected task with ID '${player.selectedTaskID}' not found in allTasks.`);
+        console.error(`Selected task with ID '${player.selectedTaskID}' not found in taskMap.`);
         player.selectedTaskID = null;
         stopClock();
         return;
     }
 
     currentTask.progress += 1;
-    currentTask.workProgress = 0;
+    updateCompletionProgressBar(currentTask);
 
     if (currentTask.progress % currentTask.resourcePeriod == 0) {
         currentTask.resources.forEach(resourceObj => {
@@ -87,7 +88,7 @@ function updateTaskProgress() {
                 common.setDBHUnlocked(true);
             }
 
-            player.selectedTaskID = null;
+            changeTask(null);
             updateTasks();
             updateResearches();
             stopClock();

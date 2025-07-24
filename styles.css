@@ -3,12 +3,16 @@
 body {
     margin: 0;
     font-family: sans-serif;
-    background-color: #000000;
 }
 
 h2 {
     margin-bottom: 50px;
     font-size: 30px;
+    color: #36453B;
+}
+
+h3 {
+    margin-bottom: 0px;
 }
 
 /* Top bar */
@@ -16,42 +20,53 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #31004a;
-    color: white;
-    padding: 10px;
-    border-bottom: 2px solid #ccc;
+    background: #6B8E23;
+    color: #EFEBD8;
+    padding: 5px;
+    border-bottom: 2px solid #36453B;
 }
 
 .top-bar .title {
-    font-size: 1.5em;
+    font-size: 2em;
 }
 
 .top-bar .date {
     flex-grow: 1;
     text-align: center;
-    font-size: 1em;
+    font-size: 1.5em;
 }
 
 .top-bar .top-buttons button {
     margin-left: 10px;
     padding: 5px 10px;
+    background-color: #A7D9B4;
+    color: #36453B;
+    border: 1px solid #36453B;
+}
+
+.top-bar .top-buttons button:hover {
+    background-color: #EFEBD8;
 }
 
 /* Main layout */
 .game-layout {
     display: flex;
-    height: calc(100vh - 52px);
+    height: calc(100vh - 50px);
 }
 
 /* Resources panel */
 .resources {
     width: 25%;
     text-align: center;
-    color: white;
-    background: #4c00a4;
+    color: #36453B;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
     padding: 10px;
     box-sizing: border-box;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #36453B;
+}
+
+#money {
+    font-size: 1.5em;
 }
 
 /* The Inventory header */
@@ -61,8 +76,8 @@ h2 {
 }
 
 .inventory-box {
-    background-color: black;
-    border: 1px solid #333;
+    background-color: #36453B;
+    border: 1px solid #A7D9B4;
     height: 160px;
     padding: 10px; 
     margin-top: 15px;
@@ -72,7 +87,7 @@ h2 {
 .inventory-container {
     width: 100%;
     text-align: left;
-    color:white;
+    color: #EFEBD8;
 }
 
 .inventory-items {
@@ -83,30 +98,50 @@ h2 {
 
 .inventory-item {
     padding: 3px;
+    transition: background-color 1s ease-out, box-shadow 1s ease-out;
+}
+
+.inventory-item.glow-animation {
+    animation: glowAndFade 1s ease-out forwards;
+}
+
+@keyframes glowAndFade {
+    0% {
+        background-color: transparent;
+        box-shadow: 0 0 0px rgba(167, 217, 180, 0);
+    }
+    50% {
+        background-color: rgba(167, 217, 180, 0.7);
+        box-shadow: 0 0 15px rgba(167, 217, 180, 1);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: 0 0 0px rgba(167, 217, 180, 0);
+    }
 }
 
 /* Research section */
 .research {
     width: 25%;
     text-align: center;
-    color: white;
-    background: #33007b;
+    color: #EFEBD8;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
     padding: 10px;
     box-sizing: border-box;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-left: 1px solid #36453B;
+    border-right: 1px solid #36453B;
 }
 
 /* Tasks section */
 .tasks {
     width: 25%;
     text-align: center;
-    color: white;
-    background: #4c00a4;
+    color: #EFEBD8;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
     padding: 10px;
     box-sizing: border-box;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-left: 1px solid #36453B;
+    border-right: 1px solid #36453B;
 }
 
 /* Tabs and tab buttons */
@@ -128,16 +163,17 @@ h2 {
     justify-content: center;
 }
 
+/* Progress buttons */
 .progress-button {
-    background-color: lightblue;
-    border: 1px solid #007bff;
+    background-color: #A7D9B4;
+    border: 1px solid #36453B;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     position: relative;
     overflow: hidden; 
     border-radius: 5px;
-    color: #fff;
+    color: #36453B;
     display: block;
     margin: 5px;
     min-width: 150px;
@@ -146,7 +182,7 @@ h2 {
 }
 
 .progress-button:hover {
-    background-color: #90d4ff;
+    background-color: #EFEBD8;
 }
 
 .progress-button .progress-fill {
@@ -155,7 +191,17 @@ h2 {
     left: 0;
     height: 100%;
     width: 0;
-    background-color: darkblue;
+    background-color: #B85C2E;
+    z-index: 1;
+}
+
+.progress-button .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: #B85C2E;
     z-index: 1;
 }
 
@@ -166,27 +212,51 @@ h2 {
 .progress-button span {
     position: relative;
     z-index: 2;
-    color: white;
+    color: #36453B;
 }
 
+/* Selected buttons */
 .progress-button.selected-button {
-    background-color: #ffff00;
-    border-color: #eeee00;
+    background-color: #EFEBD8;
+    border-color: #36453B;
 }
 
 .progress-button.selected-button:hover {
-    background-color: #dddd00;
+    background-color: #A7D9B4;
+}
+
+/* Completion progress bars */
+.completion-progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    border-color: #36453B;
+    border-width: 1px;
+    border-style: solid;
+    margin-top: 5px;
+    height: 15px;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+
+.completion-progress-bar-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    width: 0%;
+    border-radius: 5px;
+    color: white;
 }
 
 /* Log section */
 .log {
     width: 25%;
     text-align: center;
-    color: white;
-    background: #33007b;
+    color: #EFEBD8;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
     padding: 10px;
     box-sizing: border-box;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid #36453B;
 }
 
 button {
@@ -195,15 +265,15 @@ button {
 
 /* Help overlay */
 .help-overlay {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Darkens the screen */
-    z-index: 9999; /* Ensures it's on top of everything */
-    pointer-events: none; /* Allows clicks to pass through initially */
+    background-color: rgba(54, 69, 59, 0.8);
+    z-index: 9999;
+    pointer-events: none;
     transition: opacity 0.3s ease-in-out;
     opacity: 0;
 }
@@ -211,19 +281,19 @@ button {
 .help-overlay.active {
     display: block;
     opacity: 1;
-    pointer-events: all; /* Blocks clicks when active */
+    pointer-events: all;
 }
 
 .help-text-entry {
     position: absolute;
-    background-color: #fff;
-    color: #333;
+    background-color: #EFEBD8;
+    color: #36453B;
     padding: 8px 12px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     font-size: 0.9em;
-    pointer-events: none; /* Do not block interaction with help text itself */
-    max-width: 200px; /* Limit width */
+    pointer-events: none;
+    max-width: 200px;
     z-index: 10001;
 }
 
@@ -233,27 +303,27 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Do not block interaction with arrows */
+    pointer-events: none;
     z-index: 10000;
 }
 
 .help-arrows line {
-    stroke: yellow; /* Arrow color */
+    stroke: #A7D9B4;
     stroke-width: 2;
     fill: none;
-    marker-end: url(#arrowhead); /* Reference to SVG arrowhead marker */
+    marker-end: url(#arrowhead);
 }
 
 /* SVG Arrowhead Marker */
 .help-arrows defs marker {
-    overflow: visible; /* Allow marker to extend beyond path */
+    overflow: visible;
 }
 
 /* Button tooltips */
 .custom-tooltip {
     position: absolute;
-    background-color: #333;
-    color: #fff;
+    background-color: #36453B;
+    color: #EFEBD8;
     padding: 5px 10px;
     border-radius: 4px;
     font-size: 14px;
@@ -276,16 +346,14 @@ button {
 .bar-background {
     width: 100%; 
     height: 40px;
-    background-color: #555; 
-    border: 1px solid #777;
+    background-color: #36453B;
+    border: 1px solid #A7D9B4;
     border-radius: 5px;
     position: relative; 
 }
 
 .bar-fill {
     height: 100%;
-    background-color: green; 
-    width: 0%; 
     border-radius: 4px; 
     transition: width 0.3s ease-out, background-color 0.3s ease-out; 
 }
@@ -295,8 +363,8 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: #EFEBD8;
     font-size: 0.8em;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
     pointer-events: none; 
 }

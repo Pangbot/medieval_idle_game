@@ -1,6 +1,11 @@
 // Handles the player's resources and stats
 
 import { restartClockCheck } from "./time.js";
+import { updateTabButtons } from "./buttons.js";
+import { changeTaskTab } from "./tasks.js";
+import { changeResearchTab } from "./research.js";
+import { taskTabs } from "./data/taskList.js";
+import { researchTabs } from "./data/researchList.js";
 
 let player = {
     age: null,
@@ -41,6 +46,7 @@ function changeTask(taskID) {
     else {
         player.selectedTaskID = taskID;
     }
+    updateTabButtons("taskTabs", taskTabs, changeTaskTab);
     restartClockCheck();
 }
 
@@ -51,6 +57,7 @@ function changeResearch(researchID) {
     else {
         player.selectedResearchID = researchID;
     }
+    updateTabButtons("researchTabs", researchTabs, changeResearchTab);
     restartClockCheck();
 }
 

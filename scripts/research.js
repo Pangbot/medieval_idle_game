@@ -1,9 +1,11 @@
 // Handles the research area
-import { player, adjustResource } from "./player.js"
+import { player, adjustResource, changeResearch } from "./player.js"
 import { researchTabs, allResearches } from "./data/researchList.js"
 import { createTabResearchButtons } from "./buttons.js";
+import common from "./common.js";
 import { stopClock } from './time.js';
 import { updateTasks } from "./tasks.js";
+import { updateCompletionProgressBar } from "./animations.js";
 
 let currentResearchTab = researchTabs[0];
 let availableResearches = allResearches.filter(research => research.available === true);
@@ -58,17 +60,17 @@ function changeResearchTab(targetTab) {
 }
 
 function updateResearchProgress() {
-    const currentResearch = allResearches.find(research => research.id === player.selectedResearchID);
+    const currentResearch = common.researchMap.get(player.selectedResearchID);
 
     if (!currentResearch) {
-        console.error(`Selected research with ID '${player.selectedResearchID}' not found in allResearches.`);
+        console.error(`Selected research with ID '${player.selectedResearchID}' not found in researchMap.`);
         player.selectedResearchID = null;
         stopClock();
         return;
     }
 
     currentResearch.progress += 1;
-    currentResearch.workProgress = 0;
+    updateCompletionProgressBar(currentResearch);
 
     if (currentResearch.progress % currentResearch.resourcePeriod == 0) {
         currentResearch.resources.forEach(resourceObj => {
@@ -81,7 +83,7 @@ function updateResearchProgress() {
         currentResearch.available = false;
         player.completed.add(player.selectedResearchID)
 
-        player.selectedResearchID = null;
+        changeResearch(null);
         updateResearches();
         updateTasks();
         stopClock();

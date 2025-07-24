@@ -44,7 +44,11 @@ const helpData = {
         offset: [0, 200]
     },
     "DBH-bar-help": {
-        message: "This is the Dimensional Breakpoint Horizon. Almost anything you do will increase this. Weird things will happen as this gets high and if it reaches 1 the Universe will kill you off.",
+        message: "This is the Dimensional Breakpoint Horizon. Almost anything you do will increase this. Weird things will happen as this gets high. If it reaches 1 the Universe will kill you off.",
+        offset: [0, 200]
+    },
+    "inventory-help": {
+        message: "This is where your things are. Some tasks give you things. Other tasks require things. Things are good. Try to get some things.",
         offset: [0, 200]
     },
     "research-panel-help": {
@@ -74,7 +78,7 @@ function createArrowhead() {
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", "M0,0 L10,5 L0,10 L3,5 Z"); // Triangle shape
-    path.setAttribute("fill", "yellow"); // Arrowhead color
+    path.setAttribute("fill", "#A7D9B4");
 
     marker.appendChild(path);
     defs.appendChild(marker);

@@ -1,31 +1,28 @@
 // Handles the in-game date
-import { player, adjustResource } from './player.js';
+import { player, adjustResource, changeTask, changeResearch } from './player.js';
 import { updateResources } from './resources.js';
 import { updateResearchProgress } from './research.js';
 import { updateTaskProgress } from './tasks.js';
 import common from './common.js';
 import { updateAnimations } from './animations.js';
-import { allResearches } from './data/researchList.js';
-import { allTasks } from './data/taskList.js';
 
 let gameInterval = null;
-let lastTickTime = 0;
+let lastTickTime = performance.now();
 let accumulatedTime = 0;
+let tabLastVisibleTime = performance.now();
 
 function advanceGameTime() {
+    if (document.hidden) {
+        return;
+    }
     const now = performance.now();
     let deltaTime = now - lastTickTime;
 
     lastTickTime = now;
     accumulatedTime += deltaTime;
 
-    const currentResearch = allResearches.find(research => research.id === player.selectedResearchID);
-    const currentTask = allTasks.find(task => task.id === player.selectedTaskID);
-
-    currentResearch.workProgress += deltaTime;
-    currentTask.workProgress += deltaTime;
-
-    updateAnimations(currentResearch, currentTask);
+    const currentResearch = common.researchMap.get(player.selectedResearchID);
+    const currentTask = common.taskMap.get(player.selectedTaskID);
 
     while (accumulatedTime >= common.dayInMilliseconds) {
         adjustResource('day', 1);
@@ -34,12 +31,22 @@ function advanceGameTime() {
             updateResearchProgress();
             updateTaskProgress();
         }
-        else {
-            stopClock();
-        }
+
         updateResources();
         accumulatedTime -= common.dayInMilliseconds;
     }
+
+    currentResearch.workProgress += deltaTime;
+    currentTask.workProgress += deltaTime;
+
+    while (currentResearch.workProgress > common.dayInMilliseconds) {
+        currentResearch.workProgress -= common.dayInMilliseconds;
+    }
+    while (currentTask.workProgress > common.dayInMilliseconds) {
+        currentTask.workProgress -= common.dayInMilliseconds;
+    }
+
+    updateAnimations(currentResearch, currentTask);
 }
 
 function startClock() {
@@ -70,6 +77,95 @@ export function restartClockCheck() {
     else {
         stopClock();
     }
+}
+
+document.addEventListener('visibilitychange', () => {
+    let visibilityChangeTime = performance.now();
+    if (document.hidden) {
+        tabLastVisibleTime = visibilityChangeTime;
+        stopClock();
+    } else {
+        calculateOfflineProgress();
+        lastTickTime = performance.now();
+        accumulatedTime = 0;
+        restartClockCheck();
+    }
+});
+
+function calculateOfflineProgress() {
+    const now = performance.now();
+    const offlineDuration = now - tabLastVisibleTime;
+
+    if (offlineDuration < common.dayInMilliseconds || player.selectedResearchID === null || player.selectedTaskID === null) {
+        accumulatedTime = offlineDuration;
+        return;
+    }
+
+    let daysPassed = Math.floor(offlineDuration / common.dayInMilliseconds);
+    let remainingTime = offlineDuration % common.dayInMilliseconds;
+    let resultingTaskProgress = 0;
+    let resultingResearchProgress = 0;
+
+    let currentResearch = common.researchMap.get(player.selectedResearchID);
+    let currentTask = common.taskMap.get(player.selectedTaskID);
+
+    // Simulate offline days
+    for (let i = 0; i < daysPassed; i++) {
+        if (player.selectedResearchID === null || player.selectedTaskID === null) {
+            if (player.selectedResearchID === null) {
+                changeResearch(null);
+                if (player.selectedTaskID != null) {
+                    resultingTaskProgress = common.dayInMilliseconds - currentResearch.workProgress;
+                }
+            }
+            if (player.selectedTaskID === null) {
+                changeTask(null)
+                if (player.selectedResearchID != null) {
+                    resultingResearchProgress = common.dayInMilliseconds - currentTask.workProgress;
+                }
+            }
+            break;
+        }
+        adjustResource('day', 1);
+        updateDate();
+        if (player.selectedResearchID) {
+            updateResearchProgress();
+        }
+        if (player.selectedTaskID) {
+            updateTaskProgress();
+        }
+        updateResources();
+    }
+
+    currentResearch = common.researchMap.get(player.selectedResearchID);
+    currentTask = common.taskMap.get(player.selectedTaskID);
+
+    if (resultingTaskProgress > 0) {
+        currentTask.workProgress += resultingTaskProgress;
+        if (currentTask.workProgress >= common.dayInMilliseconds) {
+            currentTask.workProgress -= common.dayInMilliseconds;
+        }
+    } else if (resultingResearchProgress > 0) {
+        currentResearch.workProgress += resultingResearchProgress;
+        if (currentResearch.workProgress >= common.dayInMilliseconds) {
+            currentResearch.workProgress -= common.dayInMilliseconds;
+        }
+    } else {
+        if (currentResearch) {
+            currentResearch.workProgress += remainingTime;
+            if (currentResearch.workProgress > common.dayInMilliseconds) {
+                currentResearch.workProgress -= common.dayInMilliseconds;
+            }
+        }
+        if (currentTask) {
+            currentTask.workProgress += remainingTime;
+            if (currentTask.workProgress > common.dayInMilliseconds) {
+                currentTask.workProgress -= common.dayInMilliseconds;
+            }
+        }
+    }
+
+    updateAnimations(currentResearch, currentTask);
 }
 
 export function updateDate() {

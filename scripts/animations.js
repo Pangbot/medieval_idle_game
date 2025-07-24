@@ -24,3 +24,37 @@ export function addProgressElements(button, dataObject) { // dataObject is eithe
     let initialFill = dataObject.workProgress / common.dayInMilliseconds;
     progressFill.style.width = `${initialFill * 100}%`;
 }
+
+export function addGlowEffect(itemElement) {
+    itemElement.classList.add("glow-animation");
+    setTimeout(() => {
+        itemElement.classList.remove("glow-animation");
+    }, 1000);
+}
+
+export function addCompletionProgressBar(button, dataObject) {
+    if (dataObject.daysToComplete === Infinity) {
+        return; // Not completable
+    }
+
+    const progressBarContainer = document.createElement('div');
+    progressBarContainer.className = 'completion-progress-bar-container';
+
+    const progressBarFill = document.createElement('div');
+    progressBarFill.className = 'completion-progress-bar-fill';
+    progressBarFill.id = `${dataObject.id}-completion-progress-fill`;
+
+    progressBarContainer.appendChild(progressBarFill);
+    button.appendChild(progressBarContainer);
+
+    updateCompletionProgressBar(dataObject);
+}
+
+export function updateCompletionProgressBar(dataObject) {
+    const progressBarFill = document.getElementById(`${dataObject.id}-completion-progress-fill`);
+
+    if (progressBarFill) {
+        const progressPercentage = (dataObject.progress / dataObject.daysToComplete) * 100;
+        progressBarFill.style.width = `${progressPercentage}%`;
+    }
+}
