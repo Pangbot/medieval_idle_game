@@ -74,7 +74,7 @@ export function updateTabButtons(containerID, tabDataArray, changeTabFunction) {
     if (containerID === "taskTabs") {
         const taskButtonsContainer = document.getElementById('taskInTabBtns');
         const firstButton = taskButtonsContainer.querySelector('.progress-button');
-        allButtons = researchButtonsContainer.querySelectorAll('.progress-button');
+        allButtons = taskButtonsContainer.querySelectorAll('.progress-button');
         chosenTabID = firstButton.dataset.tabID;
     }
 
