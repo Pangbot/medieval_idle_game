@@ -20,67 +20,90 @@ export function addMainListeners() {
     createTabButtons("taskTabs", taskTabs, changeTaskTab);
 }
 
-function createTabButtons(containerId, tabDataArray, changeTabFunction) {
-    const container = document.getElementById(containerId);
+function createTabButtons(containerID, tabDataArray, changeTabFunction) {
+    const container = document.getElementById(containerID);
     if (!container) {
-        console.error(`Container with ID '${containerId}' not found for tab buttons.`);
+        console.error(`Container with ID '${containerID}' not found for tab buttons.`);
         return;
     }
 
     container.innerHTML = '';
 
-    tabDataArray.forEach((_, index) => {
+    tabDataArray.forEach((tabID) => {
         const button = document.createElement("button");
-        button.id = tabDataArray[index];
-        button.textContent = `${index + 1}`;
+        button.id = tabID;
         button.classList.add("tab-button");
 
+        if (tabID === taskTabs[0] || tabID === researchTabs[0]) {
+            button.classList.add('active-button');
+        }
+
+        const icon = document.createElement("img");
+        icon.src = `icons/` + tabID + `.png`;
+        icon.width = common.tabSize;
+        icon.height = common.tabSize;
+
         button.addEventListener("click", () => {
-            changeTabFunction(tabDataArray[index]);
+            changeTabFunction(tabID);
         });
 
+        button.appendChild(icon);
         container.appendChild(button);
     });
 }
 
-export function updateTabButtons(containerId, tabDataArray, changeTabFunction) {
-    const container = document.getElementById(containerId);
+export function updateTabButtons(containerID, tabDataArray, changeTabFunction) {
+    const container = document.getElementById(containerID);
     if (!container) {
-        console.error(`Container with ID '${containerId}' not found for tab buttons.`);
+        console.error(`Container with ID '${containerID}' not found for tab buttons.`);
         return;
     }
 
     container.innerHTML = '';
 
-    let chosen = null;
+    let chosenTabID = null;
+    let allButtons;
 
-    if (containerId === "researchTabs") {
-        chosen = common.researchMap.get(player.selectedResearchID);
+    if (containerID === "researchTabs") {
+        const researchButtonsContainer = document.getElementById('resInTabBtns');
+        const firstButton = researchButtonsContainer.querySelector('.progress-button');
+        allButtons = researchButtonsContainer.querySelectorAll('.progress-button');
+        chosenTabID = firstButton.dataset.tabID;
     }
 
-    if (containerId === "taskTabs") {
-        chosen = common.taskMap.get(player.selectedTaskID);
+    if (containerID === "taskTabs") {
+        const taskButtonsContainer = document.getElementById('taskInTabBtns');
+        const firstButton = taskButtonsContainer.querySelector('.progress-button');
+        allButtons = researchButtonsContainer.querySelectorAll('.progress-button');
+        chosenTabID = firstButton.dataset.tabID;
     }
 
-    tabDataArray.forEach((_, index) => {
+    tabDataArray.forEach((tabID) => {
         const button = document.createElement("button");
-        button.id = tabDataArray[index];
-        button.textContent = `${index + 1}`;
+        button.id = tabID;
         button.classList.add("tab-button");
 
-        if (chosen != null) {
-            if (chosen.tab === button.id) {
-                button.style.backgroundColor = 'yellow';
+        const icon = document.createElement("img");
+        icon.src = `icons/` + tabID + `.png`;
+        icon.width = common.tabSize;
+        icon.height = common.tabSize;
+
+        if (chosenTabID === button.id) {
+            // Check if we've (un)selected a research/task in the active tab
+            for (const buttonSearch of allButtons) {
+                if (buttonSearch.classList.contains('selected-button')) {
+                    button.classList.add('selected-button');
+                    break;
+                }
             }
-        }
-        else {
-            button.style.removeProperty('background-color');
+            button.classList.add('active-button');
         }
 
         button.addEventListener("click", () => {
-            changeTabFunction(tabDataArray[index]);
+            changeTabFunction(tabID);
         });
 
+        button.appendChild(icon);
         container.appendChild(button);
     });
 }
@@ -101,6 +124,7 @@ export function createTabResearchButtons(container, researches) {
         button.appendChild(span);
 
         button.classList.add("progress-button");
+        button.dataset.tabID = research.tab;
         button.dataset.researchID = research.id;
         button.dataset.description = research.description;
 
@@ -161,6 +185,7 @@ export function createTabTaskButtons(container, tasks) {
         button.appendChild(span);
 
         button.classList.add("progress-button");
+        button.dataset.tabID = task.tab;
         button.dataset.taskID = task.id;
         button.dataset.description = task.description;
 

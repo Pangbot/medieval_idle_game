@@ -1,10 +1,10 @@
 // Every task in the game
 
 export const taskTabs = [
-    "daily life",
+    "daily-life",
     "comforts",
     "science",
-    "big projects",
+    "big-projects",
     "travel"
 ];
 

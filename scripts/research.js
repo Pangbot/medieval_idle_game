@@ -53,8 +53,29 @@ function changeResearchTab(targetTab) {
         console.error(`Tab ${targetTab} not found in researchTabs (${researchTabs}).`)
     }
 
-    if (!(currentResearchTab === targetTab)) {
+    if (currentResearchTab !== targetTab) {
+        const tabsContainer = document.querySelector('#researchTabs');
+
+        if (!tabsContainer) {
+            console.error("Research tabs container not found.");
+            return;
+        }
+
+        const oldTabObject = tabsContainer.querySelector('#' + currentResearchTab);
+        const newTabObject = tabsContainer.querySelector('#' + targetTab);
+
+        if (oldTabObject && oldTabObject.classList.contains('active-button')) {
+            oldTabObject.classList.remove('active-button');
+        }
+
         currentResearchTab = targetTab;
+
+        if (newTabObject) {
+            newTabObject.classList.add('active-button');
+        } else {
+            console.error(`New tab button '${targetTab}' not found.`);
+        }
+
         updateResearches();
     }
 }

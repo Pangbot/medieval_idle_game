@@ -52,10 +52,31 @@ function changeTaskTab(targetTab) {
         console.error(`Tab ${targetTab} not found in taskTabs (${taskTabs}).`)
     }
 
-    if (!(currentTaskTab === targetTab)) {
-        currentTaskTab = targetTab;
-        updateTasks();
-    }
+    if (currentTaskTab !== targetTab) {
+            const tabsContainer = document.querySelector('#taskTabs');
+    
+            if (!tabsContainer) {
+                console.error("Task tabs container not found.");
+                return;
+            }
+    
+            const oldTabObject = tabsContainer.querySelector('#' + currentTaskTab);
+            const newTabObject = tabsContainer.querySelector('#' + targetTab);
+    
+            if (oldTabObject && oldTabObject.classList.contains('active-button')) {
+                oldTabObject.classList.remove('active-button');
+            }
+    
+            currentTaskTab = targetTab;
+    
+            if (newTabObject) {
+                newTabObject.classList.add('active-button');
+            } else {
+                console.error(`New tab button '${targetTab}' not found.`);
+            }
+    
+            updateTasks();
+        }
 }
 
 function updateTaskProgress() {

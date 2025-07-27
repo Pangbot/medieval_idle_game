@@ -12,6 +12,7 @@ const taskMap = new Map(allTasks.map(task => [task.id, task]));
 const common = {
     dayInMilliseconds: 1000,
     unlockedDBH: false,
+    tabSize: 64,
     researchMap,
     taskMap,
 

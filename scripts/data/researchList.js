@@ -1,10 +1,10 @@
 // Every research in the game
 
 export const researchTabs = [
-    "daily life",
+    "daily-life",
     "comforts",
     "science",
-    "big projects",
+    "big-projects",
     "travel"
 ];
 

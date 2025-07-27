@@ -25,7 +25,7 @@ export function addProgressElements(button, dataObject) { // dataObject is eithe
     progressFill.style.width = `${initialFill * 100}%`;
 }
 
-export function addGlowEffect(itemElement) {
+export function addGlowEffect(itemElement) { // Temporary inventory glow
     itemElement.classList.add("glow-animation");
     setTimeout(() => {
         itemElement.classList.remove("glow-animation");
