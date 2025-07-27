@@ -10,6 +10,8 @@ let gameInterval = null;
 let lastTickTime = performance.now();
 let accumulatedTime = 0;
 let tabLastVisibleTime = performance.now();
+let remainingRes = 0;
+let remainingTask = 0;
 
 function advanceGameTime() {
     if (document.hidden) {
@@ -27,26 +29,52 @@ function advanceGameTime() {
     while (accumulatedTime >= common.dayInMilliseconds) {
         adjustResource('day', 1);
         updateDate();
-        if (player.selectedResearchID && player.selectedTaskID) {
+
+        if (player.selectedResearchID) {
             updateResearchProgress();
+        }
+        if (player.selectedTaskID) {
             updateTaskProgress();
         }
 
         updateResources();
         accumulatedTime -= common.dayInMilliseconds;
+
+        // For whatever reason, some desyncing can happen if a research/task completes (but not both, presumably because it needs to recreate the buttons?)
+        // Anyway, this makes sure they stay synced if that happens
+        if (!(player.selectedResearchID) || !(player.selectedTaskID)) {
+            stopClock();
+            if (player.selectedResearchID) {
+                currentResearch.workProgress += remainingTask;
+                while (currentResearch.workProgress >= common.dayInMilliseconds) {
+                    currentResearch.workProgress -= common.dayInMilliseconds;
+                }
+            }
+            else if (player.selectedTaskID) {
+                currentTask.workProgress += remainingRes;
+                while (currentTask.workProgress >= common.dayInMilliseconds) {
+                    currentTask.workProgress -= common.dayInMilliseconds;
+                }
+            }
+            updateAnimations(currentResearch, currentTask);
+            return;
+        }
     }
 
     currentResearch.workProgress += deltaTime;
     currentTask.workProgress += deltaTime;
 
-    while (currentResearch.workProgress > common.dayInMilliseconds) {
+    while (currentResearch.workProgress >= common.dayInMilliseconds) {
         currentResearch.workProgress -= common.dayInMilliseconds;
     }
-    while (currentTask.workProgress > common.dayInMilliseconds) {
+    while (currentTask.workProgress >= common.dayInMilliseconds) {
         currentTask.workProgress -= common.dayInMilliseconds;
     }
 
     updateAnimations(currentResearch, currentTask);
+
+    remainingRes = common.dayInMilliseconds - currentResearch.workProgress;
+    remainingTask = common.dayInMilliseconds - currentTask.workProgress;
 }
 
 function startClock() {
@@ -74,9 +102,6 @@ export function restartClockCheck() {
     if( player.selectedResearchID && player.selectedTaskID ) {
         startClock();
     } 
-    else {
-        stopClock();
-    }
 }
 
 document.addEventListener('visibilitychange', () => {

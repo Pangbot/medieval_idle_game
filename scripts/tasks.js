@@ -112,7 +112,6 @@ function updateTaskProgress() {
             changeTask(null);
             updateTasks();
             updateResearches();
-            stopClock();
         }
     }
 }

@@ -6,11 +6,11 @@ export function updateAnimations(currentResearch, currentTask) {
     const researchButton = document.querySelector(`button[data-research-i-d="${player.selectedResearchID}"]`);
     const taskButton = document.querySelector(`button[data-task-i-d="${player.selectedTaskID}"]`);
     
-    if (researchButton) {
+    if ((researchButton) && (currentResearch)) {
         const resProgressFill = researchButton.querySelector('.progress-fill');
         resProgressFill.style.width = `${currentResearch.workProgress / common.dayInMilliseconds * 100}%`;
     }
-    if (taskButton) {
+    if ((taskButton) && (currentTask)) {
         const taskProgressFill = taskButton.querySelector('.progress-fill');
         taskProgressFill.style.width = `${currentTask.workProgress / common.dayInMilliseconds * 100}%`;
     }

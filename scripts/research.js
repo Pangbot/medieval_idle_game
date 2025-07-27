@@ -107,7 +107,6 @@ function updateResearchProgress() {
         changeResearch(null);
         updateResearches();
         updateTasks();
-        stopClock();
     }
 }
 
