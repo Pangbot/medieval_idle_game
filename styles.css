@@ -3,6 +3,7 @@
 body {
     margin: 0;
     font-family: sans-serif;
+    user-select: none;
 }
 
 h2 {
@@ -168,6 +169,7 @@ h3 {
 .tab-button {
     border-radius: 20px;
     border-color: #36453B;
+    background-color: #EFEBD8;
 }
 
 .tab-button.active-button {

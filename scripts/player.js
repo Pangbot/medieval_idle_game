@@ -46,7 +46,7 @@ function changeTask(taskID) {
     else {
         player.selectedTaskID = taskID;
     }
-    updateTabButtons("taskTabs", taskTabs, changeTaskTab);
+    updateTabButtons("taskTabs");
     restartClockCheck();
 }
 
@@ -57,7 +57,7 @@ function changeResearch(researchID) {
     else {
         player.selectedResearchID = researchID;
     }
-    updateTabButtons("researchTabs", researchTabs, changeResearchTab);
+    updateTabButtons("researchTabs");
     restartClockCheck();
 }
 

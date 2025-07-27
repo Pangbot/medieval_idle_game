@@ -10,7 +10,7 @@ const researchMap = new Map(allResearches.map(research => [research.id, research
 const taskMap = new Map(allTasks.map(task => [task.id, task]));
 
 const common = {
-    dayInMilliseconds: 1000,
+    dayInMilliseconds: 100,
     unlockedDBH: false,
     tabSize: 64,
     researchMap,

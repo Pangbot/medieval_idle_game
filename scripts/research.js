@@ -1,7 +1,7 @@
 // Handles the research area
 import { player, adjustResource, changeResearch } from "./player.js"
 import { researchTabs, allResearches } from "./data/researchList.js"
-import { createTabResearchButtons } from "./buttons.js";
+import { createTabResearchButtons, updateTabButtons } from "./buttons.js";
 import common from "./common.js";
 import { stopClock } from './time.js';
 import { updateTasks } from "./tasks.js";

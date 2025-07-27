@@ -1,7 +1,7 @@
 // Handles the tasks area
 import { player, adjustResource, changeTask } from "./player.js"
 import { allTasks, taskTabs } from "./data/taskList.js"
-import { createTabTaskButtons } from './buttons.js'
+import { createTabTaskButtons, updateTabButtons } from './buttons.js'
 import common from "./common.js";
 import { stopClock } from "./time.js";
 import { updateResearches } from "./research.js";

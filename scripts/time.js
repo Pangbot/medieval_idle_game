@@ -40,8 +40,7 @@ function advanceGameTime() {
         updateResources();
         accumulatedTime -= common.dayInMilliseconds;
 
-        // For whatever reason, some desyncing can happen if a research/task completes (but not both, presumably because it needs to recreate the buttons?)
-        // Anyway, this makes sure they stay synced if that happens
+        // This makes sure overflow progress from a completed task/research isn't applied to the other one.
         if (!(player.selectedResearchID) || !(player.selectedTaskID)) {
             stopClock();
             if (player.selectedResearchID) {

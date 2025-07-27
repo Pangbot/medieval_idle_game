@@ -4,8 +4,8 @@ import { showHelp } from "./help.js"
 import { taskTabs } from "./data/taskList.js";
 import { researchTabs } from "./data/researchList.js";
 import { changeResearch, changeTask, player } from "./player.js";
-import { changeTaskTab } from "./tasks.js";
-import { changeResearchTab } from "./research.js";
+import { changeTaskTab, currentTaskTab } from "./tasks.js";
+import { changeResearchTab, currentResearchTab } from "./research.js";
 import { addProgressElements, addCompletionProgressBar } from "./animations.js";
 import common from "./common.js";
 
@@ -20,7 +20,7 @@ export function addMainListeners() {
     createTabButtons("taskTabs", taskTabs, changeTaskTab);
 }
 
-function createTabButtons(containerID, tabDataArray, changeTabFunction) {
+function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Only used for initialisation
     const container = document.getElementById(containerID);
     if (!container) {
         console.error(`Container with ID '${containerID}' not found for tab buttons.`);
@@ -33,6 +33,8 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) {
         const button = document.createElement("button");
         button.id = tabID;
         button.classList.add("tab-button");
+        const firstLetter = tabID.charAt(0).toUpperCase();
+        button.dataset.description = firstLetter + tabID.slice(1).replace('-', ' ');
 
         if (tabID === taskTabs[0] || tabID === researchTabs[0]) {
             button.classList.add('active-button');
@@ -42,9 +44,25 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) {
         icon.src = `icons/` + tabID + `.png`;
         icon.width = common.tabSize;
         icon.height = common.tabSize;
+        icon.draggable = false;
 
         button.addEventListener("click", () => {
             changeTabFunction(tabID);
+        });
+
+        button.addEventListener("mouseover", (event) => {
+            const description = event.currentTarget.dataset.description;
+            if (description) {
+                showCustomTooltip(description, event.clientX, event.clientY);
+            }
+        });
+
+        button.addEventListener("mousemove", (event) => {
+            showCustomTooltip(event.currentTarget.dataset.description, event.clientX, event.clientY);
+        });
+
+        button.addEventListener("mouseout", () => {
+            hideCustomTooltip();
         });
 
         button.appendChild(icon);
@@ -52,59 +70,49 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) {
     });
 }
 
-export function updateTabButtons(containerID, tabDataArray, changeTabFunction) {
+export function updateTabButtons(containerID) {
     const container = document.getElementById(containerID);
     if (!container) {
         console.error(`Container with ID '${containerID}' not found for tab buttons.`);
         return;
     }
 
-    container.innerHTML = '';
+    const tabButtons = container.querySelectorAll('.tab-button');
+    if (!tabButtons) {
+        console.error(`Container with ID '${containerID}' has no tab buttons.`);
+        return;
+    }
 
-    let chosenTabID = null;
-    let allButtons;
+    tabButtons.forEach(button => {
+        button.classList.remove('selected-button', 'active-button');
+    })
+
+    let currentTabID = null;
+    let selectedActionTabID = null; // The tab with a selected task/researcb
 
     if (containerID === "researchTabs") {
-        const researchButtonsContainer = document.getElementById('resInTabBtns');
-        const firstButton = researchButtonsContainer.querySelector('.progress-button');
-        allButtons = researchButtonsContainer.querySelectorAll('.progress-button');
-        chosenTabID = firstButton.dataset.tabID;
-    }
-
-    if (containerID === "taskTabs") {
-        const taskButtonsContainer = document.getElementById('taskInTabBtns');
-        const firstButton = taskButtonsContainer.querySelector('.progress-button');
-        allButtons = taskButtonsContainer.querySelectorAll('.progress-button');
-        chosenTabID = firstButton.dataset.tabID;
-    }
-
-    tabDataArray.forEach((tabID) => {
-        const button = document.createElement("button");
-        button.id = tabID;
-        button.classList.add("tab-button");
-
-        const icon = document.createElement("img");
-        icon.src = `icons/` + tabID + `.png`;
-        icon.width = common.tabSize;
-        icon.height = common.tabSize;
-
-        if (chosenTabID === button.id) {
-            // Check if we've (un)selected a research/task in the active tab
-            for (const buttonSearch of allButtons) {
-                if (buttonSearch.classList.contains('selected-button')) {
-                    button.classList.add('selected-button');
-                    break;
-                }
-            }
-            button.classList.add('active-button');
+        currentTabID = currentResearchTab;
+        if (player.selectedResearchID) {
+            selectedActionTabID = common.researchMap.get(player.selectedResearchID).tab;
         }
+    } else if (containerID === "taskTabs") {
+        currentTabID = currentTaskTab;
+        if (player.selectedTaskID) {
+            selectedActionTabID = common.taskMap.get(player.selectedTaskID).tab;
+        }
+    }
 
-        button.addEventListener("click", () => {
-            changeTabFunction(tabID);
-        });
+    tabButtons.forEach(tabButton => {
+        if (tabButton.id === currentTabID) {
+            tabButton.classList.add('active-button');
 
-        button.appendChild(icon);
-        container.appendChild(button);
+            if ((selectedActionTabID) && tabButton.id === selectedActionTabID) {
+                tabButton.classList.add('selected-button');
+            }
+        }
+        else if ((selectedActionTabID) && tabButton.id === selectedActionTabID) {
+            tabButton.classList.add('selected-button');
+        }
     });
 }
 
