@@ -10,6 +10,40 @@ export const taskTabs = [
 
 export const allTasks = [
     {
+        id: "lmao",
+        tab: taskTabs[4],
+        buttonName: "Gain stuff",
+        resources: [
+            { name: "health", amount: 1 },
+            { name: "motivation", amount: 1 },
+            { name: "DBH", amount: -0.01 }
+        ],
+        resourcePeriod: 1,
+        progress: 0,
+        workProgress: 0,
+        daysToComplete: Infinity,
+        available: true,
+        requires: null,
+        description: `Gives ya stuff. :3`
+    },
+    {
+        id: "rofl",
+        tab: taskTabs[4],
+        buttonName: "Lose stuff",
+        resources: [
+            { name: "health", amount: -1 },
+            { name: "motivation", amount: -1 },
+            { name: "DBH", amount: 0.01 }
+        ],
+        resourcePeriod: 1,
+        progress: 0,
+        workProgress: 0,
+        daysToComplete: Infinity,
+        available: true,
+        requires: null,
+        description: `Loses ya stuff. D:`
+    },
+    {
         id: "dalby_work_fields",
         tab: taskTabs[0],
         buttonName: "Work the fields",

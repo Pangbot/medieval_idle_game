@@ -18,6 +18,9 @@ function loadTasks(data) {
 
 function loadCurrentTaskTab(tab) {
     currentTaskTab = tab;
+    changeTaskTab(tab);
+    updateTabButtons("taskTabs");
+    updateTasks();
 }
 
 function updateTasks() {

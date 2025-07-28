@@ -2,66 +2,70 @@
 import common from "./common.js";
 import { stopClock, restartClockCheck } from "./time.js";
 
-const helpOverlay = document.getElementById("helpOverlay");
+const gameOverlay = document.getElementById("gameOverlay");
 const helpTextContainer = document.getElementById("helpTextContainer");
 const helpArrowsSvg = document.getElementById("helpArrows");
+
+let windowSize;
+let smallOffset;
+let medOffset;
 
 const helpData = {
     "title-help": { 
         message: "This is the game's name!",
-        offset: [-200, 40]
+        offset: [-1, 1]
     },
     "date-help": {
         message: "This is the in-game date. Time will only progress when both a research and task are selected.",
-        offset: [-screen.width/2 + 150, 40]
+        offset: [-5, 1]
     },
     "save-button-help": {
         message: "Saves the game to your local storage.",
-        offset: [-320, 100]
+        offset: [-2.92, 1]
     },
     "help-button-help": {
         message: "You... just clicked this... It shows this helpful panel!",
-        offset: [-200, 40]
+        offset: [-2, 1]
     },
     "journal-button-help": {
         message: "Story lives here, there's a lot of it! Completely optional, but I worked hard on it. :(",
-        offset: [-200, 100]
+        offset: [-1.25, 1]
     },
     "settings-button-help": {
         message: "Settings live here.",
-        offset: [-100, 40]
+        offset: [-0.5, 1]
     },
     "resources-panel-help": {
         message: "Here is your money, health, and motivation.",
-        offset: [-150, 50]
+        offset: [-1, 2]
     },
     "health-bar-help": {
         message: "If your health is low, you're more likely to get sick. If it hits 0, you die.",
-        offset: [0, 200]
+        offset: [0, 1]
     },
     "motivation-bar-help": {
         message: "If your motivation is low, your productivity will decrease. If it hits 0, you will not work on progress to a time machine.",
-        offset: [0, 200]
+        offset: [0, 1]
     },
     "DBH-bar-help": {
         message: "This is the Dimensional Breakpoint Horizon. Almost anything you do will increase this. Weird things will happen as this gets high. If it reaches 1 the Universe will kill you off.",
-        offset: [0, 200]
+        offset: [0, 1]
     },
     "inventory-help": {
         message: "This is where your things are. Some tasks give you things. Other tasks require things. Things are good. Try to get some things.",
-        offset: [0, 200]
+        offset: [0, 1]
     },
     "research-panel-help": {
         message: "Select an idea to research, the bottom bar shows how far along you are.",
-        offset: [-200, 200]
+        offset: [-1, 3]
     },
     "tasks-panel-help": {
         message: "Tasks are similar to research but you (almost) never complete them.",
-        offset: [-200, 200]
+        offset: [-1, 3]
     },
     "log-panel-help": {
         message: "This will relay happenings in the game world to your eyeball(s)/screen reader.",
-        offset: [-200, 200]
+        offset: [-1, 3]
     },
 };
 
@@ -86,8 +90,12 @@ function createArrowhead() {
 }
 
 export function showHelp() {
+    windowSize = common.getGameState().savedSettings.windowSize;
+    smallOffset = windowSize / 40;
+    medOffset = windowSize / 10;
+    
     stopClock();
-    helpOverlay.classList.add("active");
+    gameOverlay.classList.add("active");
     helpTextContainer.innerHTML = ""; 
     helpArrowsSvg.innerHTML = ""; 
     createArrowhead();
@@ -100,19 +108,19 @@ export function showHelp() {
         const targetElement = document.querySelector(`[data-help-id="${helpId}"]`);
         if (targetElement) {
             const message = helpData[helpId].message;
-            const offset = helpData[helpId].offset;
-            addHelpEntry(targetElement, message, offset);
+            const scaledOffset = [helpData[helpId].offset[0] * medOffset, helpData[helpId].offset[1] * smallOffset];
+            addHelpEntry(targetElement, message, scaledOffset);
         }
     });
 
-    helpOverlay.addEventListener("click", hideHelp);
+    gameOverlay.addEventListener("click", hideHelp);
 }
 
 export function hideHelp() {
-    helpOverlay.classList.remove("active");
+    gameOverlay.classList.remove("active");
     helpTextContainer.innerHTML = "";
     helpArrowsSvg.innerHTML = "";
-    helpOverlay.removeEventListener("click", hideHelp);
+    gameOverlay.removeEventListener("click", hideHelp);
     restartClockCheck();
 }
 
@@ -132,6 +140,7 @@ function addHelpEntry(targetElement, message, offset) {
 
     textDiv.style.left = `${textX}px`;
     textDiv.style.top = `${textY}px`;
+    textDiv.style.maxWidth = `${medOffset}px`; 
 
     drawArrow(textDiv, targetElement);
 }

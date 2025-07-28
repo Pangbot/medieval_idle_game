@@ -19,6 +19,9 @@ function loadResearches(data) {
 
 function loadCurrentResearchTab(tab) {
     currentResearchTab = tab;
+    changeResearchTab(tab);
+    updateTabButtons("researchTabs");
+    updateResearches();
 }
 
 function updateResearches() {
@@ -31,8 +34,8 @@ function updateResearches() {
         if (research.requires === null) {
             research.available = true;
         } else {
-            const allRequiredCompleted = research.requires.every(requiredId =>
-                player.completed.has(requiredId)
+            const allRequiredCompleted = research.requires.every(requiredID =>
+                player.completed.has(requiredID)
             );
             research.available = allRequiredCompleted;
         }

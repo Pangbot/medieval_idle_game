@@ -1,10 +1,11 @@
-// Handles the in-game date
-import { player, adjustResource, changeTask, changeResearch } from './player.js';
-import { updateResources } from './resources.js';
-import { updateResearchProgress } from './research.js';
-import { updateTaskProgress } from './tasks.js';
-import common from './common.js';
-import { updateAnimations } from './animations.js';
+// Handles the in-game date and AFK progress
+import { player, adjustResource, changeTask, changeResearch, thresholdReached } from "./player.js";
+import { updateResources } from "./resources.js";
+import { updateResearchProgress } from "./research.js";
+import { updateTaskProgress } from "./tasks.js";
+import common from "./common.js";
+import { updateAnimations } from "./animations.js";
+import { unselectCurrentActions } from "./buttons.js";
 
 let gameInterval = null;
 let lastTickTime = performance.now();
@@ -17,6 +18,12 @@ function advanceGameTime() {
     if (document.hidden) {
         return;
     }
+
+    if (!(player.selectedResearchID) || !(player.selectedTaskID)) {
+        stopClock();
+        return
+    }
+
     const now = performance.now();
     let deltaTime = now - lastTickTime;
 
@@ -27,7 +34,7 @@ function advanceGameTime() {
     const currentTask = common.taskMap.get(player.selectedTaskID);
 
     while (accumulatedTime >= common.dayInMilliseconds) {
-        adjustResource('day', 1);
+        adjustResource("day", 1);
         updateDate();
 
         if (player.selectedResearchID) {
@@ -40,9 +47,32 @@ function advanceGameTime() {
         updateResources();
         accumulatedTime -= common.dayInMilliseconds;
 
-        // This makes sure overflow progress from a completed task/research isn't applied to the other one.
-        if (!(player.selectedResearchID) || !(player.selectedTaskID)) {
+        if (common.savedSettings.thresholdAlwaysOn && thresholdReached()) {
+            currentResearch.workProgress += deltaTime;
+            while (currentResearch.workProgress >= common.dayInMilliseconds) {
+                currentResearch.workProgress -= common.dayInMilliseconds;
+            }
+
+            currentTask.workProgress += deltaTime;
+            while (currentTask.workProgress >= common.dayInMilliseconds) {
+                currentTask.workProgress -= common.dayInMilliseconds;
+            }
+
+            updateAnimations(currentResearch, currentTask);
+            unselectCurrentActions();
             stopClock();
+            accumulatedTime = 0;
+        }
+
+        // This makes sure overflow progress from a completed task/research isn't applied to the other one.
+        if (
+            (currentResearch && currentResearch.completed && !player.selectedResearchID) ||
+            (currentTask && currentTask.completed && !player.selectedTaskID) ||
+            (!(player.selectedResearchID) && !(player.selectedTaskID))
+            ) {
+            stopClock();
+            accumulatedTime = 0;
+
             if (player.selectedResearchID) {
                 currentResearch.workProgress += remainingTask;
                 while (currentResearch.workProgress >= common.dayInMilliseconds) {
@@ -60,20 +90,23 @@ function advanceGameTime() {
         }
     }
 
-    currentResearch.workProgress += deltaTime;
-    currentTask.workProgress += deltaTime;
-
-    while (currentResearch.workProgress >= common.dayInMilliseconds) {
-        currentResearch.workProgress -= common.dayInMilliseconds;
+    if (currentResearch) {
+        currentResearch.workProgress += deltaTime;
+        while (currentResearch.workProgress >= common.dayInMilliseconds) {
+            currentResearch.workProgress -= common.dayInMilliseconds;
+        }
+        remainingRes = common.dayInMilliseconds - currentResearch.workProgress;
     }
-    while (currentTask.workProgress >= common.dayInMilliseconds) {
-        currentTask.workProgress -= common.dayInMilliseconds;
+
+    if (currentTask) {
+        currentTask.workProgress += deltaTime;
+        while (currentTask.workProgress >= common.dayInMilliseconds) {
+            currentTask.workProgress -= common.dayInMilliseconds;
+        }
+        remainingTask = common.dayInMilliseconds - currentTask.workProgress;
     }
 
     updateAnimations(currentResearch, currentTask);
-
-    remainingRes = common.dayInMilliseconds - currentResearch.workProgress;
-    remainingTask = common.dayInMilliseconds - currentTask.workProgress;
 }
 
 function startClock() {
@@ -103,7 +136,7 @@ export function restartClockCheck() {
     } 
 }
 
-document.addEventListener('visibilitychange', () => {
+document.addEventListener("visibilitychange", () => {
     let visibilityChangeTime = performance.now();
     if (document.hidden) {
         tabLastVisibleTime = visibilityChangeTime;
@@ -150,7 +183,7 @@ function calculateOfflineProgress() {
             }
             break;
         }
-        adjustResource('day', 1);
+        adjustResource("day", 1);
         updateDate();
         if (player.selectedResearchID) {
             updateResearchProgress();
@@ -159,6 +192,12 @@ function calculateOfflineProgress() {
             updateTaskProgress();
         }
         updateResources();
+
+        if (thresholdReached()) {
+            stopClock();
+            unselectCurrentActions();
+            break;
+        }
     }
 
     currentResearch = common.researchMap.get(player.selectedResearchID);
@@ -199,23 +238,23 @@ export function updateDate() {
 }
 
 function calculateGameDate(dayNumber) {
-    const startDate = new Date('1500-04-02T00:00:00Z');
+    const startDate = new Date("1500-04-02T00:00:00Z");
     const targetDate = new Date(startDate.getTime());
     targetDate.setDate(startDate.getDate() + dayNumber);
 
     const dayOfMonth = targetDate.getDate();
-    const month = targetDate.toLocaleDateString('en-UK', { month: 'long' });
+    const month = targetDate.toLocaleDateString("en-UK", { month: "long" });
     const year = targetDate.getFullYear();
 
     return `${dayOfMonth}<sup>${getOrdinalSuffix(dayOfMonth)}</sup> ${month}, ${year}`;
 }
 
 function getOrdinalSuffix(day) {
-    if (day > 3 && day < 21) return 'th';
+    if (day > 3 && day < 21) return "th";
     switch (day % 10) {
-        case 1:  return 'st';
-        case 2:  return 'nd';
-        case 3:  return 'rd';
-        default: return 'th';
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
     }
 }

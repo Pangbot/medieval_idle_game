@@ -1,11 +1,12 @@
 // Creates/destroys buttons
 import { saveGame } from "./save.js"
 import { showHelp } from "./help.js"
+import { showSettings } from "./settings.js";
 import { taskTabs } from "./data/taskList.js";
 import { researchTabs } from "./data/researchList.js";
 import { changeResearch, changeTask, player } from "./player.js";
-import { changeTaskTab, currentTaskTab } from "./tasks.js";
-import { changeResearchTab, currentResearchTab } from "./research.js";
+import { changeResearchTab, currentResearchTab, updateResearches } from "./research.js";
+import { changeTaskTab, currentTaskTab, updateTasks } from "./tasks.js";
 import { addProgressElements, addCompletionProgressBar } from "./animations.js";
 import common from "./common.js";
 
@@ -15,6 +16,9 @@ export function addMainListeners() {
 
     const helpButton = document.getElementById("helpBtn");
     helpButton.addEventListener("click", showHelp);
+
+    const settingsButton = document.getElementById("settingsBtn");
+    settingsButton.addEventListener("click", showSettings);
 
     createTabButtons("researchTabs", researchTabs, changeResearchTab);
     createTabButtons("taskTabs", taskTabs, changeTaskTab);
@@ -238,9 +242,34 @@ export function createTabTaskButtons(container, tasks) {
     });
 }
 
+export function unselectCurrentActions() {
+    const taskButtonsContainer = document.getElementById('taskTabs');
+    const researchButtonsContainer = document.getElementById('researchTabs');
+
+    if (taskButtonsContainer) {
+        const selectedTaskButton = taskButtonsContainer.querySelector('.progress-button.selected-button');
+        if (selectedTaskButton) {
+            selectedTaskButton.classList.remove('selected-button');
+        }
+    }
+
+    if (researchButtonsContainer) {
+        const selectedResearchButton = researchButtonsContainer.querySelector('.progress-button.selected-button');
+        if (selectedResearchButton) {
+            selectedResearchButton.classList.remove('selected-button');
+        }
+    }
+
+    changeResearch(null);
+    changeTask(null);
+
+    updateResearches();
+    updateTasks();
+}
+
 const customTooltip = document.getElementById("customTooltip");
 
-function showCustomTooltip(message, x, y) {
+export function showCustomTooltip(message, x, y) {
     if (!customTooltip) return;
 
     customTooltip.innerHTML = message;
@@ -252,7 +281,7 @@ function showCustomTooltip(message, x, y) {
     customTooltip.style.transform = 'translateY(0)';
 }
 
-function hideCustomTooltip() {
+export function hideCustomTooltip() {
     if (!customTooltip) return;
     customTooltip.style.opacity = 0;
     customTooltip.style.visibility = 'hidden';

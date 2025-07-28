@@ -10,6 +10,42 @@ export const researchTabs = [
 
 export const allResearches = [
     {
+        id: "lmao",
+        tab: researchTabs[4],
+        buttonName: "Gain stuff",
+        resources: [
+            { name: "health", amount: 1 },
+            { name: "motivation", amount: 1 },
+            { name: "DBH", amount: -0.01 }
+        ],
+        resourcePeriod: 1,
+        progress: 0,
+        workProgress: 0,
+        daysToComplete: Infinity,
+        available: true,
+        requires: null,
+        completed: false,
+        description: `Gives ya stuff. :3`
+    },
+    {
+        id: "rofl",
+        tab: researchTabs[4],
+        buttonName: "Lose stuff",
+        resources: [
+            { name: "health", amount: -1 },
+            { name: "motivation", amount: -1 },
+            { name: "DBH", amount: 0.01 }
+        ],
+        resourcePeriod: 1,
+        progress: 0,
+        workProgress: 0,
+        daysToComplete: Infinity,
+        available: true,
+        requires: null,
+        completed: false,
+        description: `Loses ya stuff. D:`
+    },
+    {
         id: "non_caustic_soap",
         tab: researchTabs[0],
         buttonName: "Research Soapmaking",

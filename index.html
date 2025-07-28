@@ -51,6 +51,7 @@
             <span id="DBHBarText" class="bar-text"></span>
         </div>
     </div>
+
     <h2>Inventory</h2>
     <div class="inventory-box">
         <div class="inventory-container" data-help-id="inventory-help">
@@ -92,17 +93,88 @@
     </section>
     </main>
 
-    <div id="helpOverlay" class="help-overlay">
+    <!-- Overlayed content -->
+    <div id="gameOverlay" class="game-overlay">
+        <!-- Settings -->
+        <div id="settingsContainer" class="settings-container">
+            <h1 class="settings-title">Settings</h1>
+
+            <div class="setting-item">
+                <label for="musicVolume">Music</label>
+                <input type="range" id="musicVolume" name="musicVolume" min="0" max="100" value="0">
+                <span id="musicVolumeValue">0%</span>
+            </div>
+
+            <div class="setting-item">
+                <label for="sfxVolume">SFX</label>
+                <input type="range" id="sfxVolume" name="sfxVolume" min="0" max="100" value="80">
+                <span id="sfxVolumeValue">80%</span>
+            </div>
+
+            <div class="setting-item">
+                <label for="autosaveInterval">Autosave</label>
+                <input type="range" id="autosaveInterval" name="autosaveInterval" min="0" max="60" value="30">
+                <span id="autosaveIntervalValue">30 seconds</span>
+            </div>
+
+            <div class="setting-item">
+                <label for="threshold">Threshold</label>
+                <input type="range" id="threshold" name="threshold" min="0" max="50" value="10">
+                <span id="thresholdValue">10%</span>
+                <input type="checkbox" id="thresholdAlwaysOn" name="thresholdAlwaysOn">
+                <label for="thresholdAlwaysOn">Always active</label>
+                <span id="thresholdTooltip" hidden>This setting will automatically pause the game if you're close to losing after being AFK. Select the checkbox if you want it to apply this while the game is open as well. The threshold will be active again when the resource that triggered it is double the threshold value.</span>
+            </div>
+
+            <div class="setting-item">
+                <label for="emulateWindowSize">Emulate Screen Width</label>
+                <select id="emulateWindowSize" name="emulateWindowSize">
+                    <option value="600">600 px</option>
+                    <option value="800">800 px</option>
+                    <option value="1024">1024 px</option>
+                    <option value="1280">1280 px</option>
+                    <option value="1366">1366 px</option>
+                    <option value="1440">1440 px</option>
+                    <option value="1800">1800 px</option>
+                    <option value="1920">1920 px</option>
+                    <option value="2048">2048 px</option>
+                    <option value="2880">2880 px</option>
+                    <option value="3200">3200 px</option>
+                    <option value="3840">3840 px</option>
+                    <option value="5120">5120 px</option>
+                    <option value="7680">7680 px</option>
+                </select>
+            <span id="emulateWindowSizeTooltip" hidden>This setting changes the apparent width of the game window, which affects the size of the buttons and help arrows. Each panel will always be 1/4 of your actual screen width though.</span>
+            </div>
+
+            <div class="setting-item">
+                <button class="import-save-btn">Import Save</button>
+                <input type="text" id="importSaveTextBox" placeholder="(Paste save text here.)">
+            </div>
+
+            <div class="setting-item">
+                <button class="export-save-btn">Export Save</button>
+            </div>
+
+            <div class="setting-item">
+                <button class="delete-save-btn">Delete Save</button>
+            </div>
+
+            <h2 class="restart-warning">Game will restart after closing!</h2>
+
+            <div class="close-button-container">
+                <button class="close-button">Close</button>
+            </div>
+        </div>
+        <!-- Help text/arrows -->
         <div id="helpTextContainer"></div>
         <svg id="helpArrows" class="help-arrows"></svg>
     </div>
 
     <script type="module">
         import { startGame } from './scripts/game.js';
-
-        // Start after DOM is ready
         window.addEventListener('DOMContentLoaded', () => {
-        startGame();
+            startGame();
         });
     </script>
 </body>
