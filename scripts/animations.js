@@ -16,24 +16,17 @@ export function updateAnimations(currentResearch, currentTask) {
     }
 }
 
-export function addProgressElements(button, dataObject) { // dataObject is either task or research
+export function addProgressElements(button, action) { // action is either task or research
     const progressFill = document.createElement('div');
     progressFill.classList.add('progress-fill');
     button.appendChild(progressFill);
     
-    let initialFill = dataObject.workProgress / common.dayInMilliseconds;
+    let initialFill = action.workProgress / common.dayInMilliseconds;
     progressFill.style.width = `${initialFill * 100}%`;
 }
 
-export function addGlowEffect(itemElement) { // Temporary inventory glow
-    itemElement.classList.add("glow-animation");
-    setTimeout(() => {
-        itemElement.classList.remove("glow-animation");
-    }, 1000);
-}
-
-export function addCompletionProgressBar(button, dataObject) {
-    if (dataObject.daysToComplete === Infinity) {
+export function addCompletionProgressBar(button, action) {
+    if (action.daysToComplete === Infinity || !(action.daysToComplete)) {
         return; // Not completable
     }
 
@@ -42,19 +35,34 @@ export function addCompletionProgressBar(button, dataObject) {
 
     const progressBarFill = document.createElement('div');
     progressBarFill.className = 'completion-progress-bar-fill';
-    progressBarFill.id = `${dataObject.id}-completion-progress-fill`;
+    progressBarFill.id = `${action.id}-completion-progress-fill`;
 
     progressBarContainer.appendChild(progressBarFill);
     button.appendChild(progressBarContainer);
 
-    updateCompletionProgressBar(dataObject);
+    const progressPercentage = (action.progress / action.daysToComplete) * 100;
+    progressBarFill.style.width = `${progressPercentage}%`;
 }
 
-export function updateCompletionProgressBar(dataObject) {
-    const progressBarFill = document.getElementById(`${dataObject.id}-completion-progress-fill`);
+export function updateCompletionProgressBar(action) {
+    const progressBarFill = document.getElementById(`${action.id}-completion-progress-fill`);
 
     if (progressBarFill) {
-        const progressPercentage = (dataObject.progress / dataObject.daysToComplete) * 100;
+        const progressPercentage = (action.progress / action.daysToComplete) * 100;
         progressBarFill.style.width = `${progressPercentage}%`;
     }
+}
+
+export function addUpGlowEffect(itemElement) { // Temporary inventory glow for increased amount
+    itemElement.classList.add("up-glow-animation");
+    setTimeout(() => {
+        itemElement.classList.remove("up-glow-animation");
+    }, 1000);
+}
+
+export function addDownGlowEffect(itemElement) { // Temporary inventory glow for decreased amount
+    itemElement.classList.add("down-glow-animation");
+    setTimeout(() => {
+        itemElement.classList.remove("down-glow-animation");
+    }, 1000);
 }

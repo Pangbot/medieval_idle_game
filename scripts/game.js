@@ -1,4 +1,4 @@
-import { addMainListeners } from "./buttons.js";
+import { addMainListeners, updateTabButtons } from "./buttons.js";
 import { updateResources } from "./resources.js";
 import { updateResearches } from "./research.js";
 import { updateTasks } from "./tasks.js";
@@ -11,8 +11,6 @@ export function startGame() {
     
     window.onload = () => {
 
-        addMainListeners();
-        initialiseSettings();
         common.tabSize = parseInt(common.savedSettings.windowSize) / 30;
 
         if (localStorage.getItem("saveData")) {
@@ -29,7 +27,10 @@ export function startGame() {
             changeAutosaveInterval();
         }
 
-        
+        addMainListeners();
+        updateTabButtons("researchTabs");
+        updateTabButtons("taskTabs");
+        initialiseSettings();
         console.log("Loaded!");
     };
 }

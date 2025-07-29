@@ -10,21 +10,44 @@ import { changeTaskTab, currentTaskTab, updateTasks } from "./tasks.js";
 import { addProgressElements, addCompletionProgressBar } from "./animations.js";
 import common from "./common.js";
 
+export let buttonClickSound = new Audio("../audio/button_click.mp3");
+let isSoundLoaded = true;
+
+export function playButtonClickSound() {
+    if (isSoundLoaded) {
+        buttonClickSound.play();
+    }
+}
+
 export function addMainListeners() {
+    if (!buttonClickSound) {
+        console.error("button_click.mp3 not found in audio folder.")
+        isSoundLoaded = false;
+    }
+
     const saveButton = document.getElementById("saveBtn");
-    saveButton.addEventListener("click", saveGame);
+    saveButton.addEventListener("click", () => {
+        saveGame();
+        playButtonClickSound();
+    });
 
     const helpButton = document.getElementById("helpBtn");
-    helpButton.addEventListener("click", showHelp);
+    helpButton.addEventListener("click", () => {
+        showHelp();
+        playButtonClickSound();
+    });
 
     const settingsButton = document.getElementById("settingsBtn");
-    settingsButton.addEventListener("click", showSettings);
+    settingsButton.addEventListener("click", () => {
+        showSettings();
+        playButtonClickSound();
+    });
 
     createTabButtons("researchTabs", researchTabs, changeResearchTab);
     createTabButtons("taskTabs", taskTabs, changeTaskTab);
 }
 
-function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Only used for initialisation
+function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Used for initialisation and updating tabSize
     const container = document.getElementById(containerID);
     if (!container) {
         console.error(`Container with ID '${containerID}' not found for tab buttons.`);
@@ -40,10 +63,6 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Onl
         const firstLetter = tabID.charAt(0).toUpperCase();
         button.dataset.description = firstLetter + tabID.slice(1).replace('-', ' ');
 
-        if (tabID === taskTabs[0] || tabID === researchTabs[0]) {
-            button.classList.add('active-button');
-        }
-
         const icon = document.createElement("img");
         icon.src = `icons/` + tabID + `.png`;
         icon.width = common.tabSize;
@@ -52,6 +71,7 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Onl
 
         button.addEventListener("click", () => {
             changeTabFunction(tabID);
+            playButtonClickSound();
         });
 
         button.addEventListener("mouseover", (event) => {
@@ -120,7 +140,7 @@ export function updateTabButtons(containerID) {
     });
 }
 
-export function createTabResearchButtons(container, researches) {
+export function createResearchButtons(container, researches) {
     if (!researches || researches.length === 0) {
         const messageDiv = document.createElement("div");
         messageDiv.textContent = `No researches available in this tab. :(`;
@@ -151,7 +171,7 @@ export function createTabResearchButtons(container, researches) {
             if (button.classList.contains('selected-button')) {
                 button.classList.remove('selected-button');
             } else {
-                const researchButtonsContainer = document.getElementById('resInTabBtns');
+                const researchButtonsContainer = document.getElementById('researchBtns');
                 const allSelectableButtons = researchButtonsContainer.querySelectorAll('.progress-button');
                 allSelectableButtons.forEach(btn => {
                     btn.classList.remove('selected-button');
@@ -160,6 +180,7 @@ export function createTabResearchButtons(container, researches) {
                 button.classList.add('selected-button');
             }
             changeResearch(research.id);
+            playButtonClickSound();
         });
 
         button.addEventListener("mouseover", (event) => {
@@ -181,7 +202,7 @@ export function createTabResearchButtons(container, researches) {
     });
 }
 
-export function createTabTaskButtons(container, tasks) {
+export function createTaskButtons(container, tasks) {
     if (!tasks || tasks.length === 0) {
         const messageDiv = document.createElement("div");
         messageDiv.textContent = `No tasks available in this tab. :(`;
@@ -212,7 +233,7 @@ export function createTabTaskButtons(container, tasks) {
             if (button.classList.contains('selected-button')) {
                 button.classList.remove('selected-button');
             } else {
-                const taskButtonsContainer = document.getElementById('taskInTabBtns');
+                const taskButtonsContainer = document.getElementById('taskBtns');
                 const allSelectableButtons = taskButtonsContainer.querySelectorAll('.progress-button');
                 allSelectableButtons.forEach(btn => {
                     btn.classList.remove('selected-button');
@@ -221,6 +242,7 @@ export function createTabTaskButtons(container, tasks) {
                 button.classList.add('selected-button');
             }
             changeTask(task.id);
+            playButtonClickSound();
         });
 
         button.addEventListener("mouseover", (event) => {
@@ -242,7 +264,7 @@ export function createTabTaskButtons(container, tasks) {
     });
 }
 
-export function unselectCurrentActions() {
+export function unselectCurrentActions() { // Same behaviour as clicking on both active actions
     const taskButtonsContainer = document.getElementById('taskTabs');
     const researchButtonsContainer = document.getElementById('researchTabs');
 
@@ -270,8 +292,9 @@ export function unselectCurrentActions() {
 const customTooltip = document.getElementById("customTooltip");
 
 export function showCustomTooltip(message, x, y) {
-    if (!customTooltip) return;
-
+    if (!customTooltip) {
+        return;
+    }
     customTooltip.innerHTML = message;
     // Position it slightly offset from the mouse cursor
     customTooltip.style.left = `${x + 15}px`;
@@ -282,7 +305,9 @@ export function showCustomTooltip(message, x, y) {
 }
 
 export function hideCustomTooltip() {
-    if (!customTooltip) return;
+    if (!customTooltip) {
+        return;
+    }
     customTooltip.style.opacity = 0;
     customTooltip.style.visibility = 'hidden';
     customTooltip.style.transform = 'translateY(-5px)';

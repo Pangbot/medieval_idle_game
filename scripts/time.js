@@ -36,25 +36,20 @@ function advanceGameTime() {
     while (accumulatedTime >= common.dayInMilliseconds) {
         adjustResource("day", 1);
         updateDate();
+        updateResources(); // In case there are effects to resources not caused directly from actions
 
-        if (player.selectedResearchID) {
-            updateResearchProgress();
-        }
-        if (player.selectedTaskID) {
-            updateTaskProgress();
-        }
-
-        updateResources();
         accumulatedTime -= common.dayInMilliseconds;
 
         if (common.savedSettings.thresholdAlwaysOn && thresholdReached()) {
             currentResearch.workProgress += deltaTime;
             while (currentResearch.workProgress >= common.dayInMilliseconds) {
+                updateResearchProgress();
                 currentResearch.workProgress -= common.dayInMilliseconds;
             }
 
             currentTask.workProgress += deltaTime;
             while (currentTask.workProgress >= common.dayInMilliseconds) {
+                updateTaskProgress();
                 currentTask.workProgress -= common.dayInMilliseconds;
             }
 
@@ -76,12 +71,14 @@ function advanceGameTime() {
             if (player.selectedResearchID) {
                 currentResearch.workProgress += remainingTask;
                 while (currentResearch.workProgress >= common.dayInMilliseconds) {
+                    updateResearchProgress();
                     currentResearch.workProgress -= common.dayInMilliseconds;
                 }
             }
             else if (player.selectedTaskID) {
                 currentTask.workProgress += remainingRes;
                 while (currentTask.workProgress >= common.dayInMilliseconds) {
+                    updateTaskProgress();
                     currentTask.workProgress -= common.dayInMilliseconds;
                 }
             }
@@ -93,6 +90,7 @@ function advanceGameTime() {
     if (currentResearch) {
         currentResearch.workProgress += deltaTime;
         while (currentResearch.workProgress >= common.dayInMilliseconds) {
+            updateResearchProgress();
             currentResearch.workProgress -= common.dayInMilliseconds;
         }
         remainingRes = common.dayInMilliseconds - currentResearch.workProgress;
@@ -101,11 +99,13 @@ function advanceGameTime() {
     if (currentTask) {
         currentTask.workProgress += deltaTime;
         while (currentTask.workProgress >= common.dayInMilliseconds) {
+            updateTaskProgress();
             currentTask.workProgress -= common.dayInMilliseconds;
         }
         remainingTask = common.dayInMilliseconds - currentTask.workProgress;
     }
 
+    updateResources();
     updateAnimations(currentResearch, currentTask);
 }
 

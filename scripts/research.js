@@ -1,30 +1,46 @@
-// Handles the research area
+// Handles the research panel
 import { player, adjustResource, changeResearch } from "./player.js"
 import { researchTabs, allResearches } from "./data/researchList.js"
-import { createTabResearchButtons, updateTabButtons } from "./buttons.js";
+import { createResearchButtons, updateTabButtons } from "./buttons.js";
 import common from "./common.js";
 import { stopClock } from './time.js';
 import { updateTasks } from "./tasks.js";
 import { updateCompletionProgressBar } from "./animations.js";
 
-let currentResearchTab = researchTabs[0];
-let availableResearches = allResearches.filter(research => research.available === true);
+export let currentResearchTab = researchTabs[0];
+export let allResearchesUpdated;
+export let availableResearches = allResearches.filter(research => research.available === true);
 let researchesInTab = availableResearches.filter(research => research.tab === currentResearchTab);
 
-function loadResearches(data) {
-    availableResearches = data;
+export function loadResearches(data) {
+    const loadedResearchesMap = new Map();
+    data.forEach(loadedResearch => {
+        loadedResearchesMap.set(loadedResearch.id, loadedResearch);
+    });
+
+    allResearches.forEach(research => {
+        const matchingLoadedResearch = loadedResearchesMap.get(research.id);
+
+        if (matchingLoadedResearch) {
+            Object.assign(research, matchingLoadedResearch);
+        }
+    });
+
+    allResearchesUpdated = allResearches;
+
+    availableResearches = allResearchesUpdated.filter(research => research.available === true && research.completed === false);
     researchesInTab = availableResearches.filter(research => research.tab === currentResearchTab);
-    updateResearches();
+    createResearches();
 }
 
-function loadCurrentResearchTab(tab) {
+export function loadCurrentResearchTab(tab) {
     currentResearchTab = tab;
     changeResearchTab(tab);
     updateTabButtons("researchTabs");
     updateResearches();
 }
 
-function updateResearches() {
+export function updateResearches() {
     allResearches.forEach(research => {
         if (research.completed) {
             research.available = false;
@@ -40,18 +56,20 @@ function updateResearches() {
             research.available = allRequiredCompleted;
         }
     });
+
+    allResearchesUpdated = allResearches;
     availableResearches = allResearches.filter(research => research.available === true);
     researchesInTab = availableResearches.filter(research => research.tab === currentResearchTab);
-    createTabResearches();
+    createResearches();
 }
 
-function createTabResearches() {
-    const researchInTabContainer = document.getElementById("resInTabBtns");
-    researchInTabContainer.innerHTML = '';
-    createTabResearchButtons(researchInTabContainer, researchesInTab);
+function createResearches() {
+    const researchContainer = document.getElementById("researchBtns");
+    researchContainer.innerHTML = '';
+    createResearchButtons(researchContainer, researchesInTab);
 }
 
-function changeResearchTab(targetTab) {
+export function changeResearchTab(targetTab) {
     if (!researchTabs.includes(targetTab)) {
         console.error(`Tab ${targetTab} not found in researchTabs (${researchTabs}).`)
     }
@@ -83,7 +101,7 @@ function changeResearchTab(targetTab) {
     }
 }
 
-function updateResearchProgress() {
+export function updateResearchProgress() {
     const currentResearch = common.researchMap.get(player.selectedResearchID);
 
     if (!currentResearch) {
@@ -94,7 +112,6 @@ function updateResearchProgress() {
     }
 
     currentResearch.progress += 1;
-    updateCompletionProgressBar(currentResearch);
 
     if (currentResearch.progress % currentResearch.resourcePeriod == 0) {
         currentResearch.resources.forEach(resourceObj => {
@@ -102,15 +119,25 @@ function updateResearchProgress() {
         });
     }
 
-    if (currentResearch.progress >= currentResearch.daysToComplete) {
-        currentResearch.completed = true;
-        currentResearch.available = false;
-        player.completed.add(player.selectedResearchID)
+    if (isValidCompletionTime(currentResearch)) {
+        updateCompletionProgressBar(currentResearch);
 
-        changeResearch(null);
-        updateResearches();
-        updateTasks();
+        if (currentResearch.progress >= currentResearch.daysToComplete) {
+            currentResearch.completed = true;
+            currentResearch.available = false;
+            player.completed.add(currentResearch.id);
+            changeResearch(null);
+            updateResearches();
+            updateTasks();
+        }
     }
 }
 
-export { availableResearches, loadResearches, loadCurrentResearchTab, updateResearches, currentResearchTab, changeResearchTab, updateResearchProgress }
+function isValidCompletionTime(currentResearch) {
+    if (currentResearch.daysToComplete !== null && currentResearch.daysToComplete !== Infinity) {
+        return true
+    }
+    else {
+        return false
+    }
+}

@@ -97,29 +97,51 @@ h3 {
     max-height: 80px;
     overflow-y: auto;
     padding-right: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    justify-items: center;
 }
 
 .inventory-item {
     padding: 3px;
-    transition: background-color 1s ease-out, box-shadow 1s ease-out;
 }
 
-.inventory-item.glow-animation {
-    animation: glowAndFade 1s ease-out forwards;
+.inventory-item.up-glow-animation {
+    animation: upGlowAndFade 1s ease-out forwards;
 }
 
-@keyframes glowAndFade {
+.inventory-item.down-glow-animation {
+    animation: downGlowAndFade 1s ease-out forwards;
+}
+
+@keyframes upGlowAndFade {
     0% {
         background-color: transparent;
-        box-shadow: 0 0 0px rgba(167, 217, 180, 0);
+        box-shadow: 0 0 0px #A7D9B400;
     }
     50% {
-        background-color: rgba(167, 217, 180, 0.7);
-        box-shadow: 0 0 15px rgba(167, 217, 180, 1);
+        background-color: #A7D9B4B3;
+        box-shadow: 0 0 15px #A7D9B4FF;
     }
     100% {
         background-color: transparent;
-        box-shadow: 0 0 0px rgba(167, 217, 180, 0);
+        box-shadow: 0 0 0px #A7D9B400;
+    }
+}
+
+@keyframes downGlowAndFade {
+    0% {
+        background-color: transparent;
+        box-shadow: 0 0 0px #FF000000;
+    }
+    50% {
+        background-color: #FF0000B3;
+        box-shadow: 0 0 15px #FF0000FF;
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: 0 0 0px #FF000000;
     }
 }
 
@@ -148,9 +170,9 @@ h3 {
 }
 
 /* Tabs and tab buttons */
-#resInTabBtns,
-#taskInTabBtns {
-    width: fit-content;
+#researchBtns,
+#taskBtns {
+    width: 60%;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -162,7 +184,7 @@ h3 {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 5px;
+    padding: 10px;
     justify-content: center;
 }
 
@@ -177,7 +199,7 @@ h3 {
 }
 
 .tab-button.selected-button {
-    background-color: yellow;
+    background-color: #B85C2E;
 }
 
 /* Progress buttons */
@@ -245,7 +267,7 @@ h3 {
 /* Completion progress bars */
 .completion-progress-bar-container {
     width: 100%;
-    background-color: #e0e0e0;
+    background-color: #E0E0E0;
     border-radius: 5px;
     border-color: #36453B;
     border-width: 1px;

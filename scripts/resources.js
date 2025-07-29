@@ -1,16 +1,23 @@
 // Handles the visual aspect of the resources panel
 import { player } from "./player.js";
 import common from "./common.js";
-import { addGlowEffect } from "./animations.js";
+import { addUpGlowEffect, addDownGlowEffect } from "./animations.js";
 
 export function updateResources() {
-    updateMoneyDisplay();
+    // Filter out inventory items with 0 amount
+    player.resources = player.resources.filter(resource => {
+        if (resource.name === "money" || resource.name === "health" || resource.name === "motivation" || resource.name === "DBH") {
+            return true;
+        }
+        return resource.amount > 0;
+    });
 
     const getResourceAmount = (name) => {
         const resource = player.resources.find(resource => resource.name === name);
         return resource.amount;
     };
 
+    updateMoneyDisplay();
     updateBar("health", getResourceAmount("health"), 100);
     updateBar("motivation", getResourceAmount("motivation"), 100);
 
@@ -109,30 +116,52 @@ function updateInventory() {
         return;
     }
 
-    // Record current inventory state for comparison later
-    const currentInventoryState = {};
+    // Create a map of existing inventory item elements
+    const existingItemElements = {};
     inventoryContainer.querySelectorAll('.inventory-item').forEach(itemElement => {
         const name = itemElement.dataset.itemName;
-        const amount = parseFloat(itemElement.dataset.itemAmount);
-        currentInventoryState[name] = amount;
+        existingItemElements[name] = itemElement;
     });
 
-    inventoryContainer.innerHTML = '';
+    const currentInventoryState = {};
 
     for (let i = 5; i < player.resources.length; i++) {
         const item = player.resources[i];
-        
-        const itemElement = document.createElement("div");
-        itemElement.classList.add("inventory-item");
-        itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
-        itemElement.dataset.itemName = item.name;
-        itemElement.dataset.itemAmount = item.amount;
+        let itemElement = existingItemElements[item.name];
 
-        inventoryContainer.appendChild(itemElement);
+        if (itemElement) {
+            // Item already exists in inventory
+            const oldAmount = parseFloat(itemElement.dataset.itemAmount);
+            itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
+            itemElement.dataset.itemAmount = item.amount;
 
-        // Glow if the item is new or its amount has changed
-        if (!currentInventoryState[item.name] || currentInventoryState[item.name] !== item.amount) {
-            addGlowEffect(itemElement);
+            currentInventoryState[item.name] = oldAmount;
+            delete existingItemElements[item.name];
+
+            if (oldAmount < item.amount) {
+                addUpGlowEffect(itemElement);
+            }
+            else if (oldAmount > item.amount) {
+                addDownGlowEffect(itemElement);
+            }
+        } else {
+            // Item is new to inventory
+            itemElement = document.createElement("div");
+            itemElement.classList.add("inventory-item");
+            itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
+            itemElement.dataset.itemName = item.name;
+            itemElement.dataset.itemAmount = item.amount;
+
+            inventoryContainer.appendChild(itemElement);
+
+            currentInventoryState[item.name] = 0;
+            addUpGlowEffect(itemElement);
+        }
+    }
+
+    for (const name in existingItemElements) {
+        if (existingItemElements.hasOwnProperty(name)) {
+            inventoryContainer.removeChild(existingItemElements[name]);
         }
     }
 }

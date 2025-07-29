@@ -1,56 +1,73 @@
-// Handles the tasks area
+// Handles the tasks panel
 import { player, adjustResource, changeTask } from "./player.js"
 import { allTasks, taskTabs } from "./data/taskList.js"
-import { createTabTaskButtons, updateTabButtons } from './buttons.js'
+import { createTaskButtons, updateTabButtons } from './buttons.js'
 import common from "./common.js";
 import { stopClock } from "./time.js";
 import { updateResearches } from "./research.js";
 import { updateCompletionProgressBar } from "./animations.js";
 
-let currentTaskTab = taskTabs[0];
-let availableTasks = allTasks.filter(task => task.available === true);
+export let currentTaskTab = taskTabs[0];
+export let allTasksUpdated;
+export let availableTasks = allTasks.filter(task => task.available === true);
 let tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
 
-function loadTasks(data) {
-    availableTasks = data;
-    createTabTasks();
+export function loadTasks(data) {
+    const loadedTasksMap = new Map();
+    data.forEach(loadedTask => {
+        loadedTasksMap.set(loadedTask.id, loadedTask);
+    });
+
+    allTasks.forEach(task => {
+        const matchingLoadedTask = loadedTasksMap.get(task.id);
+
+        if (matchingLoadedTask) {
+            Object.assign(task, matchingLoadedTask);
+        }
+    });
+    
+    allTasksUpdated = allTasks;
+    availableTasks = allTasksUpdated.filter(task => task.available === true);
+    tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
+    createTasks();
 }
 
-function loadCurrentTaskTab(tab) {
+export function loadCurrentTaskTab(tab) {
     currentTaskTab = tab;
     changeTaskTab(tab);
     updateTabButtons("taskTabs");
     updateTasks();
 }
 
-function updateTasks() {
+export function updateTasks() {
     allTasks.forEach(task => {
-            if (task.completed) {
-                task.available = false;
-                return;
-            }
-    
-            if (task.requires === null) {
-                task.available = true;
-            } else {
-                const allRequiredCompleted = task.requires.every(requiredId =>
-                    player.completed.has(requiredId)
-                );
-                task.available = allRequiredCompleted;
-            }
-        });
-        availableTasks = allTasks.filter(task => task.available === true);
-        tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
-        createTabTasks();
+        if (task.completed) {
+            task.available = false;
+            return;
+        }
+
+        if (task.requires === null) {
+            task.available = true;
+        } else {
+            const allRequiredCompleted = task.requires.every(requiredID =>
+                player.completed.has(requiredID)
+            );
+            task.available = allRequiredCompleted;
+        }
+    });
+    allTasksUpdated = allTasks;
+    availableTasks = allTasksUpdated.filter(task => task.available === true);
+    tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
+    createTasks();
 }
 
-function createTabTasks() {
-    const taskInTabContainer = document.getElementById("taskInTabBtns");
-    taskInTabContainer.innerHTML = '';
-    createTabTaskButtons(taskInTabContainer, tasksInTab);
+function createTasks() {
+    const taskContainer = document.getElementById("taskBtns");
+    taskContainer.innerHTML = '';
+    createTaskButtons(taskContainer, tasksInTab);
 }
 
-function changeTaskTab(targetTab) {
+export function changeTaskTab(targetTab) {
     if (!taskTabs.includes(targetTab)) {
         console.error(`Tab ${targetTab} not found in taskTabs (${taskTabs}).`)
     }
@@ -82,7 +99,7 @@ function changeTaskTab(targetTab) {
         }
 }
 
-function updateTaskProgress() {
+export function updateTaskProgress() {
     const currentTask = common.taskMap.get(player.selectedTaskID);
 
     if (!currentTask) {
@@ -93,7 +110,6 @@ function updateTaskProgress() {
     }
 
     currentTask.progress += 1;
-    updateCompletionProgressBar(currentTask);
 
     if (currentTask.progress % currentTask.resourcePeriod == 0) {
         currentTask.resources.forEach(resourceObj => {
@@ -102,10 +118,15 @@ function updateTaskProgress() {
     }
 
     // Check if it's completable
-    if (currentTask.daysToComplete) {
+    if (isValidCompletionTime(currentTask)) {
+        updateCompletionProgressBar(currentTask);
+
         if (currentTask.progress >= currentTask.daysToComplete) {
             currentTask.completed = true;
             currentTask.available = false;
+
+            player.completed.add(currentTask.id);
+            availableTasks = availableTasks.filter(task => task.available === true);
 
             // Not exactly elegant, but does the job. Maybe make this more modular if multiple different tasks unlock things.
             if (currentTask.id === "examine_arrival_area") {
@@ -119,4 +140,11 @@ function updateTaskProgress() {
     }
 }
 
-export { availableTasks, loadTasks, loadCurrentTaskTab, updateTasks, currentTaskTab, changeTaskTab, updateTaskProgress }
+function isValidCompletionTime(currentTask) {
+    if (currentTask.daysToComplete !== null && currentTask.daysToComplete !== Infinity) {
+        return true
+    }
+    else {
+        return false
+    }
+}

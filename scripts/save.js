@@ -4,7 +4,14 @@ import common from './common.js';
 let autosaveTimer = null; // Holds ID for autosave interval
 
 export function saveGame() {
-    let state = common.getGameState()
+    let state = common.getGameState();
+
+    let playerCopy = { ...state.player };
+
+    // Need to convert set to array for stringify
+    playerCopy.completed = Array.from(playerCopy.completed);
+    state.player = playerCopy;
+
     localStorage.setItem("saveData", JSON.stringify(state))
     console.log("Game saved")
     console.log(state)
@@ -12,7 +19,6 @@ export function saveGame() {
 
 export function loadGame() {
     const raw = localStorage.getItem("saveData");
-    // console.log(raw)
     if (raw) {
         common.setGameState(JSON.parse(raw))
         startAutosave();
@@ -27,6 +33,7 @@ export function importSave(saveString) {
     if (isValidSave(saveString)) {
         common.setGameState(JSON.parse(saveString));
         saveGame();
+        common.notify(`Save imported successfully! :D`)
     }
     else {
         common.notify(`Save string is invalid. :/`)

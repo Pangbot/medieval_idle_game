@@ -68,7 +68,7 @@
         <div class="tabs" id="researchTabs">
             <!-- Dynamically add research tabs -->
         </div>
-        <div class="buttons" id="resInTabBtns">
+        <div class="buttons" id="researchBtns">
             <!-- Buttons of a specfic tab shown here -->
         </div>
     </section>
@@ -79,7 +79,7 @@
         <div class="tabs" id="taskTabs">
             <!-- Dynamically add task tabs -->
         </div>
-        <div class="buttons" id="taskInTabBtns">
+        <div class="buttons" id="taskBtns">
             <!-- Buttons of a specfic tab shown here -->
         </div>
     </section>
@@ -99,16 +99,19 @@
         <div id="settingsContainer" class="settings-container">
             <h1 class="settings-title">Settings</h1>
 
+            <!-- Commenting out music option for now
             <div class="setting-item">
                 <label for="musicVolume">Music</label>
                 <input type="range" id="musicVolume" name="musicVolume" min="0" max="100" value="0">
                 <span id="musicVolumeValue">0%</span>
             </div>
+            -->
 
             <div class="setting-item">
                 <label for="sfxVolume">SFX</label>
                 <input type="range" id="sfxVolume" name="sfxVolume" min="0" max="100" value="80">
                 <span id="sfxVolumeValue">80%</span>
+                <button id="sfxTestButton">SFX Test</button>
             </div>
 
             <div class="setting-item">
@@ -123,7 +126,7 @@
                 <span id="thresholdValue">10%</span>
                 <input type="checkbox" id="thresholdAlwaysOn" name="thresholdAlwaysOn">
                 <label for="thresholdAlwaysOn">Always active</label>
-                <span id="thresholdTooltip" hidden>This setting will automatically pause the game if you're close to losing after being AFK. Select the checkbox if you want it to apply this while the game is open as well. The threshold will be active again when the resource that triggered it is double the threshold value.</span>
+                <span id="thresholdTooltip" hidden></span>
             </div>
 
             <div class="setting-item">
@@ -144,7 +147,7 @@
                     <option value="5120">5120 px</option>
                     <option value="7680">7680 px</option>
                 </select>
-            <span id="emulateWindowSizeTooltip" hidden>This setting changes the apparent width of the game window, which affects the size of the buttons and help arrows. Each panel will always be 1/4 of your actual screen width though.</span>
+            <span id="emulateWindowSizeTooltip" hidden></span>
             </div>
 
             <div class="setting-item">
