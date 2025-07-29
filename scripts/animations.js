@@ -1,16 +1,19 @@
 // Handles animating task/research buttons and any other animations I think of adding
 import common from "./common.js";
-import { player } from "./player.js";
 
 export function updateAnimations(currentResearch, currentTask) {
-    const researchButton = document.querySelector(`button[data-research-i-d="${player.selectedResearchID}"]`);
-    const taskButton = document.querySelector(`button[data-task-i-d="${player.selectedTaskID}"]`);
+    if (!(currentResearch) || !(currentTask)) {
+        return;
+    }
+    const researchButton = document.querySelector(`button[data-research-i-d="${currentResearch.id}"]`);
+    const taskButton = document.querySelector(`button[data-task-i-d="${currentTask.id}"]`);
     
-    if ((researchButton) && (currentResearch)) {
+    if (researchButton) {
         const resProgressFill = researchButton.querySelector('.progress-fill');
         resProgressFill.style.width = `${currentResearch.workProgress / common.dayInMilliseconds * 100}%`;
     }
-    if ((taskButton) && (currentTask)) {
+
+    if (taskButton) {
         const taskProgressFill = taskButton.querySelector('.progress-fill');
         taskProgressFill.style.width = `${currentTask.workProgress / common.dayInMilliseconds * 100}%`;
     }

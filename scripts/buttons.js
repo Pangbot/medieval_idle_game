@@ -50,18 +50,18 @@ export function addMainListeners() {
 function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Used for initialisation and updating tabSize
     const container = document.getElementById(containerID);
     if (!container) {
-        console.error(`Container with ID '${containerID}' not found for tab buttons.`);
+        console.error(`Container with ID "${containerID}" not found for tab buttons.`);
         return;
     }
 
-    container.innerHTML = '';
+    container.innerHTML = "";
 
     tabDataArray.forEach((tabID) => {
         const button = document.createElement("button");
         button.id = tabID;
         button.classList.add("tab-button");
         const firstLetter = tabID.charAt(0).toUpperCase();
-        button.dataset.description = firstLetter + tabID.slice(1).replace('-', ' ');
+        button.dataset.description = firstLetter + tabID.slice(1).replace("-", " ");
 
         const icon = document.createElement("img");
         icon.src = `icons/` + tabID + `.png`;
@@ -97,18 +97,18 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Use
 export function updateTabButtons(containerID) {
     const container = document.getElementById(containerID);
     if (!container) {
-        console.error(`Container with ID '${containerID}' not found for tab buttons.`);
+        console.error(`Container with ID "${containerID}" not found for tab buttons.`);
         return;
     }
 
-    const tabButtons = container.querySelectorAll('.tab-button');
+    const tabButtons = container.querySelectorAll(".tab-button");
     if (!tabButtons) {
-        console.error(`Container with ID '${containerID}' has no tab buttons.`);
+        console.error(`Container with ID "${containerID}" has no tab buttons.`);
         return;
     }
 
     tabButtons.forEach(button => {
-        button.classList.remove('selected-button', 'active-button');
+        button.classList.remove("selected-button", "active-button");
     })
 
     let currentTabID = null;
@@ -128,58 +128,123 @@ export function updateTabButtons(containerID) {
 
     tabButtons.forEach(tabButton => {
         if (tabButton.id === currentTabID) {
-            tabButton.classList.add('active-button');
+            tabButton.classList.add("active-button");
 
             if ((selectedActionTabID) && tabButton.id === selectedActionTabID) {
-                tabButton.classList.add('selected-button');
+                tabButton.classList.add("selected-button");
             }
         }
         else if ((selectedActionTabID) && tabButton.id === selectedActionTabID) {
-            tabButton.classList.add('selected-button');
+            tabButton.classList.add("selected-button");
         }
     });
 }
 
-export function createResearchButtons(container, researches) {
-    if (!researches || researches.length === 0) {
+export function createActionButtons(containerID, actions, type) {
+    const container = document.getElementById(containerID);
+    if (!container) {
+        console.error(`Container with ID "${containerID}" not found for ${type} buttons.`);
+        return;
+    }
+    
+    if (!actions || actions.length === 0) {
         const messageDiv = document.createElement("div");
-        messageDiv.textContent = `No researches available in this tab. :(`;
+        messageDiv.textContent = `No ${type} available in this tab. :(`;
         container.appendChild(messageDiv);
         return;
     }
 
-    researches.forEach(research => {
+    actions.forEach(action => {
         const button = document.createElement("button");
 
-        const span = document.createElement('span');
-        span.textContent = research.buttonName;
+        const span = document.createElement("span");
+        span.textContent = action.buttonName;
         button.appendChild(span);
 
         button.classList.add("progress-button");
-        button.dataset.tabID = research.tab;
-        button.dataset.researchID = research.id;
-        button.dataset.description = research.description;
+        button.dataset.tabID = action.tab;
 
-        addProgressElements(button, research);
-        addCompletionProgressBar(button, research);
+        if (type === "tasks") {
+            button.dataset.taskID = action.id;
+        } else if (type === "researches") {
+            button.dataset.researchID = action.id;
+        }
 
-        if (button.dataset.researchID === player.selectedResearchID) {
-            button.classList.add('selected-button');
+        let description = action.description;
+
+        // Filter out bar resources and only include resources that are consumed
+        const filteredResources = action.resources.filter(resource =>
+            resource.name !== "health" &&
+            resource.name !== "motivation" &&
+            resource.name !== "DBH" &&
+            resource.amount < 0
+        );
+
+        if (filteredResources.length > 0) {
+            description += "<br><br>Required to run:<br>";
+            filteredResources.forEach(resource => {
+                if (resource.amount === -1) {
+                    description += `${Math.abs(resource.amount)} ${resource.name.slice(0, -1)}<br>`;
+                } else {
+                    description += `${Math.abs(resource.amount)} ${resource.name}<br>`;
+                }
+            });
+        }
+
+        if (!ableToRunAction(action)) {
+            description += "<br><b>(insufficient resources)</b>";
+            button.disabled = true;
+            button.classList.add("unavailable-action");
+        } else {
+            button.disabled = false;
+            button.classList.remove("unavailable-action");
+        }
+
+        button.dataset.description = description;
+
+        addProgressElements(button, action);
+        addCompletionProgressBar(button, action);
+
+        // Handle selected state based on type
+        if (type === "tasks") {
+            if (button.dataset.taskID === player.selectedTaskID && ableToRunAction(action)) {
+                button.classList.add("selected-button");
+            } else if (button.dataset.taskID === player.selectedTaskID && !(ableToRunAction(action))) {
+                button.classList.remove("selected-button");
+                changeTask(null);
+            }
+        } else if (type === "researches") {
+            if (button.dataset.researchID === player.selectedResearchID && ableToRunAction(action)) {
+                button.classList.add("selected-button");
+            } else if (button.dataset.researchID === player.selectedResearchID && !(ableToRunAction(action))) {
+                button.classList.remove("selected-button");
+                changeResearch(null);
+            }
         }
 
         button.addEventListener("click", () => {
-            if (button.classList.contains('selected-button')) {
-                button.classList.remove('selected-button');
+            if (button.disabled) {
+                return;
+            }
+
+            if (button.classList.contains("selected-button")) {
+                button.classList.remove("selected-button");
             } else {
-                const researchButtonsContainer = document.getElementById('researchBtns');
-                const allSelectableButtons = researchButtonsContainer.querySelectorAll('.progress-button');
+                const actionButtonsContainer = document.getElementById(`${type === "tasks" ? "taskBtns" : "researchBtns"}`);
+                const allSelectableButtons = actionButtonsContainer.querySelectorAll(".progress-button");
                 allSelectableButtons.forEach(btn => {
-                    btn.classList.remove('selected-button');
+                    btn.classList.remove("selected-button");
                 });
 
-                button.classList.add('selected-button');
+                button.classList.add("selected-button");
             }
-            changeResearch(research.id);
+
+            // Call the appropriate change function
+            if (type === "tasks") {
+                changeTask(action.id);
+            } else if (type === "researches") {
+                changeResearch(action.id);
+            }
             playButtonClickSound();
         });
 
@@ -202,83 +267,88 @@ export function createResearchButtons(container, researches) {
     });
 }
 
-export function createTaskButtons(container, tasks) {
-    if (!tasks || tasks.length === 0) {
+export function updateActionButtons(containerID, actions, type) {
+    const container = document.getElementById(containerID);
+    if (!container) {
+        console.error(`Container with ID "${containerID}" not found for ${type} buttons.`);
+        return;
+    }
+
+    if (!actions || actions.length === 0) {
         const messageDiv = document.createElement("div");
-        messageDiv.textContent = `No tasks available in this tab. :(`;
+        messageDiv.textContent = `No ${type} available in this tab. :(`;
         container.appendChild(messageDiv);
         return;
     }
 
-    tasks.forEach(task => {
-        const button = document.createElement("button");
-
-        const span = document.createElement('span');
-        span.textContent = task.buttonName;
-        button.appendChild(span);
-
-        button.classList.add("progress-button");
-        button.dataset.tabID = task.tab;
-        button.dataset.taskID = task.id;
-        button.dataset.description = task.description;
-
-        addProgressElements(button, task);
-        addCompletionProgressBar(button, task);
-
-        if (button.dataset.taskID === player.selectedTaskID) {
-            button.classList.add('selected-button');
+    actions.forEach(action => {
+        let button;
+        if (type === "tasks") {
+            button = container.querySelector(`[data-task-i-d="${action.id}"]`);
+        } else if (type === "researches") {
+            button = container.querySelector(`[data-research-i-d="${action.id}"]`);
         }
 
-        button.addEventListener("click", () => {
-            if (button.classList.contains('selected-button')) {
-                button.classList.remove('selected-button');
-            } else {
-                const taskButtonsContainer = document.getElementById('taskBtns');
-                const allSelectableButtons = taskButtonsContainer.querySelectorAll('.progress-button');
-                allSelectableButtons.forEach(btn => {
-                    btn.classList.remove('selected-button');
-                });
+        let description = action.description;
 
-                button.classList.add('selected-button');
+        const filteredResources = action.resources.filter(resource =>
+            resource.name !== "health" &&
+            resource.name !== "motivation" &&
+            resource.name !== "DBH" &&
+            resource.amount < 0
+        );
+
+        if (filteredResources.length > 0) {
+            description += "<br><br>Required to run:<br>";
+            filteredResources.forEach(resource => {
+                if (resource.amount === -1) {
+                    description += `${Math.abs(resource.amount)} ${resource.name.slice(0, -1)}<br>`;
+                } else {
+                    description += `${Math.abs(resource.amount)} ${resource.name}<br>`;
+                }
+            });
+        }
+
+        if (!ableToRunAction(action)) {
+            description += "<br><b>(insufficient resources)</b>";
+            button.disabled = true;
+            button.classList.add("unavailable-action");
+        } else {
+            button.disabled = false;
+            button.classList.remove("unavailable-action");
+        }
+
+        if (type === "tasks") {
+            if (button.dataset.taskID === player.selectedTaskID && !(ableToRunAction(action))) {
+                button.classList.remove("selected-button");
+                changeTask(null);
             }
-            changeTask(task.id);
-            playButtonClickSound();
-        });
-
-        button.addEventListener("mouseover", (event) => {
-            const description = event.currentTarget.dataset.description;
-            if (description) {
-                showCustomTooltip(description, event.clientX, event.clientY);
+        } else if (type === "researches") {
+            if (button.dataset.researchID === player.selectedResearchID && !(ableToRunAction(action))) {
+                button.classList.remove("selected-button");
+                changeResearch(null);
             }
-        });
+        }
 
-        button.addEventListener("mousemove", (event) => {
-            showCustomTooltip(event.currentTarget.dataset.description, event.clientX, event.clientY);
-        });
-
-        button.addEventListener("mouseout", () => {
-            hideCustomTooltip();
-        });
-
-        container.appendChild(button);
+        button.dataset.description = description;
     });
 }
 
 export function unselectCurrentActions() { // Same behaviour as clicking on both active actions
-    const taskButtonsContainer = document.getElementById('taskTabs');
-    const researchButtonsContainer = document.getElementById('researchTabs');
+    const taskButtonsContainer = document.getElementById("taskTabs");
+    const researchButtonsContainer = document.getElementById("researchTabs");
 
     if (taskButtonsContainer) {
-        const selectedTaskButton = taskButtonsContainer.querySelector('.progress-button.selected-button');
+        const selectedTaskButton = taskButtonsContainer.querySelector(".progress-button.selected-button");
         if (selectedTaskButton) {
-            selectedTaskButton.classList.remove('selected-button');
+            selectedTaskButton.classList.remove("selected-button");
         }
     }
 
     if (researchButtonsContainer) {
-        const selectedResearchButton = researchButtonsContainer.querySelector('.progress-button.selected-button');
+        const selectedResearchButton = researchButtonsContainer.querySelector(".progress-button.selected-button");
         if (selectedResearchButton) {
-            selectedResearchButton.classList.remove('selected-button');
+            selectedResearchButton.classList.remove("selected-button");
         }
     }
 
@@ -287,6 +357,30 @@ export function unselectCurrentActions() { // Same behaviour as clicking on both
 
     updateResearches();
     updateTasks();
+}
+
+function ableToRunAction(action) {
+    // Filter out bar resources and only include resources that are consumed
+    const requiredResources = action.resources.filter(resource =>
+        resource.name !== "health" &&
+        resource.name !== "motivation" &&
+        resource.name !== "DBH" &&
+        resource.amount < 0
+    );
+
+    if (!(requiredResources)) {
+        return true;
+    }
+
+    for (const requiredRes of requiredResources) {
+        const playerResource = player.resources.find(resource => resource.name === requiredRes.name);
+
+        // If player doesn"t have the resource at all, or doesn"t have enough
+        if (!playerResource || playerResource.amount < Math.abs(requiredRes.amount)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 const customTooltip = document.getElementById("customTooltip");
@@ -300,8 +394,8 @@ export function showCustomTooltip(message, x, y) {
     customTooltip.style.left = `${x + 15}px`;
     customTooltip.style.top = `${y + 15}px`;
     customTooltip.style.opacity = 1;
-    customTooltip.style.visibility = 'visible';
-    customTooltip.style.transform = 'translateY(0)';
+    customTooltip.style.visibility = "visible";
+    customTooltip.style.transform = "translateY(0)";
 }
 
 export function hideCustomTooltip() {
@@ -309,6 +403,6 @@ export function hideCustomTooltip() {
         return;
     }
     customTooltip.style.opacity = 0;
-    customTooltip.style.visibility = 'hidden';
-    customTooltip.style.transform = 'translateY(-5px)';
+    customTooltip.style.visibility = "hidden";
+    customTooltip.style.transform = "translateY(-5px)";
 }

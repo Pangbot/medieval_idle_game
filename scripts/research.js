@@ -1,11 +1,11 @@
 // Handles the research panel
 import { player, adjustResource, changeResearch } from "./player.js"
 import { researchTabs, allResearches } from "./data/researchList.js"
-import { createResearchButtons, updateTabButtons } from "./buttons.js";
+import { createActionButtons, updateActionButtons, updateTabButtons } from "./buttons.js";
 import common from "./common.js";
 import { stopClock } from './time.js';
 import { updateTasks } from "./tasks.js";
-import { updateCompletionProgressBar } from "./animations.js";
+import { updateCompletionProgressBar, updateAnimations } from "./animations.js";
 
 export let currentResearchTab = researchTabs[0];
 export let allResearchesUpdated;
@@ -66,7 +66,7 @@ export function updateResearches() {
 function createResearches() {
     const researchContainer = document.getElementById("researchBtns");
     researchContainer.innerHTML = '';
-    createResearchButtons(researchContainer, researchesInTab);
+    createActionButtons("researchBtns", researchesInTab, "researches");
 }
 
 export function changeResearchTab(targetTab) {
@@ -119,6 +119,9 @@ export function updateResearchProgress() {
         });
     }
 
+    updateActionButtons("researchBtns", researchesInTab,"researches");
+    updateAnimations(currentResearch, player.selectedTaskID);
+
     if (isValidCompletionTime(currentResearch)) {
         updateCompletionProgressBar(currentResearch);
 
@@ -140,4 +143,11 @@ function isValidCompletionTime(currentResearch) {
     else {
         return false
     }
+}
+
+export function resetAllResearchProgress() {
+    allResearches.forEach(research => {
+        research.workProgress = 0;
+    });
+    updateResearches();
 }

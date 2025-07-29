@@ -4,19 +4,6 @@ import common from "./common.js";
 import { addUpGlowEffect, addDownGlowEffect } from "./animations.js";
 
 export function updateResources() {
-    // Filter out inventory items with 0 amount
-    player.resources = player.resources.filter(resource => {
-        if (resource.name === "money" || resource.name === "health" || resource.name === "motivation" || resource.name === "DBH") {
-            return true;
-        }
-        return resource.amount > 0;
-    });
-
-    const getResourceAmount = (name) => {
-        const resource = player.resources.find(resource => resource.name === name);
-        return resource.amount;
-    };
-
     updateMoneyDisplay();
     updateBar("health", getResourceAmount("health"), 100);
     updateBar("motivation", getResourceAmount("motivation"), 100);
@@ -34,6 +21,11 @@ export function updateResources() {
         console.error("DBH bar wrapper element with ID 'dbhBarContainerWrapper' not found.");
     }
     updateInventory();
+}
+
+function getResourceAmount(resourceName) {
+    const resource = player.resources.find(resource => resource.name === resourceName);
+    return resource.amount;
 }
 
 function updateMoneyDisplay() {
@@ -127,35 +119,37 @@ function updateInventory() {
 
     for (let i = 5; i < player.resources.length; i++) {
         const item = player.resources[i];
-        let itemElement = existingItemElements[item.name];
+        if (item.amount > 0) {
+            let itemElement = existingItemElements[item.name];
 
-        if (itemElement) {
-            // Item already exists in inventory
-            const oldAmount = parseFloat(itemElement.dataset.itemAmount);
-            itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
-            itemElement.dataset.itemAmount = item.amount;
+            if (itemElement) {
+                // Item already exists in inventory
+                const oldAmount = parseFloat(itemElement.dataset.itemAmount);
+                itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
+                itemElement.dataset.itemAmount = item.amount;
 
-            currentInventoryState[item.name] = oldAmount;
-            delete existingItemElements[item.name];
+                currentInventoryState[item.name] = oldAmount;
+                delete existingItemElements[item.name];
 
-            if (oldAmount < item.amount) {
+                if (oldAmount < item.amount) {
+                    addUpGlowEffect(itemElement);
+                }
+                else if (oldAmount > item.amount) {
+                    addDownGlowEffect(itemElement);
+                }
+            } else {
+                // Item is new to inventory
+                itemElement = document.createElement("div");
+                itemElement.classList.add("inventory-item");
+                itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
+                itemElement.dataset.itemName = item.name;
+                itemElement.dataset.itemAmount = item.amount;
+
+                inventoryContainer.appendChild(itemElement);
+
+                currentInventoryState[item.name] = 0;
                 addUpGlowEffect(itemElement);
             }
-            else if (oldAmount > item.amount) {
-                addDownGlowEffect(itemElement);
-            }
-        } else {
-            // Item is new to inventory
-            itemElement = document.createElement("div");
-            itemElement.classList.add("inventory-item");
-            itemElement.textContent = `${item.name}: ${Math.floor(item.amount)}`;
-            itemElement.dataset.itemName = item.name;
-            itemElement.dataset.itemAmount = item.amount;
-
-            inventoryContainer.appendChild(itemElement);
-
-            currentInventoryState[item.name] = 0;
-            addUpGlowEffect(itemElement);
         }
     }
 

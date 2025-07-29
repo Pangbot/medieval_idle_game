@@ -1,8 +1,10 @@
 // Handles various settings in the game (and opening/closing the menu)
 
-import { showCustomTooltip, hideCustomTooltip, buttonClickSound, playButtonClickSound } from "./buttons.js"; 
+import { showCustomTooltip, hideCustomTooltip, buttonClickSound, playButtonClickSound, unselectCurrentActions } from "./buttons.js"; 
 import { changeAutosaveInterval, saveGame, importSave, exportSave, deleteSave } from "./save.js";
-import { restartClockCheck, stopClock } from "./time.js";
+import { restartClockCheck, stopClock, resetDayProgress } from "./time.js";
+import { resetAllResearchProgress } from "./research.js";
+import { resetAllTaskProgress } from "./tasks.js";
 import common from "./common.js";
 
 const gameOverlay = document.getElementById("gameOverlay");
@@ -19,12 +21,13 @@ const sfxTestButton = document.getElementById("sfxTestButton");
 
 const thresholdInput = document.getElementById("threshold");
 const thresholdValueSpan = document.getElementById("thresholdValue");
-const thresholdLabel = document.querySelector('label[for="threshold"]');
+const thresholdLabel = document.querySelector("label[for='threshold']");
 const thresholdAlwaysOnCheckbox = document.getElementById("thresholdAlwaysOn");
 
 const windowSizeSelect = document.getElementById("emulateWindowSize");
-const emulateWindowSizeLabel = document.querySelector('label[for="emulateWindowSize"]');
-const emulateWindowSizeTooltip = document.getElementById("emulateWindowSizeTooltip");
+const emulateWindowSizeLabel = document.querySelector("label[for='emulateWindowSize']");
+
+const analButton = document.getElementById("analButton");
 
 const autosaveIntervalInput = document.getElementById("autosaveInterval");
 const autosaveIntervalValueSpan = document.getElementById("autosaveIntervalValue");
@@ -37,6 +40,19 @@ const closeButton = settingsContainer.querySelector(".close-button");
 
 let restartRequired = false;
 let previousWidth;
+
+const thresholdTooltip = `This setting will automatically pause the game if you're close to losing after being AFK. 
+The threshold will be active again when the resource that triggered it is double the threshold value. <br><br>
+
+Select the checkbox if you want it to apply this while the game is open as well.`;
+
+const emulateWindowTooltip = `This setting changes the apparent width of the game window, which affects the size of the buttons and help graphics.<br>
+Each panel will always be 1/4 of your actual screen width though.`;
+
+const analToolTip = `This resets partial progress to 0 for all researches, tasks, and even the day.<br>
+It's good if you like things to stay in sync.`;
+
+const newAnalToolTip = `Just so you know, this is referred to as "analButton" in the code.`;
 
 export function initialiseSettings() {
     sfxTestButton.addEventListener("click", playButtonClickSound);
@@ -96,11 +112,11 @@ export function initialiseSettings() {
     });
 
     thresholdLabel.addEventListener("mouseover", (event) => {
-        const tooltipText = `This setting will automatically pause the game if you're close to losing after being AFK. 
-        The threshold will be active again when the resource that triggered it is double the threshold value. <br><br>
-        
-        Select the checkbox if you want it to apply this while the game is open as well.`;
-        showCustomTooltip(tooltipText, event.clientX, event.clientY);
+        showCustomTooltip(thresholdTooltip, event.clientX, event.clientY);
+    });
+
+    thresholdLabel.addEventListener("mousemove", (event) => {
+        showCustomTooltip(thresholdTooltip, event.clientX, event.clientY);
     });
 
     thresholdLabel.addEventListener("mouseout", () => {
@@ -125,13 +141,51 @@ export function initialiseSettings() {
         common.getGameState().savedSettings.windowSize = width;
     });
 
-    emulateWindowSizeLabel.addEventListener("mouseover", (event) => { // Changed to emulateWindowSizeLabel
-        const tooltipText = `This setting changes the apparent width of the game window, which affects the size of the buttons and help graphics.<br>
-        Each panel will always be 1/4 of your actual screen width though.`;
-        showCustomTooltip(tooltipText, event.clientX, event.clientY);
+    emulateWindowSizeLabel.addEventListener("mouseover", (event) => {
+        showCustomTooltip(emulateWindowTooltip, event.clientX, event.clientY);
     });
 
-    emulateWindowSizeLabel.addEventListener("mouseout", () => { // Changed to emulateWindowSizeLabel
+    emulateWindowSizeLabel.addEventListener("mousemove", (event) => {
+        showCustomTooltip(emulateWindowTooltip, event.clientX, event.clientY);
+    });
+
+    emulateWindowSizeLabel.addEventListener("mouseout", () => {
+        hideCustomTooltip();
+    });
+
+    analButton.addEventListener("click", () => {
+        buttonClickSound.play();
+        unselectCurrentActions();
+        resetDayProgress();
+        resetAllResearchProgress();
+        resetAllTaskProgress();
+
+        analButton.removeEventListener("mouseover", (event) => {
+            showCustomTooltip(analToolTip, event.clientX, event.clientY);
+        });
+        analButton.removeEventListener("mousemove", (event) => {
+            showCustomTooltip(analToolTip, event.clientX, event.clientY);
+        });
+
+        analButton.innerText = "Reset!";
+
+        analButton.addEventListener("mouseover", (event) => {
+            showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
+        });
+        analButton.addEventListener("mousemove", (event) => {
+            showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
+        });
+    });
+
+    analButton.addEventListener("mouseover", (event) => {
+        showCustomTooltip(analToolTip, event.clientX, event.clientY);
+    });
+
+    analButton.addEventListener("mousemove", (event) => {
+        showCustomTooltip(analToolTip, event.clientX, event.clientY);
+    });
+
+    analButton.addEventListener("mouseout", () => {
         hideCustomTooltip();
     });
 
@@ -177,8 +231,23 @@ export function showSettings() {
 function hideSettings() {
     gameOverlay.classList.remove("active");
     settingsContainer.classList.remove("active");
+    analButton.innerText = "I Like Things to be in Sync";
+
+    analButton.removeEventListener("mouseover", (event) => {
+        showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
+    });
+    analButton.removeEventListener("mousemove", (event) => {
+        showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
+    });
+    analButton.addEventListener("mouseover", (event) => {
+        showCustomTooltip(analToolTip, event.clientX, event.clientY);
+    });
+    analButton.addEventListener("mousemove", (event) => {
+        showCustomTooltip(analToolTip, event.clientX, event.clientY);
+    });
+
     changeAutosaveInterval(common.getGameState().savedSettings.autosaveInterval);
-    importSaveTextBox.value = ''; 
+    importSaveTextBox.value = "";
     if (restartRequired) {
         saveGame();
         location.reload();

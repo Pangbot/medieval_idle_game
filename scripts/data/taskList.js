@@ -44,6 +44,21 @@ export const allTasks = [
         description: `Loses ya stuff. D:`
     },
     {
+        id: "water_bucket_drainer",
+        tab: taskTabs[4],
+        buttonName: "Takes your water buckets",
+        resources: [
+            { name: "Water buckets", amount: -1 },
+        ],
+        resourcePeriod: 1,
+        progress: 0,
+        workProgress: 0,
+        daysToComplete: Infinity,
+        available: true,
+        requires: ["water_improvements"],
+        description: `Stay hydrated.`
+    },
+    {
         id: "dalby_work_fields",
         tab: taskTabs[0],
         buttonName: "Work the fields",

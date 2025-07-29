@@ -1,11 +1,11 @@
 // Handles the tasks panel
 import { player, adjustResource, changeTask } from "./player.js"
 import { allTasks, taskTabs } from "./data/taskList.js"
-import { createTaskButtons, updateTabButtons } from './buttons.js'
+import { updateActionButtons, createActionButtons, updateTabButtons } from './buttons.js'
 import common from "./common.js";
 import { stopClock } from "./time.js";
 import { updateResearches } from "./research.js";
-import { updateCompletionProgressBar } from "./animations.js";
+import { updateAnimations, updateCompletionProgressBar } from "./animations.js";
 
 export let currentTaskTab = taskTabs[0];
 export let allTasksUpdated;
@@ -64,7 +64,7 @@ export function updateTasks() {
 function createTasks() {
     const taskContainer = document.getElementById("taskBtns");
     taskContainer.innerHTML = '';
-    createTaskButtons(taskContainer, tasksInTab);
+    createActionButtons("taskBtns", tasksInTab, "tasks");
 }
 
 export function changeTaskTab(targetTab) {
@@ -117,6 +117,9 @@ export function updateTaskProgress() {
         });
     }
 
+    updateActionButtons("taskBtns", tasksInTab,"tasks");
+    updateAnimations(player.selectedResearchID, currentTask);
+
     // Check if it's completable
     if (isValidCompletionTime(currentTask)) {
         updateCompletionProgressBar(currentTask);
@@ -147,4 +150,11 @@ function isValidCompletionTime(currentTask) {
     else {
         return false
     }
+}
+
+export function resetAllTaskProgress() {
+    allTasks.forEach(task => {
+        task.workProgress = 0;
+    });
+    updateTasks();
 }

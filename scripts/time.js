@@ -9,7 +9,7 @@ import { unselectCurrentActions } from "./buttons.js";
 
 let gameInterval = null;
 let lastTickTime = performance.now();
-let accumulatedTime = 0;
+let dayProgress = 0;
 let tabLastVisibleTime = performance.now();
 let remainingRes = 0;
 let remainingTask = 0;
@@ -28,84 +28,141 @@ function advanceGameTime() {
     let deltaTime = now - lastTickTime;
 
     lastTickTime = now;
-    accumulatedTime += deltaTime;
+    dayProgress += deltaTime;
 
     const currentResearch = common.researchMap.get(player.selectedResearchID);
     const currentTask = common.taskMap.get(player.selectedTaskID);
 
-    while (accumulatedTime >= common.dayInMilliseconds) {
+    // Check if either or both will need to reset, add corresponding progresses
+    if (currentResearch.workProgress + deltaTime >= common.dayInMilliseconds && currentTask.workProgress + deltaTime >= common.dayInMilliseconds) {
+        // Both hit end of bar
+        if (currentResearch.progress === currentResearch.daysToComplete - 1 && 
+            currentTask.progress === currentTask.daysToComplete - 1) 
+        { // Both will complete
+            currentResearch.workProgress = 0;
+            currentTask.workProgress = 0;
+        }
+        else if (currentResearch.progress === currentResearch.daysToComplete - 1 && 
+                 currentTask.progress !== currentTask.daysToComplete - 1) 
+        { // Only research will complete
+            currentResearch.workProgress = 0;
+            currentTask.workProgress += remainingRes;
+            dayProgress += remainingRes - deltaTime; // dayProgress correction
+
+            if (currentTask.workProgress >= common.dayInMilliseconds) {
+                currentTask.workProgress -= common.dayInMilliseconds;
+            }
+        }
+        else if (currentResearch.progress !== currentResearch.daysToComplete - 1 && 
+                 currentTask.progress === currentTask.daysToComplete - 1) 
+        { // Only task will complete
+            currentResearch.workProgress += remainingTask;
+            dayProgress += remainingTask - deltaTime; // dayProgress correction
+
+            if (currentResearch.workProgress >= common.dayInMilliseconds) {
+                currentResearch.workProgress -= common.dayInMilliseconds;
+            }
+            currentTask.workProgress = 0;
+        }
+        else { // Neither will complete
+            currentResearch.workProgress += deltaTime - common.dayInMilliseconds;
+            currentTask.workProgress += deltaTime - common.dayInMilliseconds;
+        }
+        updateResearchProgress();
+        updateTaskProgress();
+        updateResources();
+        // Check if either button disabled after finishing run
+        if (!(player.selectedResearchID)) {
+            currentTask.workProgress -= currentResearch.workProgress;
+            dayProgress -= currentResearch.workProgress; // dayProgress correction
+            currentResearch.workProgress = 0;
+        }
+
+        if (!(player.selectedTaskID)) {
+            currentResearch.workProgress -= currentTask.workProgress;
+            dayProgress -= currentTask.workProgress; // dayProgress correction
+            currentTask.workProgress = 0;
+        }
+    }
+    else if (currentResearch.workProgress + deltaTime >= common.dayInMilliseconds && currentTask.workProgress + deltaTime < common.dayInMilliseconds) {
+        // currentResearch hits end of bar, currentTask doesn't
+        if (currentResearch.progress === currentResearch.daysToComplete - 1) {
+            currentResearch.workProgress = 0;
+            currentTask.workProgress += remainingRes;
+            dayProgress += remainingRes - deltaTime; // dayProgress correction
+
+            if (currentTask.workProgress >= common.dayInMilliseconds) {
+                currentTask.workProgress -= common.dayInMilliseconds;
+            }
+        }
+        else {
+            currentResearch.workProgress += deltaTime - common.dayInMilliseconds;
+            currentTask.workProgress += deltaTime;
+        }
+        updateResearchProgress();
+        updateResources();
+        // Check if research button disabled after finishing run
+        if (!(player.selectedResearchID)) {
+            currentTask.workProgress -= currentResearch.workProgress;
+            dayProgress -= currentResearch.workProgress; // dayProgress correction
+            currentResearch.workProgress = 0;
+        }
+    }
+    else if (currentResearch.workProgress + deltaTime < common.dayInMilliseconds && currentTask.workProgress + deltaTime >= common.dayInMilliseconds) {
+        // currentTask hits end of bar, currentResearch doesn't
+        if (currentTask.progress === currentTask.daysToComplete - 1) {
+            currentTask.workProgress = 0;
+            currentResearch.workProgress += remainingTask;
+            dayProgress += remainingTask - deltaTime; // dayProgress correction
+
+            if (currentResearch.workProgress >= common.dayInMilliseconds) {
+                currentResearch.workProgress -= common.dayInMilliseconds;
+            }
+        }
+        else {
+            currentResearch.workProgress += deltaTime;
+            currentTask.workProgress += deltaTime - common.dayInMilliseconds;
+        }
+        updateTaskProgress();
+        updateResources();
+        // Check if task button disabled after finishing run
+        if (!(player.selectedTaskID)) {
+            currentResearch.workProgress -= currentTask.workProgress;
+            dayProgress -= currentTask.workProgress; // dayProgress correction
+            currentTask.workProgress = 0;
+        }
+    }
+    else {
+        // Neither will reach end of bar
+        currentResearch.workProgress += deltaTime;
+        currentTask.workProgress += deltaTime;
+    }
+
+    // Run threshold logic
+    if (common.savedSettings.thresholdAlwaysOn && thresholdReached()) {
+        // Remove the leftover progress from an action that should not have run again
+        const correction = Math.min(currentResearch.workProgress, currentTask.workProgress, dayProgress);
+        currentResearch.workProgress -= correction;
+        currentTask.workProgress -= correction;
+        dayProgress -= correction;
+        console.log(`Progresses: ${dayProgress}, ${currentResearch.workProgress}, ${currentTask.workProgress}.`);
+        updateAnimations(currentResearch, currentTask);
+        unselectCurrentActions();
+        stopClock();
+    }
+
+    while (dayProgress >= common.dayInMilliseconds) {
         adjustResource("day", 1);
         updateDate();
         updateResources(); // In case there are effects to resources not caused directly from actions
 
-        accumulatedTime -= common.dayInMilliseconds;
-
-        if (common.savedSettings.thresholdAlwaysOn && thresholdReached()) {
-            currentResearch.workProgress += deltaTime;
-            while (currentResearch.workProgress >= common.dayInMilliseconds) {
-                updateResearchProgress();
-                currentResearch.workProgress -= common.dayInMilliseconds;
-            }
-
-            currentTask.workProgress += deltaTime;
-            while (currentTask.workProgress >= common.dayInMilliseconds) {
-                updateTaskProgress();
-                currentTask.workProgress -= common.dayInMilliseconds;
-            }
-
-            updateAnimations(currentResearch, currentTask);
-            unselectCurrentActions();
-            stopClock();
-            accumulatedTime = 0;
-        }
-
-        // This makes sure overflow progress from a completed task/research isn't applied to the other one.
-        if (
-            (currentResearch && currentResearch.completed && !player.selectedResearchID) ||
-            (currentTask && currentTask.completed && !player.selectedTaskID) ||
-            (!(player.selectedResearchID) && !(player.selectedTaskID))
-            ) {
-            stopClock();
-            accumulatedTime = 0;
-
-            if (player.selectedResearchID) {
-                currentResearch.workProgress += remainingTask;
-                while (currentResearch.workProgress >= common.dayInMilliseconds) {
-                    updateResearchProgress();
-                    currentResearch.workProgress -= common.dayInMilliseconds;
-                }
-            }
-            else if (player.selectedTaskID) {
-                currentTask.workProgress += remainingRes;
-                while (currentTask.workProgress >= common.dayInMilliseconds) {
-                    updateTaskProgress();
-                    currentTask.workProgress -= common.dayInMilliseconds;
-                }
-            }
-            updateAnimations(currentResearch, currentTask);
-            return;
-        }
+        dayProgress -= common.dayInMilliseconds;
     }
 
-    if (currentResearch) {
-        currentResearch.workProgress += deltaTime;
-        while (currentResearch.workProgress >= common.dayInMilliseconds) {
-            updateResearchProgress();
-            currentResearch.workProgress -= common.dayInMilliseconds;
-        }
-        remainingRes = common.dayInMilliseconds - currentResearch.workProgress;
-    }
+    // Calculate remaining time for next loop
+    remainingRes = common.dayInMilliseconds - currentResearch.workProgress;
+    remainingTask = common.dayInMilliseconds - currentTask.workProgress;
 
-    if (currentTask) {
-        currentTask.workProgress += deltaTime;
-        while (currentTask.workProgress >= common.dayInMilliseconds) {
-            updateTaskProgress();
-            currentTask.workProgress -= common.dayInMilliseconds;
-        }
-        remainingTask = common.dayInMilliseconds - currentTask.workProgress;
-    }
-
-    updateResources();
     updateAnimations(currentResearch, currentTask);
 }
 
@@ -144,7 +201,6 @@ document.addEventListener("visibilitychange", () => {
     } else {
         calculateOfflineProgress();
         lastTickTime = performance.now();
-        accumulatedTime = 0;
         restartClockCheck();
     }
 });
@@ -154,80 +210,72 @@ function calculateOfflineProgress() {
     const offlineDuration = now - tabLastVisibleTime;
 
     if (offlineDuration < common.dayInMilliseconds || player.selectedResearchID === null || player.selectedTaskID === null) {
-        accumulatedTime = offlineDuration;
+        dayProgress = offlineDuration;
         return;
     }
+    else {
+        dayProgress = offlineDuration % common.dayInMilliseconds;
+    }
 
-    let daysPassed = Math.floor(offlineDuration / common.dayInMilliseconds);
-    let remainingTime = offlineDuration % common.dayInMilliseconds;
-    let resultingTaskProgress = 0;
-    let resultingResearchProgress = 0;
-
+    let timeSimulated = 0;
+    
     let currentResearch = common.researchMap.get(player.selectedResearchID);
     let currentTask = common.taskMap.get(player.selectedTaskID);
 
-    // Simulate offline days
-    for (let i = 0; i < daysPassed; i++) {
-        if (player.selectedResearchID === null || player.selectedTaskID === null) {
-            if (player.selectedResearchID === null) {
-                changeResearch(null);
-                if (player.selectedTaskID != null) {
-                    resultingTaskProgress = common.dayInMilliseconds - currentResearch.workProgress;
-                }
-            }
-            if (player.selectedTaskID === null) {
-                changeTask(null)
-                if (player.selectedResearchID != null) {
-                    resultingResearchProgress = common.dayInMilliseconds - currentTask.workProgress;
-                }
-            }
+    // Simulate offline time
+    while (true) {
+
+        let remainingDayProgress = common.dayInMilliseconds - dayProgress;
+        let remainingResProgress = common.dayInMilliseconds - currentResearch.workProgress;
+        let remainingTaskProgress = common.dayInMilliseconds - currentTask.workProgress;
+
+        // Get lowest remaining time chunk to finish running action or day
+        const timeToProgress = Math.min(remainingDayProgress, remainingResProgress, remainingTaskProgress);
+
+        // Break out of loop if simulating this time chunk will be too much
+        if (timeSimulated + timeToProgress > offlineDuration) {
             break;
         }
-        adjustResource("day", 1);
-        updateDate();
-        if (player.selectedResearchID) {
-            updateResearchProgress();
-        }
-        if (player.selectedTaskID) {
-            updateTaskProgress();
-        }
-        updateResources();
 
-        if (thresholdReached()) {
-            stopClock();
-            unselectCurrentActions();
-            break;
-        }
-    }
+        dayProgress += timeToProgress;
+        currentResearch.workProgress += timeToProgress;
+        currentTask.workProgress += timeToProgress;
+        timeSimulated += timeToProgress;
 
-    currentResearch = common.researchMap.get(player.selectedResearchID);
-    currentTask = common.taskMap.get(player.selectedTaskID);
-
-    if (resultingTaskProgress > 0) {
-        currentTask.workProgress += resultingTaskProgress;
-        if (currentTask.workProgress >= common.dayInMilliseconds) {
-            currentTask.workProgress -= common.dayInMilliseconds;
+        // Check which ones are >= common.dayInMilliseconds (bearing in mind it could be 1, 2, or all 3)
+        if (dayProgress >= common.dayInMilliseconds) {
+            dayProgress -= common.dayInMilliseconds;
+            adjustResource("day", 1);
+            updateDate();
         }
-    } else if (resultingResearchProgress > 0) {
-        currentResearch.workProgress += resultingResearchProgress;
+
         if (currentResearch.workProgress >= common.dayInMilliseconds) {
             currentResearch.workProgress -= common.dayInMilliseconds;
+            updateResearchProgress();
         }
-    } else {
-        if (currentResearch) {
-            currentResearch.workProgress += remainingTime;
-            if (currentResearch.workProgress > common.dayInMilliseconds) {
-                currentResearch.workProgress -= common.dayInMilliseconds;
-            }
+
+        if(currentTask.workProgress >= common.dayInMilliseconds) {
+            currentTask.workProgress -= common.dayInMilliseconds;
+            updateTaskProgress();
         }
-        if (currentTask) {
-            currentTask.workProgress += remainingTime;
-            if (currentTask.workProgress > common.dayInMilliseconds) {
-                currentTask.workProgress -= common.dayInMilliseconds;
-            }
+
+        updateResources();
+
+        // Break loop if threshold reached
+        if (thresholdReached()) {
+            updateAnimations(currentResearch, currentTask);
+            unselectCurrentActions();
+            stopClock();
+            break;
+        }
+
+        // Break loop if an action is unselected
+        if (!(player.selectedResearchID) || !(player.selectedTaskID)) {
+            break;
         }
     }
 
+    // Update animations
     updateAnimations(currentResearch, currentTask);
 }
 
@@ -257,4 +305,8 @@ function getOrdinalSuffix(day) {
         case 3:  return "rd";
         default: return "th";
     }
+}
+
+export function resetDayProgress() {
+    dayProgress = 0;
 }
