@@ -30,7 +30,8 @@ export function loadResearches(data) {
 
     availableResearches = allResearchesUpdated.filter(research => research.available === true && research.completed === false);
     researchesInTab = availableResearches.filter(research => research.tab === currentResearchTab);
-    createResearches();
+
+    createActionButtons("researchBtns", researchesInTab, "researches");
 }
 
 export function loadCurrentResearchTab(tab) {
@@ -41,8 +42,14 @@ export function loadCurrentResearchTab(tab) {
 }
 
 export function updateResearches() {
+    const dayNumber = player.resources.find(resource => resource.name === "day").amount;
     allResearches.forEach(research => {
         if (research.completed) {
+            research.available = false;
+            return;
+        }
+
+        if (research.minDay > dayNumber) {
             research.available = false;
             return;
         }
@@ -60,13 +67,27 @@ export function updateResearches() {
     allResearchesUpdated = allResearches;
     availableResearches = allResearches.filter(research => research.available === true);
     researchesInTab = availableResearches.filter(research => research.tab === currentResearchTab);
-    createResearches();
-}
 
-function createResearches() {
     const researchContainer = document.getElementById("researchBtns");
-    researchContainer.innerHTML = '';
-    createActionButtons("researchBtns", researchesInTab, "researches");
+    const currentResearchButtons = researchContainer.querySelectorAll(".progress-button");
+
+    // Get the IDs of the currently rendered buttons
+    const currentButtonIDs = Array.from(currentResearchButtons).map(button => button.dataset.researchID);
+
+    const researchesInTabIDs = researchesInTab.map(research => research.id);
+
+    currentButtonIDs.sort();
+    researchesInTabIDs.sort();
+
+    console.log(researchesInTabIDs.join(','));
+    console.log(currentButtonIDs.join(','));
+    // Check if the lengths are the same AND if the sorted ID strings are identical
+    if (researchesInTabIDs.length !== currentButtonIDs.length || researchesInTabIDs.join(',') !== currentButtonIDs.join(',')) {
+        createActionButtons("researchBtns", researchesInTab, "researches");
+    } else {
+        updateActionButtons("researchBtns", researchesInTab, "researches");
+    }
+    
 }
 
 export function changeResearchTab(targetTab) {
@@ -119,21 +140,21 @@ export function updateResearchProgress() {
         });
     }
 
-    updateActionButtons("researchBtns", researchesInTab,"researches");
-    updateAnimations(currentResearch, player.selectedTaskID);
-
     if (isValidCompletionTime(currentResearch)) {
         updateCompletionProgressBar(currentResearch);
 
         if (currentResearch.progress >= currentResearch.daysToComplete) {
+            console.log(`Completed ${currentResearch.id}`);
             currentResearch.completed = true;
             currentResearch.available = false;
             player.completed.add(currentResearch.id);
             changeResearch(null);
-            updateResearches();
-            updateTasks();
         }
     }
+
+    updateResearches();
+    updateTasks();
+    updateAnimations(currentResearch, player.selectedTaskID);
 }
 
 function isValidCompletionTime(currentResearch) {

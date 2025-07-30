@@ -101,39 +101,43 @@
     <div id="gameOverlay" class="game-overlay">
         <!-- Settings -->
         <div id="settingsContainer" class="settings-container">
+            <h2 class="restart-warning">Game will restart after closing!</h2>
+
             <h1 class="settings-title">Settings</h1>
 
             <!-- Commenting out music option for now
-            <div class="setting-item">
+            <div class="setting-item-grid">
                 <label for="musicVolume">Music</label>
                 <input type="range" id="musicVolume" name="musicVolume" min="0" max="100" value="0">
                 <span id="musicVolumeValue">0%</span>
             </div>
             -->
 
-            <div class="setting-item">
+            <div class="setting-item-grid">
                 <label for="sfxVolume">SFX</label>
                 <input type="range" id="sfxVolume" name="sfxVolume" min="0" max="100" value="80">
                 <span id="sfxVolumeValue">80%</span>
                 <button id="sfxTestButton">SFX Test</button>
             </div>
 
-            <div class="setting-item">
+            <div class="setting-item-grid">
                 <label for="autosaveInterval">Autosave</label>
                 <input type="range" id="autosaveInterval" name="autosaveInterval" min="0" max="60" value="30">
-                <span id="autosaveIntervalValue">30 seconds</span>
+                <span id="autosaveIntervalValue">30 s</span>
             </div>
 
-            <div class="setting-item">
+            <div class="setting-item-grid">
                 <label for="threshold">Threshold</label>
                 <input type="range" id="threshold" name="threshold" min="0" max="50" value="10">
                 <span id="thresholdValue">10%</span>
-                <input type="checkbox" id="thresholdAlwaysOn" name="thresholdAlwaysOn">
-                <label for="thresholdAlwaysOn">Always active</label>
-                <span id="thresholdTooltip" hidden></span>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="thresholdAlwaysOn" name="thresholdAlwaysOn">
+                    <label for="thresholdAlwaysOn">Always</label>
+                </div>
             </div>
+            <span id="thresholdTooltip" hidden></span>
 
-            <div class="setting-item">
+            <div class="setting-item" id="windowElement">
                 <label for="emulateWindowSize">Emulate Screen Width</label>
                 <select id="emulateWindowSize" name="emulateWindowSize">
                     <option value="600">600 px</option>
@@ -155,27 +159,24 @@
             </div>
 
             <div class="setting-item">
-                <button id="analButton">I Like Things to be in Sync</button>
+                <button id="analBtn">I Like Things to be in Sync</button>
                 <span id="analTooltip" hidden></span>
             </div>
 
             <div class="setting-item">
-                <button class="import-save-btn">Import Save</button>
+                <span class="save-buttons-wrapper">
+                    <button class="export-save-btn">Export Save</button>
+                    <button class="import-save-btn">Import Save</button>
+                </span>
                 <input type="text" id="importSaveTextBox" placeholder="(Paste save text here.)">
             </div>
 
             <div class="setting-item">
-                <button class="export-save-btn">Export Save</button>
+                <button class="delete-save-btn" id="delete-save-btn">Delete Save</button>
             </div>
-
-            <div class="setting-item">
-                <button class="delete-save-btn">Delete Save</button>
-            </div>
-
-            <h2 class="restart-warning">Game will restart after closing!</h2>
 
             <div class="close-button-container">
-                <button class="close-button">Close</button>
+                <button class="close-btn" id="closeBtn">Close</button>
             </div>
         </div>
         <!-- Help text/arrows -->

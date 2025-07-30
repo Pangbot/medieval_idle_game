@@ -1,6 +1,8 @@
 /* styles.css */
 
 body {
+    height: 100%;
+    min-height: 100vh;
     margin: 0;
     font-family: sans-serif;
     user-select: none;
@@ -63,6 +65,7 @@ h3 {
 .top-bar .top-buttons button {
     margin-left: 10px;
     padding: 5px 10px;
+    border-radius: 10px;
     background-color: #A7D9B4;
     color: #36453B;
     border: 1px solid #36453B;
@@ -75,7 +78,8 @@ h3 {
 /* Main layout */
 .game-layout {
     display: flex;
-    height: calc(100vh - 50px);
+    height: calc(100% - 50px);
+    min-height: calc(100vh - 50px);
 }
 
 /* Resources panel */
@@ -104,7 +108,7 @@ h3 {
 .inventory-box {
     background-color: #36453B;
     border: 1px solid #A7D9B4;
-    height: 160px;
+    height: 300px;
     padding: 10px; 
     margin-top: 15px;
     border-radius: 5px;
@@ -117,7 +121,7 @@ h3 {
 }
 
 .inventory-items {
-    max-height: 80px;
+    max-height: 300px;
     overflow-y: auto;
     padding-right: 5px;
     display: grid;
@@ -234,7 +238,7 @@ h3 {
     cursor: pointer;
     position: relative;
     overflow: hidden; 
-    border-radius: 5px;
+    border-radius: 10px;
     color: #36453B;
     display: block;
     margin: 5px;
@@ -357,34 +361,162 @@ button {
     pointer-events: all;
 }
 
+/* settings menu styling */
 .settings-container {
-    display: none;
     position: fixed;
     top: 10%;
     left: 35%;
     width: 30%;
-    height: 60%;
-    background-color: black;
-    color: #A7D9B4;
+    max-height: 70vh;
+    display: none;
+
+    background-color: #36453B;
+    border: 2px solid #6B8E23;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    overflow-y: auto;
+    color: #EFEBD8;
     z-index: 1000;
-    pointer-events: none;
-    transition: opacity 0.3s ease-in-out;
+
     opacity: 0;
+    pointer-events: none;
 }
 
 .settings-container.active {
-    display: block;
+    display: flex;
     opacity: 1;
     pointer-events: all;
 }
 
+.settings-container label {
+    color: #A7D9B4;
+    font-weight: bold;
+}
+
+.settings-container button {
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #A7D9B4;
+    color: #36453B;
+    border: 1px solid #6B8E23;
+}
+
+.settings-container button:hover {
+    background-color: #EFEBD8;
+}
+
+.settings-container input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: #6B8E23;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity .2s;
+    border-radius: 4px;
+}
+
+.settings-container input[type="range"]:hover {
+    opacity: 1;
+}
+
+.settings-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #A7D9B4;
+    cursor: grab;
+    border-radius: 50%;
+    border: 1px solid #36453B;
+}
+
+.settings-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #A7D9B4;
+    cursor: grab;
+    border-radius: 50%;
+    border: 1px solid #36453B;
+}
+
+.settings-container input[type="checkbox"]:checked {
+    accent-color: #A7D9B4;
+}
+
+/* Settings specifics */
+.settings-title {
+    text-align: center;
+}
+
 .restart-warning {
     display: none;
+    text-align: center;
     color: red;
 }
 
 .restart-warning.active {
     display: block;
+}
+
+#analBtn {
+    height: 30px;
+}
+
+#delete-save-btn {
+    height: 30px;
+    background-color: #B22222;
+    color: #EFEBD8;
+}
+
+#delete-save-btn:hover {
+    background-color: #EFEBD8;
+    color: #B22222;
+}
+
+#closeBtn {
+    height: 30px;
+    background-color: #B85C2E;
+    color: #EFEBD8;
+}
+
+#closeBtn:hover {
+    background-color: #E67A4F;
+    border-color: #A7D9B4;
+}
+
+/* Music/SFX/Autosave/Threshold */
+.setting-item-grid {
+    display: grid;
+    grid-template-columns: 90px 2fr 50px 90px;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px dashed #6B8E23;
+}
+
+#windowElement {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+/* Sync & Saving */
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    gap: 5px;
+    border-bottom: 1px dashed #6B8E23;
+}
+
+.close-button-container {
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-around;
 }
 
 .help-text-entry {
@@ -425,6 +557,7 @@ button {
 .custom-tooltip {
     position: absolute;
     background-color: #36453B;
+    border: 2px solid #6B8E23;
     color: #EFEBD8;
     padding: 5px 10px;
     border-radius: 4px;

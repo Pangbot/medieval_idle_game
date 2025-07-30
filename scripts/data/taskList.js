@@ -12,7 +12,7 @@ export const allTasks = [
     {
         id: "lmao",
         tab: taskTabs[4],
-        buttonName: "Gain stuff",
+        buttonName: "Gain Stuff",
         resources: [
             { name: "health", amount: 1 },
             { name: "motivation", amount: 1 },
@@ -23,13 +23,14 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: null,
         description: `Gives ya stuff. :3`
     },
     {
         id: "rofl",
         tab: taskTabs[4],
-        buttonName: "Lose stuff",
+        buttonName: "Lose Stuff",
         resources: [
             { name: "health", amount: -1 },
             { name: "motivation", amount: -1 },
@@ -40,6 +41,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: null,
         description: `Loses ya stuff. D:`
     },
@@ -55,6 +57,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: ["water_improvements"],
         description: `Stay hydrated.`
     },
@@ -72,6 +75,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: null,
         description: `The Whalley family very kindly took you in, but you have to pull your weight.<br>
         Maybe there are other ways you can help them out?`
@@ -87,7 +91,8 @@ export const allTasks = [
         progress: 0,
         workProgress: 0,
         daysToComplete: 30,
-        available: true,
+        available: false,
+        minDay: 90,
         requires: null,
         description: `Now that you're settling in, it might be a good time to look around the place you arrived here from. Maybe something else came back with you?`
     },
@@ -106,6 +111,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: false,
+        minDay: 0,
         requires: ["non_caustic_soap"],
         description: `To make sure the pH of your soap is right, you can find a natural pH indicator. With a bit of processing, lichens can be used and there should be some growing around here.`
     },
@@ -124,6 +130,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: ["water_improvements"],
         description: `Water's needed for a lot of things.`
     },
@@ -143,6 +150,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: false,
+        minDay: 0,
         requires: ["non_caustic_soap"],
         description: `Better soap will keep you healthier.`
     },
@@ -160,6 +168,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: null,
         description: `Tab 2 button desc.`
     },
@@ -177,6 +186,7 @@ export const allTasks = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: null,
         description: `Tab 3 button desc.`
     }

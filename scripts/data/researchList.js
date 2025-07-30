@@ -23,6 +23,7 @@ export const allResearches = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: null,
         completed: false,
         description: `Gives ya stuff. :3`
@@ -41,6 +42,7 @@ export const allResearches = [
         workProgress: 0,
         daysToComplete: Infinity,
         available: true,
+        minDay: 0,
         requires: null,
         completed: false,
         description: `Loses ya stuff. D:`
@@ -48,7 +50,7 @@ export const allResearches = [
     {
         id: "non_caustic_soap",
         tab: researchTabs[0],
-        buttonName: "Research Soapmaking",
+        buttonName: "Soapmaking",
         resources: [
             { name: "health", amount: -1 },
             { name: "motivation", amount: -1 },
@@ -59,16 +61,16 @@ export const allResearches = [
         progress: 0,
         workProgress: 0,
         available: true,
+        minDay: 0,
         requires: null,
         completed: false,
         description: `What's available here isn't so much <i>soap</i> as it is... ash... with a sprinkling of water.<br> 
-        Do a little digging in your QuanTech&trade; neural chip and figure out how you could make soap that doesn't burn your skin.<br>
-        Unlocks the 'Make Soap' task and 'Water Improvements' research.` 
+        Do a little digging in your QuanTech&trade; neural chip and figure out how you could make soap that doesn't burn your skin.` 
     },
     {
-        id: "water_improvements",
+        id: "water_storage_improvements",
         tab: researchTabs[0],
-        buttonName: "Research Water Improvements",
+        buttonName: "Water Storage Improvements",
         resources: [
             { name: "health", amount: -1 },
             { name: "motivation", amount: -1 },
@@ -79,10 +81,10 @@ export const allResearches = [
         progress: 0,
         workProgress: 0,
         available: false,
+        minDay: 0,
         requires: ["non_caustic_soap"],
         completed: false,
-        description: `It's all well and good having nice soap, but what would <i>really</i> help is making it easier to get water. Running back and forth to the well is a pain.<br>
-        Unlocks the 'Make Water Pipe' task and 'Water Purification' research.` 
+        description: `It's all well and good having nice soap, but what would <b>really</b> help is making it easier to keep water. Running back and forth to the well is a pain.<br>` 
     },
     {
         id: "tab_1_test",
@@ -98,6 +100,7 @@ export const allResearches = [
         progress: 0,
         workProgress: 0,
         available: true,
+        minDay: 0,
         requires: null,
         completed: false,
         description: `Tab 1 test desc.`
@@ -114,6 +117,7 @@ export const allResearches = [
         progress: 0,
         workProgress: 0,
         available: true,
+        minDay: 0,
         requires: null,
         completed: false,
         description: `Tab 1 test desc.`
@@ -132,6 +136,7 @@ export const allResearches = [
         progress: 0,
         workProgress: 0,
         available: true,
+        minDay: 0,
         requires: null,
         completed: false,
         description: `Tab 2 test desc.`
@@ -150,6 +155,7 @@ export const allResearches = [
         progress: 0,
         workProgress: 0,
         available: true,
+        minDay: 0,
         requires: null,
         completed: false,
         description: `Tab 3 test desc.`

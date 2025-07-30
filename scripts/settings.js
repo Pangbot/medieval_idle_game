@@ -27,7 +27,7 @@ const thresholdAlwaysOnCheckbox = document.getElementById("thresholdAlwaysOn");
 const windowSizeSelect = document.getElementById("emulateWindowSize");
 const emulateWindowSizeLabel = document.querySelector("label[for='emulateWindowSize']");
 
-const analButton = document.getElementById("analButton");
+const analButton = document.getElementById("analBtn");
 
 const autosaveIntervalInput = document.getElementById("autosaveInterval");
 const autosaveIntervalValueSpan = document.getElementById("autosaveIntervalValue");
@@ -36,18 +36,19 @@ const importSaveButton = settingsContainer.querySelector(".import-save-btn");
 const importSaveTextBox = document.getElementById("importSaveTextBox");
 const exportSaveButton = settingsContainer.querySelector(".export-save-btn");
 const deleteSaveButton = settingsContainer.querySelector(".delete-save-btn");
-const closeButton = settingsContainer.querySelector(".close-button");
+const closeButton = settingsContainer.querySelector(".close-btn");
 
 let restartRequired = false;
 let previousWidth;
 
-const thresholdTooltip = `This setting will automatically pause the game if you're close to losing after being AFK. 
+const thresholdTooltip = `This setting will automatically pause the game if you're close to losing while the tab is hidden. 
 The threshold will be active again when the resource that triggered it is double the threshold value. <br><br>
 
 Select the checkbox if you want it to apply this while the game is open as well.`;
 
-const emulateWindowTooltip = `This setting changes the apparent width of the game window, which affects the size of the buttons and help graphics.<br>
-Each panel will always be 1/4 of your actual screen width though.`;
+const emulateWindowTooltip = `This setting changes the apparent width of the game window, which affects the size of the tab buttons and help elements.<br>
+Each panel will always be 1/4 of your actual window width though.<br>
+This setting requires the game to restart (your progress will be saved first!), help elements may overlap if you emulate a very different window width to your true width.`;
 
 const analToolTip = `This resets partial progress to 0 for all researches, tasks, and even the day.<br>
 It's good if you like things to stay in sync.`;
@@ -191,7 +192,7 @@ export function initialiseSettings() {
 
     autosaveIntervalInput.addEventListener("input", (event) => {
         const interval = event.target.value;
-        autosaveIntervalValueSpan.textContent = interval === "0" ? "Never" : `${interval} seconds`;
+        autosaveIntervalValueSpan.textContent = interval === "0" ? "Never" : `${interval} s`;
         common.getGameState().savedSettings.autosaveInterval = parseInt(interval);
     });
 }

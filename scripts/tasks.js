@@ -29,7 +29,7 @@ export function loadTasks(data) {
     allTasksUpdated = allTasks;
     availableTasks = allTasksUpdated.filter(task => task.available === true);
     tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
-    createTasks();
+    createActionButtons("taskBtns", tasksInTab, "tasks");
 }
 
 export function loadCurrentTaskTab(tab) {
@@ -40,8 +40,14 @@ export function loadCurrentTaskTab(tab) {
 }
 
 export function updateTasks() {
+    const dayNumber = player.resources.find(resource => resource.name === "day").amount
     allTasks.forEach(task => {
         if (task.completed) {
+            task.available = false;
+            return;
+        }
+
+        if (task.minDay > dayNumber) {
             task.available = false;
             return;
         }
@@ -58,13 +64,25 @@ export function updateTasks() {
     allTasksUpdated = allTasks;
     availableTasks = allTasksUpdated.filter(task => task.available === true);
     tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
-    createTasks();
-}
 
-function createTasks() {
     const taskContainer = document.getElementById("taskBtns");
-    taskContainer.innerHTML = '';
-    createActionButtons("taskBtns", tasksInTab, "tasks");
+    const currentTaskButtons = taskContainer.querySelectorAll(".progress-button");
+
+    // Get the IDs of the currently rendered buttons
+    const currentButtonIDs = Array.from(currentTaskButtons).map(button => button.dataset.taskID);
+
+    const tasksInTabIDs = tasksInTab.map(task => task.id);
+
+    currentButtonIDs.sort();
+    tasksInTabIDs.sort();
+
+    // Check if the lengths are the same AND if the sorted ID strings are identical
+    if (tasksInTabIDs.length !== currentButtonIDs.length || tasksInTabIDs.join(',') !== currentButtonIDs.join(',')) {
+        taskContainer.innerHTML = '';
+        createActionButtons("taskBtns", tasksInTab, "tasks");
+    } else {
+        updateActionButtons("taskBtns", tasksInTab, "tasks");
+    }
 }
 
 export function changeTaskTab(targetTab) {
@@ -117,9 +135,6 @@ export function updateTaskProgress() {
         });
     }
 
-    updateActionButtons("taskBtns", tasksInTab,"tasks");
-    updateAnimations(player.selectedResearchID, currentTask);
-
     // Check if it's completable
     if (isValidCompletionTime(currentTask)) {
         updateCompletionProgressBar(currentTask);
@@ -137,10 +152,12 @@ export function updateTaskProgress() {
             }
 
             changeTask(null);
-            updateTasks();
-            updateResearches();
         }
     }
+
+    updateTasks();
+    updateResearches();
+    updateAnimations(player.selectedResearchID, currentTask);
 }
 
 function isValidCompletionTime(currentTask) {

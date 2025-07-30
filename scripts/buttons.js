@@ -146,6 +146,8 @@ export function createActionButtons(containerID, actions, type) {
         console.error(`Container with ID "${containerID}" not found for ${type} buttons.`);
         return;
     }
+
+    container.innerHTML = "";
     
     if (!actions || actions.length === 0) {
         const messageDiv = document.createElement("div");
@@ -172,24 +174,7 @@ export function createActionButtons(containerID, actions, type) {
 
         let description = action.description;
 
-        // Filter out bar resources and only include resources that are consumed
-        const filteredResources = action.resources.filter(resource =>
-            resource.name !== "health" &&
-            resource.name !== "motivation" &&
-            resource.name !== "DBH" &&
-            resource.amount < 0
-        );
-
-        if (filteredResources.length > 0) {
-            description += "<br><br>Required to run:<br>";
-            filteredResources.forEach(resource => {
-                if (resource.amount === -1) {
-                    description += `${Math.abs(resource.amount)} ${resource.name.slice(0, -1)}<br>`;
-                } else {
-                    description += `${Math.abs(resource.amount)} ${resource.name}<br>`;
-                }
-            });
-        }
+        description += addResourceInformation(action);
 
         if (!ableToRunAction(action)) {
             description += "<br><b>(insufficient resources)</b>";
@@ -291,23 +276,7 @@ export function updateActionButtons(containerID, actions, type) {
 
         let description = action.description;
 
-        const filteredResources = action.resources.filter(resource =>
-            resource.name !== "health" &&
-            resource.name !== "motivation" &&
-            resource.name !== "DBH" &&
-            resource.amount < 0
-        );
-
-        if (filteredResources.length > 0) {
-            description += "<br><br>Required to run:<br>";
-            filteredResources.forEach(resource => {
-                if (resource.amount === -1) {
-                    description += `${Math.abs(resource.amount)} ${resource.name.slice(0, -1)}<br>`;
-                } else {
-                    description += `${Math.abs(resource.amount)} ${resource.name}<br>`;
-                }
-            });
-        }
+        description += addResourceInformation(action);
 
         if (!ableToRunAction(action)) {
             description += "<br><b>(insufficient resources)</b>";
@@ -359,8 +328,81 @@ export function unselectCurrentActions() { // Same behaviour as clicking on both
     updateTasks();
 }
 
+function addResourceInformation(action) {
+    let resourceInfo = ``;
+
+    const gainedResources = action.resources.filter(resource =>
+        resource.amount > 0
+    );
+
+    const spentResources = action.resources.filter(resource =>
+        resource.amount < 0
+    );
+
+    if (gainedResources.length > 0 || spentResources.length > 0) {
+        if (action.resourcePeriod === 1) {
+            resourceInfo += `<div style="text-align: center; margin-top: 10px;">Every day</div>`;
+        }
+        else {
+            resourceInfo += `<div style="text-align: center; margin-top: 10px;">Every ${action.resourcePeriod} days</div>`;
+        }
+    }
+
+    // Start the flex container
+    resourceInfo += `<div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">`;
+
+    let providesContent = '';
+    if (gainedResources.length > 0) {
+        providesContent += `<div><strong>Provides:</strong><br>`;
+        gainedResources.forEach(resource => {
+            let resourceName = resource.name; // Don't want to change the actual name, just show the singular version
+            resourceName = resourceName.charAt(0).toUpperCase() + resourceName.slice(1);
+            if (resource.amount === 1 && resourceName.endsWith("s")) {
+                resourceName = resourceName.slice(0, -1); 
+            }
+
+            if (resourceName === "DBH" && !common.unlockedDBH) {
+                providesContent += `A bad feeling...<br>`;
+            }
+            else {
+                providesContent += `${resource.amount} ${resourceName}<br>`;
+            }
+        });
+        providesContent += `</div>`;
+    }
+
+    let requiresContent = '';
+    if (spentResources.length > 0) {
+        requiresContent += `<div><strong>Requires:</strong><br>`;
+        spentResources.forEach(resource => {
+            let resourceName = resource.name; // As above
+            resourceName = resourceName.charAt(0).toUpperCase() + resourceName.slice(1);
+            if (resource.amount === -1 && resourceName.endsWith("s")) {
+                resourceName = resourceName.slice(0, -1);
+            } 
+            
+            if (resourceName === "DBH" && !common.unlockedDBH) {
+                requiresContent += `A good(?) feeling...<br>`;
+            }
+            else {
+                requiresContent += `${Math.abs(resource.amount)} ${resourceName}<br>`;
+            }
+        });
+        requiresContent += `</div>`;
+    }
+
+    resourceInfo += providesContent;
+    resourceInfo += requiresContent;
+
+    // Close the flex container
+    resourceInfo += `</div>`;
+
+    return resourceInfo;
+}
+
 function ableToRunAction(action) {
     // Filter out bar resources and only include resources that are consumed
+    // Otherwise the game would stop you from ever losing lmao
     const requiredResources = action.resources.filter(resource =>
         resource.name !== "health" &&
         resource.name !== "motivation" &&
@@ -372,11 +414,11 @@ function ableToRunAction(action) {
         return true;
     }
 
-    for (const requiredRes of requiredResources) {
-        const playerResource = player.resources.find(resource => resource.name === requiredRes.name);
+    for (const requiredResource of requiredResources) {
+        const playerResource = player.resources.find(resource => resource.name === requiredResource.name);
 
         // If player doesn"t have the resource at all, or doesn"t have enough
-        if (!playerResource || playerResource.amount < Math.abs(requiredRes.amount)) {
+        if (!playerResource || playerResource.amount < Math.abs(requiredResource.amount)) {
             return false;
         }
     }
