@@ -27,7 +27,6 @@ export function loadResearches(data) {
     });
 
     allResearchesUpdated = allResearches;
-
     availableResearches = allResearchesUpdated.filter(research => research.available === true && research.completed === false);
     researchesInTab = availableResearches.filter(research => research.tab === currentResearchTab);
 
@@ -79,8 +78,6 @@ export function updateResearches() {
     currentButtonIDs.sort();
     researchesInTabIDs.sort();
 
-    console.log(researchesInTabIDs.join(','));
-    console.log(currentButtonIDs.join(','));
     // Check if the lengths are the same AND if the sorted ID strings are identical
     if (researchesInTabIDs.length !== currentButtonIDs.length || researchesInTabIDs.join(',') !== currentButtonIDs.join(',')) {
         createActionButtons("researchBtns", researchesInTab, "researches");
@@ -144,7 +141,6 @@ export function updateResearchProgress() {
         updateCompletionProgressBar(currentResearch);
 
         if (currentResearch.progress >= currentResearch.daysToComplete) {
-            console.log(`Completed ${currentResearch.id}`);
             currentResearch.completed = true;
             currentResearch.available = false;
             player.completed.add(currentResearch.id);

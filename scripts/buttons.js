@@ -151,7 +151,8 @@ export function createActionButtons(containerID, actions, type) {
     
     if (!actions || actions.length === 0) {
         const messageDiv = document.createElement("div");
-        messageDiv.textContent = `No ${type} available in this tab. :(`;
+        messageDiv.classList.add("empty-tab-message");
+        messageDiv.innerHTML = `No ${type} available<br>in this tab. :(`;
         container.appendChild(messageDiv);
         return;
     }
@@ -260,8 +261,10 @@ export function updateActionButtons(containerID, actions, type) {
     }
 
     if (!actions || actions.length === 0) {
+        container.innerHTML = "";
         const messageDiv = document.createElement("div");
-        messageDiv.textContent = `No ${type} available in this tab. :(`;
+        messageDiv.classList.add("empty-tab-message");
+        messageDiv.innerHTML = `No ${type} available<br>in this tab. :(`;
         container.appendChild(messageDiv);
         return;
     }

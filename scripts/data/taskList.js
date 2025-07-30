@@ -131,7 +131,7 @@ export const allTasks = [
         daysToComplete: Infinity,
         available: true,
         minDay: 0,
-        requires: ["water_improvements"],
+        requires: ["water_storage_improvements"],
         description: `Water's needed for a lot of things.`
     },
     {
