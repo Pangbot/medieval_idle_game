@@ -1,13 +1,24 @@
 // Handles the player's resources and stats
 
-import { restartClockCheck, stopClock } from "./time.js";
-import { updateTabButtons, unselectCurrentActions } from "./buttons.js";
+import { restartClockCheck } from "./time.js";
+import { updateTabButtons } from "./buttons.js";
 import common from "./common.js";
 
 let thresholdTriggeredResources = [];
 
 export let player = {
-    age: null,
+    stats: [
+        { name: "age", value: "young" }, // Planned: young/middle/old
+        { name: "science", value: "physicist" }, // Planned: physicist/chemist/biologist
+        { name: "hobby", value: "linguist" }, // Planned: linguist/artist/naturist
+
+        { name: "reproductiveCapacity", value: "male" }, // Planned: (fertile) male/(fertile) female/infertile
+        { name: "genderIdentity", value: "man" }, // Planned: man/woman/nonbinary
+        { name: "pronouns", value: "hehim" }, // Planned: hehim/sheher/theythem
+        { name: "romanticPreference", value: "women" }, // Planned: men/women/all/aromantic
+
+        { name: "temperament", value: "pragmatic"}, // Planned: optimistic/pragmatic/resilient
+    ],
     selectedTaskID: null,
     selectedResearchID: null,
     completed: new Set(),
@@ -21,7 +32,7 @@ export let player = {
 };
 
 export function loadPlayer(data) {
-    player = data
+    player = data;
 }
 
 export function adjustResource(resourceName, amount) {

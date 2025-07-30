@@ -3,6 +3,7 @@ import { updateResources } from "./resources.js";
 import { updateResearches } from "./research.js";
 import { updateTasks } from "./tasks.js";
 import { restartClockCheck, updateDate } from "./time.js";
+import { initialiseJournal } from "./journal.js";
 import { initialiseSettings } from "./settings.js";
 import { changeAutosaveInterval, loadGame } from "./save.js";
 import common from "./common.js";
@@ -36,6 +37,7 @@ export function startGame() {
             addMainListeners();
             updateTabButtons("researchTabs");
             updateTabButtons("taskTabs");
+            initialiseJournal();
             initialiseSettings();
             console.log("Loaded!");
             resolve();

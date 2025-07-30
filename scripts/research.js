@@ -6,6 +6,7 @@ import common from "./common.js";
 import { stopClock } from './time.js';
 import { updateTasks } from "./tasks.js";
 import { updateCompletionProgressBar, updateAnimations } from "./animations.js";
+import { updateJournal } from "./journal.js";
 
 export let currentResearchTab = researchTabs[0];
 export let allResearchesUpdated;
@@ -150,6 +151,7 @@ export function updateResearchProgress() {
 
     updateResearches();
     updateTasks();
+    updateJournal();
     updateAnimations(currentResearch, player.selectedTaskID);
 }
 

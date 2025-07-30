@@ -75,6 +75,20 @@ h3 {
     background-color: #EFEBD8;
 }
 
+#journalBtn.newEntry {
+    background-color: #A7D9B4;
+    animation: oscillateBackground 0.5s infinite alternate;
+}
+
+@keyframes oscillateBackground {
+    0% {
+        background-color: #A7D9B4;
+    }
+    100% {
+        background-color: #B85C2E;
+    }
+}
+
 /* Main layout */
 .game-layout {
     display: flex;
@@ -374,7 +388,36 @@ button {
     pointer-events: all;
 }
 
-/* settings menu styling */
+/* Journal styling */
+.journal-container {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 35%;
+    width: 30%;
+    max-height: 70vh;
+
+    background-color: #36453B;
+    border: 2px solid #6B8E23;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    overflow-y: auto;
+    color: #EFEBD8;
+
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.journal-container.active {
+    display: block;
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Settings menu styling */
 .settings-container {
     position: fixed;
     top: 10%;
@@ -411,12 +454,25 @@ button {
 .settings-container button {
     border-radius: 5px;
     font-weight: bold;
+}
+
+.setting-item button {
     background-color: #A7D9B4;
     color: #36453B;
     border: 1px solid #6B8E23;
 }
 
-.settings-container button:hover {
+.setting-item button:hover {
+    background-color: #EFEBD8;
+}
+
+.setting-item-grid button {
+    background-color: #A7D9B4;
+    color: #36453B;
+    border: 1px solid #6B8E23;
+}
+
+.setting-item-grid button:hover {
     background-color: #EFEBD8;
 }
 
@@ -489,13 +545,14 @@ button {
     color: #B22222;
 }
 
-#closeBtn {
-    height: 30px;
+.close-btn {
+    border-radius: 5px;
+    font-weight: bold;
     background-color: #B85C2E;
     color: #EFEBD8;
 }
 
-#closeBtn:hover {
+.close-btn:hover {
     background-color: #E67A4F;
     border-color: #A7D9B4;
 }

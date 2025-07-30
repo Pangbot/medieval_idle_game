@@ -1,11 +1,12 @@
 // Handles the in-game date and AFK progress
-import { player, adjustResource, changeTask, changeResearch, thresholdReached } from "./player.js";
+import { player, adjustResource, thresholdReached } from "./player.js";
 import { updateResources } from "./resources.js";
 import { updateResearchProgress } from "./research.js";
 import { updateTaskProgress } from "./tasks.js";
 import common from "./common.js";
 import { updateAnimations } from "./animations.js";
 import { unselectCurrentActions } from "./buttons.js";
+import { updateJournal } from "./journal.js";
 
 let gameInterval = null;
 let lastTickTime = performance.now();
@@ -155,7 +156,7 @@ function advanceGameTime() {
         adjustResource("day", 1);
         updateDate();
         updateResources(); // In case there are effects to resources not caused directly from actions
-
+        updateJournal();
         dayProgress -= common.dayInMilliseconds;
     }
 

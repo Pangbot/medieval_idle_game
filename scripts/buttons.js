@@ -1,6 +1,7 @@
 // Creates/destroys buttons
-import { saveGame } from "./save.js"
-import { showHelp } from "./help.js"
+import { saveGame } from "./save.js";
+import { showHelp } from "./help.js";
+import { showJournal } from "./journal.js";
 import { showSettings } from "./settings.js";
 import { taskTabs } from "./data/taskList.js";
 import { researchTabs } from "./data/researchList.js";
@@ -27,20 +28,26 @@ export function addMainListeners() {
 
     const saveButton = document.getElementById("saveBtn");
     saveButton.addEventListener("click", () => {
-        saveGame();
         playButtonClickSound();
+        saveGame();
     });
 
     const helpButton = document.getElementById("helpBtn");
     helpButton.addEventListener("click", () => {
-        showHelp();
         playButtonClickSound();
+        showHelp();
+    });
+
+    const journalButton = document.getElementById("journalBtn");
+    journalButton.addEventListener("click", () => {
+        playButtonClickSound();
+        showJournal();
     });
 
     const settingsButton = document.getElementById("settingsBtn");
     settingsButton.addEventListener("click", () => {
-        showSettings();
         playButtonClickSound();
+        showSettings();
     });
 
     createTabButtons("researchTabs", researchTabs, changeResearchTab);

@@ -36,7 +36,7 @@ const importSaveButton = settingsContainer.querySelector(".import-save-btn");
 const importSaveTextBox = document.getElementById("importSaveTextBox");
 const exportSaveButton = settingsContainer.querySelector(".export-save-btn");
 const deleteSaveButton = settingsContainer.querySelector(".delete-save-btn");
-const closeButton = settingsContainer.querySelector(".close-btn");
+const closeButton = document.getElementById("settingsCloseBtn");
 
 let restartRequired = false;
 let previousWidth;
@@ -50,10 +50,10 @@ const emulateWindowTooltip = `This setting changes the apparent width of the gam
 Each panel will always be 1/4 of your actual window width though.<br>
 This setting requires the game to restart (your progress will be saved first!), help elements may overlap if you emulate a very different window width to your true width.`;
 
-const analToolTip = `This resets partial progress to 0 for all researches, tasks, and even the day.<br>
+const analTooltip = `This resets partial progress to 0 for all researches, tasks, and even the day.<br>
 It's good if you like things to stay in sync.`;
 
-const newAnalToolTip = `Just so you know, this is referred to as "analButton" in the code.`;
+const newAnalTooltip = `Just so you know, this is referred to as "analButton" in the code.`;
 
 export function initialiseSettings() {
     sfxTestButton.addEventListener("click", playButtonClickSound);
@@ -161,40 +161,20 @@ export function initialiseSettings() {
         resetAllResearchProgress();
         resetAllTaskProgress();
 
-        analButton.removeEventListener("mouseover", (event) => {
-            showCustomTooltip(analToolTip, event.clientX, event.clientY);
-        });
-        analButton.removeEventListener("mousemove", (event) => {
-            showCustomTooltip(analToolTip, event.clientX, event.clientY);
-        });
-
         analButton.innerText = "Reset!";
-
-        analButton.addEventListener("mouseover", (event) => {
-            showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
-        });
-        analButton.addEventListener("mousemove", (event) => {
-            showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
-        });
     });
 
-    analButton.addEventListener("mouseover", (event) => {
-        showCustomTooltip(analToolTip, event.clientX, event.clientY);
-    });
-
-    analButton.addEventListener("mousemove", (event) => {
-        showCustomTooltip(analToolTip, event.clientX, event.clientY);
-    });
-
-    analButton.addEventListener("mouseout", () => {
-        hideCustomTooltip();
-    });
+    analButton.addEventListener("mouseover", handleAnalButtonTooltip);
+    analButton.addEventListener("mousemove", handleAnalButtonTooltip);
+    analButton.addEventListener("mouseout", hideCustomTooltip);
 
     autosaveIntervalInput.addEventListener("input", (event) => {
         const interval = event.target.value;
         autosaveIntervalValueSpan.textContent = interval === "0" ? "Never" : `${interval} s`;
         common.getGameState().savedSettings.autosaveInterval = parseInt(interval);
     });
+
+    document.addEventListener("keydown", handleEscapeKey);
 }
 
 export function loadSettings(settingsData) {
@@ -234,19 +214,6 @@ function hideSettings() {
     settingsContainer.classList.remove("active");
     analButton.innerText = "I Like Things to be in Sync";
 
-    analButton.removeEventListener("mouseover", (event) => {
-        showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
-    });
-    analButton.removeEventListener("mousemove", (event) => {
-        showCustomTooltip(newAnalToolTip, event.clientX, event.clientY);
-    });
-    analButton.addEventListener("mouseover", (event) => {
-        showCustomTooltip(analToolTip, event.clientX, event.clientY);
-    });
-    analButton.addEventListener("mousemove", (event) => {
-        showCustomTooltip(analToolTip, event.clientX, event.clientY);
-    });
-
     changeAutosaveInterval(common.getGameState().savedSettings.autosaveInterval);
     importSaveTextBox.value = "";
     if (restartRequired) {
@@ -254,6 +221,25 @@ function hideSettings() {
         location.reload();
     } else {
         restartClockCheck();
+    }
+}
+
+function handleEscapeKey(event) {
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        if (settingsContainer.classList.contains('active')) {
+            hideSettings();
+        } else {
+            showSettings();
+        }
+    }
+}
+
+function handleAnalButtonTooltip(event) {
+    if (analButton.innerText === "Reset!") {
+        showCustomTooltip(newAnalTooltip, event.clientX, event.clientY);
+    } else {
+        showCustomTooltip(analTooltip, event.clientX, event.clientY);
     }
 }
 

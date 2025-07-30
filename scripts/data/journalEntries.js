@@ -1,10 +1,15 @@
 export const entries = [
     {
         id: "start_young",
-        conditions: 
-        {
-            age: "young"
-        },
+        name: "I'm dead",
+        playerConditions: 
+        [
+            { name : "age", value: "young"},
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
         read: false,
         text: `Well it's official. I'm dead.
 
@@ -29,10 +34,15 @@ export const entries = [
     },
     {
         id: "start_middle",
-        conditions: 
-        {
-            age: "middle"
-        },
+        name: "I'm dead",
+        playerConditions: 
+        [
+            { name : "age", value: "middle"},
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
         read: false,
         text: `Well it's official. I'm dead.
 
@@ -57,10 +67,15 @@ export const entries = [
     },
     {
         id: "start_old",
-        conditions: 
-        {
-            age: "old"
-        },
+        name: "I'm dead",
+        playerConditions: 
+        [
+            { name : "age", value: "old"},
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
         read: false,
         text: `Well it's official. I'm dead.
 
@@ -87,10 +102,15 @@ export const entries = [
     // Placeholder entry
     {
         id: "entry_placeholder",
-        conditions: 
-        {
-            placeholder: true
-        },
+        name: "Placeholder",
+        playerConditions: 
+        [
+            { name: "placeholder", value: true },
+        ],
+        gameConditions:
+        [
+            { name: "placeholder", value: true },
+        ],
         read: false,
         text: `This is a placeholder!`
     }
