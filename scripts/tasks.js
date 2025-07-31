@@ -1,7 +1,7 @@
 // Handles the tasks panel
 import { player, adjustResource, changeTask } from "./player.js"
 import { allTasks, taskTabs } from "./data/taskList.js"
-import { updateActionButtons, createActionButtons, updateTabButtons } from './buttons.js'
+import { updateActionButtons, createActionButtons, updateTabButtons } from "./buttons.js"
 import common from "./common.js";
 import { stopClock } from "./time.js";
 import { updateResearches } from "./research.js";
@@ -42,6 +42,9 @@ export function loadCurrentTaskTab(tab) {
 
 export function updateTasks() {
     const dayNumber = player.resources.find(resource => resource.name === "day").amount
+    const previousAvailableTasks = availableTasks;
+    const previousAvailableTaskIDs = new Set(previousAvailableTasks.map(task => task.id));
+
     allTasks.forEach(task => {
         if (task.completed) {
             task.available = false;
@@ -66,6 +69,21 @@ export function updateTasks() {
     availableTasks = allTasksUpdated.filter(task => task.available === true);
     tasksInTab = availableTasks.filter(task => task.tab === currentTaskTab);
 
+    const newAvailableTasks = availableTasks.filter(task => !previousAvailableTaskIDs.has(task.id));
+
+    if (newAvailableTasks.length > 0) {
+        const tabContainer = document.getElementById("taskTabs");
+        newAvailableTasks.forEach(task => {
+            if (task.tab !== currentTaskTab) {
+                const tabButton = tabContainer.querySelector(`button[id="${task.tab}"]`);
+                
+                if (!(tabButton.classList.contains("newEntry"))) {
+                    tabButton.classList.add("newEntry");
+                }
+            }
+        });
+    }
+
     const taskContainer = document.getElementById("taskBtns");
     const currentTaskButtons = taskContainer.querySelectorAll(".progress-button");
 
@@ -78,8 +96,8 @@ export function updateTasks() {
     tasksInTabIDs.sort();
 
     // Check if the lengths are the same AND if the sorted ID strings are identical
-    if (tasksInTabIDs.length !== currentButtonIDs.length || tasksInTabIDs.join(',') !== currentButtonIDs.join(',')) {
-        taskContainer.innerHTML = '';
+    if (tasksInTabIDs.length !== currentButtonIDs.length || tasksInTabIDs.join(",") !== currentButtonIDs.join(",")) {
+        taskContainer.innerHTML = "";
         createActionButtons("taskBtns", tasksInTab, "tasks");
     } else {
         updateActionButtons("taskBtns", tasksInTab, "tasks");
@@ -91,27 +109,33 @@ export function changeTaskTab(targetTab) {
         console.error(`Tab ${targetTab} not found in taskTabs (${taskTabs}).`)
     }
 
+    const tabContainer = document.getElementById("taskTabs");
+    const tabButton = tabContainer.querySelector(`button[id="${targetTab}"]`);
+    if (tabButton.classList.contains("newEntry")) {
+        tabButton.classList.remove("newEntry");
+    }
+
     if (currentTaskTab !== targetTab) {
-            const tabsContainer = document.querySelector('#taskTabs');
+            const tabsContainer = document.querySelector("#taskTabs");
     
             if (!tabsContainer) {
                 console.error("Task tabs container not found.");
                 return;
             }
     
-            const oldTabObject = tabsContainer.querySelector('#' + currentTaskTab);
-            const newTabObject = tabsContainer.querySelector('#' + targetTab);
+            const oldTabObject = tabsContainer.querySelector("#" + currentTaskTab);
+            const newTabObject = tabsContainer.querySelector("#" + targetTab);
     
-            if (oldTabObject && oldTabObject.classList.contains('active-button')) {
-                oldTabObject.classList.remove('active-button');
+            if (oldTabObject && oldTabObject.classList.contains("active-button")) {
+                oldTabObject.classList.remove("active-button");
             }
     
             currentTaskTab = targetTab;
     
             if (newTabObject) {
-                newTabObject.classList.add('active-button');
+                newTabObject.classList.add("active-button");
             } else {
-                console.error(`New tab button '${targetTab}' not found.`);
+                console.error(`New tab button "${targetTab}" not found.`);
             }
     
             updateTasks();
@@ -122,7 +146,7 @@ export function updateTaskProgress() {
     const currentTask = common.taskMap.get(player.selectedTaskID);
 
     if (!currentTask) {
-        console.error(`Selected task with ID '${player.selectedTaskID}' not found in taskMap.`);
+        console.error(`Selected task with ID "${player.selectedTaskID}" not found in taskMap.`);
         player.selectedTaskID = null;
         stopClock();
         return;
@@ -136,7 +160,7 @@ export function updateTaskProgress() {
         });
     }
 
-    // Check if it's completable
+    // Check if it"s completable
     if (isValidCompletionTime(currentTask)) {
         updateCompletionProgressBar(currentTask);
 

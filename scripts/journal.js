@@ -7,11 +7,21 @@ import { playButtonClickSound } from "./buttons.js";
 const journalButton = document.getElementById("journalBtn");
 const gameOverlay = document.getElementById("gameOverlay");
 const journalContainer = document.getElementById("journalContainer");
+const journalEntriesContainer = document.getElementById("journalEntriesContainer");
+const entryTextContainer = document.getElementById("entryTextContainer");
 const closeButton = document.getElementById("journalCloseBtn");
 
 let journalMap = new Map();
 
 export function initialiseJournal() {
+
+    journalContainer.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    entryTextContainer.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
 
     closeButton.addEventListener("click", () => {
         playButtonClickSound();
@@ -19,6 +29,7 @@ export function initialiseJournal() {
     });
 
     gameOverlay.addEventListener("click", hideJournal);
+    gameOverlay.addEventListener("click", hideJournalEntry);
 
     if (journal.allRelevantEntries.length === 0) { // Only build journal if not present
         buildJournal();
@@ -47,12 +58,13 @@ export let journal = {
 
 export function loadJournal(data) {
     journal = data;
+    updateJournal();
 }
 
 export function updateJournal() {
     const entriesToAdd = [];
 
-    // Iterate through filtered journal entries
+    // Loop through filtered journal entries
     journal.allRelevantEntries.forEach(entryID => {
         // Skip entries already in the journal
         if (journal.entriesInJournal.includes(entryID)) {
@@ -96,15 +108,30 @@ export function updateJournal() {
     if (entriesToAdd.length > 0) {
         entriesToAdd.forEach(entryID => {
             journal.entriesInJournal.push(entryID);
+            const entry = journalMap.get(entryID);
+
+            const buttonText = `Entry #` + journal.entriesInJournal.length + `: <b>` + entry.title + `</b>`;
+
+            const entryButton = document.createElement("button");
+            entryButton.innerHTML = buttonText;
+            entryButton.classList.add("journal-item");
+            entryButton.classList.add("newEntry");
+            entryButton.id = entry.id;
+
+            entryButton.addEventListener('click', () => {
+                showJournalEntry(entryID);
+            });
+
+            journalEntriesContainer.appendChild(entryButton);
             console.log(`New journal entry: ${entryID}`);
         });
-        startJournalFlash();
+        startJournalGlow();
     }
 }
 
 export function showJournal() {
     stopClock();
-    stopJournalFlash();
+    stopJournalGlow();
     gameOverlay.classList.add("active");
     journalContainer.classList.add("active");
 }
@@ -143,14 +170,36 @@ function buildJournal() {
     console.log("Journal built. Relevant entries:", journal.allRelevantEntries);
 }
 
-function startJournalFlash() {
+function startJournalGlow() {
     if (!(journalButton.classList.contains("newEntry"))) {
         journalButton.classList.add("newEntry");
     }
 }
 
-function stopJournalFlash() {
+function stopJournalGlow() {
     if (journalButton.classList.contains("newEntry")) {
         journalButton.classList.remove("newEntry");
     }
+}
+
+function showJournalEntry(entryID) {
+    const entry = journalMap.get(entryID);
+
+    const entryButton = document.getElementById(entryID);
+    if (entryButton.classList.contains("newEntry")) {
+        entryButton.classList.remove("newEntry");
+    }
+
+    entryTextContainer.classList.add("active");
+
+    entryTextContainer.innerHTML = "";
+
+    entryTextContainer.innerHTML = entry.text.replace(/\r?\n/g, '<br>');
+
+    entry.read = true;
+
+}
+
+function hideJournalEntry() {
+    entryTextContainer.classList.remove("active");
 }

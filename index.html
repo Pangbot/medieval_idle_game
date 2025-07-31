@@ -97,14 +97,22 @@
     </section>
     </main>
 
-    <!-- Overlayed content -->
+    <!-- Overlayed content (Journal, Settings, Help)-->
     <div id="gameOverlay" class="game-overlay">
         <!-- Journal -->
         <div id="journalContainer" class="journal-container">
             <h1 class="journal-title">My Journal</h1>
 
+            <div id="journalEntriesContainer">
+                <!-- Journal entries generated here -->
+            </div>
+
             <button class="close-btn" id="journalCloseBtn">Close</button>
         </div>
+        
+        <!-- Contains the actual text of the current open entry -->
+        <div id="entryTextContainer"></div>
+
         <!-- Settings -->
         <div id="settingsContainer" class="settings-container">
             <h2 class="restart-warning">Game will restart after closing!</h2>

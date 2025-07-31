@@ -72,6 +72,7 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Use
 
         const icon = document.createElement("img");
         icon.src = `icons/` + tabID + `.png`;
+        icon.alt = tabID.replace("-", " ") + " icon";
         icon.width = common.tabSize;
         icon.height = common.tabSize;
         icon.draggable = false;

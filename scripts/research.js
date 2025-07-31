@@ -3,7 +3,7 @@ import { player, adjustResource, changeResearch } from "./player.js"
 import { researchTabs, allResearches } from "./data/researchList.js"
 import { createActionButtons, updateActionButtons, updateTabButtons } from "./buttons.js";
 import common from "./common.js";
-import { stopClock } from './time.js';
+import { stopClock } from "./time.js";
 import { updateTasks } from "./tasks.js";
 import { updateCompletionProgressBar, updateAnimations } from "./animations.js";
 import { updateJournal } from "./journal.js";
@@ -43,6 +43,9 @@ export function loadCurrentResearchTab(tab) {
 
 export function updateResearches() {
     const dayNumber = player.resources.find(resource => resource.name === "day").amount;
+    const previousAvailableResearches = availableResearches;
+    const previousAvailableResearchIDs = new Set(previousAvailableResearches.map(research => research.id));
+
     allResearches.forEach(research => {
         if (research.completed) {
             research.available = false;
@@ -68,6 +71,21 @@ export function updateResearches() {
     availableResearches = allResearches.filter(research => research.available === true);
     researchesInTab = availableResearches.filter(research => research.tab === currentResearchTab);
 
+    const newAvailableResearches = availableResearches.filter(task => !previousAvailableResearchIDs.has(task.id));
+    
+    if (newAvailableResearches.length > 0) {
+        const tabContainer = document.getElementById("researchTabs");
+        newAvailableResearches.forEach(research => {
+            if (research.tab !== currentResearchTab) {
+                const tabButton = tabContainer.querySelector(`button[id="${research.tab}"]`);
+                
+                if (!(tabButton.classList.contains("newEntry"))) {
+                    tabButton.classList.add("newEntry");
+                }
+            }
+        });
+    }
+
     const researchContainer = document.getElementById("researchBtns");
     const currentResearchButtons = researchContainer.querySelectorAll(".progress-button");
 
@@ -80,7 +98,7 @@ export function updateResearches() {
     researchesInTabIDs.sort();
 
     // Check if the lengths are the same AND if the sorted ID strings are identical
-    if (researchesInTabIDs.length !== currentButtonIDs.length || researchesInTabIDs.join(',') !== currentButtonIDs.join(',')) {
+    if (researchesInTabIDs.length !== currentButtonIDs.length || researchesInTabIDs.join(",") !== currentButtonIDs.join(",")) {
         createActionButtons("researchBtns", researchesInTab, "researches");
     } else {
         updateActionButtons("researchBtns", researchesInTab, "researches");
@@ -93,27 +111,33 @@ export function changeResearchTab(targetTab) {
         console.error(`Tab ${targetTab} not found in researchTabs (${researchTabs}).`)
     }
 
+    const tabContainer = document.getElementById("researchTabs");
+    const tabButton = tabContainer.querySelector(`button[id="${targetTab}"]`);
+    if (tabButton.classList.contains("newEntry")) {
+        tabButton.classList.remove("newEntry");
+    }
+
     if (currentResearchTab !== targetTab) {
-        const tabsContainer = document.querySelector('#researchTabs');
+        const tabsContainer = document.querySelector("#researchTabs");
 
         if (!tabsContainer) {
             console.error("Research tabs container not found.");
             return;
         }
 
-        const oldTabObject = tabsContainer.querySelector('#' + currentResearchTab);
-        const newTabObject = tabsContainer.querySelector('#' + targetTab);
+        const oldTabObject = tabsContainer.querySelector("#" + currentResearchTab);
+        const newTabObject = tabsContainer.querySelector("#" + targetTab);
 
-        if (oldTabObject && oldTabObject.classList.contains('active-button')) {
-            oldTabObject.classList.remove('active-button');
+        if (oldTabObject && oldTabObject.classList.contains("active-button")) {
+            oldTabObject.classList.remove("active-button");
         }
 
         currentResearchTab = targetTab;
 
         if (newTabObject) {
-            newTabObject.classList.add('active-button');
+            newTabObject.classList.add("active-button");
         } else {
-            console.error(`New tab button '${targetTab}' not found.`);
+            console.error(`New tab button "${targetTab}" not found.`);
         }
 
         updateResearches();
@@ -124,7 +148,7 @@ export function updateResearchProgress() {
     const currentResearch = common.researchMap.get(player.selectedResearchID);
 
     if (!currentResearch) {
-        console.error(`Selected research with ID '${player.selectedResearchID}' not found in researchMap.`);
+        console.error(`Selected research with ID "${player.selectedResearchID}" not found in researchMap.`);
         player.selectedResearchID = null;
         stopClock();
         return;

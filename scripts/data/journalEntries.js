@@ -1,7 +1,7 @@
 export const entries = [
     {
         id: "start_young",
-        name: "I'm dead",
+        title: "I'm dead",
         playerConditions: 
         [
             { name : "age", value: "young"},
@@ -34,7 +34,7 @@ export const entries = [
     },
     {
         id: "start_middle",
-        name: "I'm dead",
+        title: "I'm dead",
         playerConditions: 
         [
             { name : "age", value: "middle"},
@@ -67,7 +67,7 @@ export const entries = [
     },
     {
         id: "start_old",
-        name: "I'm dead",
+        title: "I'm dead",
         playerConditions: 
         [
             { name : "age", value: "old"},
@@ -99,10 +99,24 @@ export const entries = [
         If this is Earth, I can find iron, copper, all sorts. It doesn't matter how long it takes if I never came here in the first place.
         But first things first, better make sure I survive the night.`
     },
+    {
+        id: "entry_placeholder",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        read: false,
+        text: `This is a placeholder!`
+    },
     // Placeholder entry
     {
         id: "entry_placeholder",
-        name: "Placeholder",
+        title: "Placeholder",
         playerConditions: 
         [
             { name: "placeholder", value: true },
@@ -113,5 +127,5 @@ export const entries = [
         ],
         read: false,
         text: `This is a placeholder!`
-    }
+    },
 ]

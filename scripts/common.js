@@ -14,7 +14,7 @@ const taskMap = new Map(allTasks.map(task => [task.id, task]));
 const defaultTabSize = 64;
 
 const common = {
-    dayInMilliseconds: 100,
+    dayInMilliseconds: 1000,
     unlockedDBH: false,
     tabSize: defaultTabSize,
     researchMap,
