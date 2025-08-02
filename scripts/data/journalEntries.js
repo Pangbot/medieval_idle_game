@@ -1,4 +1,19 @@
-export const entries = [
+// Holds the entries for the journal
+
+const conditionSchema = { name: "string", value: undefined };
+
+const boolean = true;
+
+export const journalSchema = {
+    id: "string",
+    title: "string",
+    playerConditions: [conditionSchema],
+    gameConditions: [conditionSchema],
+    read: boolean,
+    text: `string`
+}
+
+export const journalEntries = [
     {
         id: "start_young",
         title: "I'm dead",
@@ -113,19 +128,5 @@ export const entries = [
         read: false,
         text: `This is a placeholder!`
     },
-    // Placeholder entry
-    {
-        id: "entry_placeholder",
-        title: "Placeholder",
-        playerConditions: 
-        [
-            { name: "placeholder", value: true },
-        ],
-        gameConditions:
-        [
-            { name: "placeholder", value: true },
-        ],
-        read: false,
-        text: `This is a placeholder!`
-    },
+    
 ]

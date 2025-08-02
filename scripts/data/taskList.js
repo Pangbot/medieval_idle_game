@@ -1,5 +1,29 @@
 // Every task in the game
 
+const conditionSchema = { name: "string", value: undefined };
+
+const boolean = true;
+
+const number = 0;
+
+const stringArray = ["element"];
+
+export const taskSchema = {
+    id: "string",
+    tab: "string",
+    buttonName: "string",
+    resources: [conditionSchema],
+    resourcePeriod: number,
+    progress: number,
+    workProgress: number,
+    daysToComplete: number,
+    available: boolean,
+    minDay: number, // Could change this to gameConditions and resources to playerConditions...
+    requires: stringArray,
+    completed: boolean,
+    description: `string`
+}
+
 export const taskTabs = [
     "daily-life",
     "comforts",
@@ -14,17 +38,18 @@ export const allTasks = [
         tab: taskTabs[4],
         buttonName: "Gain Stuff",
         resources: [
-            { name: "health", amount: 1 },
-            { name: "motivation", amount: 1 },
-            { name: "DBH", amount: -0.01 }
+            { name: "health", value: 1 },
+            { name: "motivation", value: 1 },
+            { name: "DBH", value: -0.01 }
         ],
         resourcePeriod: 1,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         description: `Gives ya stuff. :3`
     },
     {
@@ -32,17 +57,18 @@ export const allTasks = [
         tab: taskTabs[4],
         buttonName: "Lose Stuff",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.01 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.01 }
         ],
         resourcePeriod: 1,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         description: `Loses ya stuff. D:`
     },
     {
@@ -50,12 +76,13 @@ export const allTasks = [
         tab: taskTabs[4],
         buttonName: "Takes your water buckets",
         resources: [
-            { name: "Water buckets", amount: -1 },
+            { name: "Water buckets", value: -1 },
         ],
         resourcePeriod: 1,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: true,
         minDay: 0,
         requires: ["water_improvements"],
@@ -66,17 +93,18 @@ export const allTasks = [
         tab: taskTabs[0],
         buttonName: "Work the fields",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 7,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         description: `The Whalley family very kindly took you in, but you have to pull your weight.<br>
         Maybe there are other ways you can help them out?`
     },
@@ -85,15 +113,16 @@ export const allTasks = [
         tab: taskTabs[1],
         buttonName: "Examine Arrival Area",
         resources: [
-            { name: "DBH", amount: 0.001 }
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 7,
         progress: 0,
         workProgress: 0,
         daysToComplete: 30,
+        completed: false,
         available: false,
         minDay: 90,
-        requires: null,
+        requires: [],
         description: `Now that you're settling in, it might be a good time to look around the place you arrived here from. Maybe something else came back with you?`
     },
     {
@@ -101,15 +130,16 @@ export const allTasks = [
         tab: taskTabs[1],
         buttonName: "Look for Lichens",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 },
-            { name: "Lichens", amount: 1 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 },
+            { name: "Lichens", value: 1 }
         ],
         resourcePeriod: 7,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: false,
         minDay: 0,
         requires: ["non_caustic_soap"],
@@ -120,15 +150,16 @@ export const allTasks = [
         tab: taskTabs[1],
         buttonName: "Fetch Buckets of Water",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 },
-            { name: "Water buckets", amount: 1 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 },
+            { name: "Water buckets", value: 1 }
         ],
         resourcePeriod: 7,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: true,
         minDay: 0,
         requires: ["water_storage_improvements"],
@@ -139,16 +170,17 @@ export const allTasks = [
         tab: taskTabs[1],
         buttonName: "Make a Bar of Soap",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 },
-            { name: "Lichens", amount: -1 },
-            { name: "Soap", amount: 1 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 },
+            { name: "Lichens", value: -1 },
+            { name: "Soap", value: 1 }
         ],
         resourcePeriod: 7,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: false,
         minDay: 0,
         requires: ["non_caustic_soap"],
@@ -159,17 +191,18 @@ export const allTasks = [
         tab: taskTabs[2],
         buttonName: "Tab 2 button",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 7,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         description: `Tab 2 button desc.`
     },
     {
@@ -177,17 +210,18 @@ export const allTasks = [
         tab: taskTabs[3],
         buttonName: "Tab 3 button",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 7,
         progress: 0,
         workProgress: 0,
         daysToComplete: Infinity,
+        completed: false,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         description: `Tab 3 button desc.`
     }
 ]

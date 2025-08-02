@@ -1,5 +1,29 @@
 // Every research in the game
 
+const conditionSchema = { name: "string", value: undefined };
+
+const boolean = true;
+
+const number = 0;
+
+const stringArray = ["element"];
+
+export const researchSchema = {
+    id: "string",
+    tab: "string",
+    buttonName: "string",
+    resources: [conditionSchema],
+    resourcePeriod: number,
+    progress: number,
+    workProgress: number,
+    daysToComplete: number,
+    available: boolean,
+    minDay: number, // Could change this to gameConditions and resources to playerConditions...
+    requires: stringArray,
+    completed: boolean,
+    description: `string`
+}
+
 export const researchTabs = [
     "daily-life",
     "comforts",
@@ -14,9 +38,9 @@ export const allResearches = [
         tab: researchTabs[4],
         buttonName: "Gain stuff",
         resources: [
-            { name: "health", amount: 1 },
-            { name: "motivation", amount: 1 },
-            { name: "DBH", amount: -0.01 }
+            { name: "health", value: 1 },
+            { name: "motivation", value: 1 },
+            { name: "DBH", value: -0.01 }
         ],
         resourcePeriod: 1,
         progress: 0,
@@ -24,7 +48,7 @@ export const allResearches = [
         daysToComplete: Infinity,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         completed: false,
         description: `Gives ya stuff. :3`
     },
@@ -33,9 +57,9 @@ export const allResearches = [
         tab: researchTabs[4],
         buttonName: "Lose stuff",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.01 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.01 }
         ],
         resourcePeriod: 1,
         progress: 0,
@@ -43,7 +67,7 @@ export const allResearches = [
         daysToComplete: Infinity,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         completed: false,
         description: `Loses ya stuff. D:`
     },
@@ -52,9 +76,9 @@ export const allResearches = [
         tab: researchTabs[0],
         buttonName: "Soapmaking",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 7,
         daysToComplete: 30,
@@ -62,7 +86,7 @@ export const allResearches = [
         workProgress: 0,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         completed: false,
         description: `What's available here isn't so much <i>soap</i> as it is... ash... with a sprinkling of water.<br> 
         Do a little digging in your QuanTech&trade; neural chip and figure out how you could make soap that doesn't burn your skin.` 
@@ -72,9 +96,9 @@ export const allResearches = [
         tab: researchTabs[0],
         buttonName: "Water Storage Improvements",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 5,
         daysToComplete: 30,
@@ -91,9 +115,9 @@ export const allResearches = [
         tab: researchTabs[1],
         buttonName: "Research tab 1 button",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 1,
         daysToComplete: 30,
@@ -101,7 +125,7 @@ export const allResearches = [
         workProgress: 0,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         completed: false,
         description: `Tab 1 test desc.`
     },
@@ -110,7 +134,7 @@ export const allResearches = [
         tab: researchTabs[0],
         buttonName: "Keeps researching forever",
         resources: [
-            { name: "DBH", amount: 0.001 }
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 1,
         daysToComplete: Infinity,
@@ -118,7 +142,7 @@ export const allResearches = [
         workProgress: 0,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         completed: false,
         description: `Tab 1 test desc.`
     },
@@ -127,9 +151,9 @@ export const allResearches = [
         tab: researchTabs[2],
         buttonName: "Research tab 2 button",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 7,
         daysToComplete: 30,
@@ -137,7 +161,7 @@ export const allResearches = [
         workProgress: 0,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         completed: false,
         description: `Tab 2 test desc.`
     },
@@ -146,9 +170,9 @@ export const allResearches = [
         tab: researchTabs[3],
         buttonName: "Research tab 3 button",
         resources: [
-            { name: "health", amount: -1 },
-            { name: "motivation", amount: -1 },
-            { name: "DBH", amount: 0.001 }
+            { name: "health", value: -1 },
+            { name: "motivation", value: -1 },
+            { name: "DBH", value: 0.001 }
         ],
         resourcePeriod: 7,
         daysToComplete: 30,
@@ -156,7 +180,7 @@ export const allResearches = [
         workProgress: 0,
         available: true,
         minDay: 0,
-        requires: null,
+        requires: [],
         completed: false,
         description: `Tab 3 test desc.`
     },

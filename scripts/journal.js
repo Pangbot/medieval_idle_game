@@ -1,5 +1,5 @@
 // Handles the journal logic
-import { entries } from "./data/journalEntries.js";
+import { journalEntries } from "./data/journalEntries.js";
 import { player } from "./player.js";
 import { stopClock, restartClockCheck } from "./time.js";
 import { playButtonClickSound } from "./buttons.js";
@@ -39,7 +39,7 @@ export function initialiseJournal() {
     }
 
     journal.allRelevantEntries.forEach(entryID => {
-        const fullEntry = entries.find(entry => entry.id === entryID);
+        const fullEntry = journalEntries.find(entry => entry.id === entryID);
         if (fullEntry) {
             journalMap.set(entryID, fullEntry);
         } else {
@@ -149,7 +149,7 @@ function buildJournal() {
         return;
     }
 
-    entries.forEach(entry => {
+    journalEntries.forEach(entry => {
         if (!entry.playerConditions || entry.playerConditions.length === 0) {
             journal.allRelevantEntries.push(entry.id);
             return;
