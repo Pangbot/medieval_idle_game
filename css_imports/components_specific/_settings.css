@@ -1,0 +1,155 @@
+/* Settings, range elements, checkbox, dropdown, text entry - not the buttons though */
+
+/* Settings */
+.settings-title {
+    text-align: center;
+}
+
+.settings-container {
+    position: fixed;
+    top: 10%;
+    left: 35%;
+    width: 30%;
+    max-height: 70vh;
+    display: none;
+
+    background-color: #36453B;
+    border: 2px solid #6B8E23;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    overflow-y: auto;
+    color: #A7D9B4;
+    z-index: 1000;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.settings-container.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+}
+
+.settings-container label {
+    color: #A7D9B4;
+    font-weight: bold;
+}
+
+/* Music/SFX/Autosave/Threshold */
+.setting-item-grid {
+    display: grid;
+    grid-template-columns: 90px 2fr 50px 90px;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px dashed #6B8E23;
+}
+
+#windowElement {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+/* Sync & Saving */
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    gap: 5px;
+    border-bottom: 1px dashed #6B8E23;
+}
+
+.restart-warning {
+    display: none;
+    text-align: center;
+    color: red;
+}
+
+.restart-warning.active {
+    display: block;
+}
+
+/* Range elements */
+.settings-container input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: #6B8E23;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity .2s;
+    border-radius: 4px;
+}
+
+.settings-container input[type="range"]:hover {
+    opacity: 1;
+}
+
+.settings-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #A7D9B4;
+    cursor: grab;
+    border-radius: 50%;
+    border: 1px solid #36453B;
+}
+
+.settings-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #A7D9B4;
+    cursor: grab;
+    border-radius: 50%;
+    border: 1px solid #36453B;
+}
+
+.settings-container input[type="checkbox"]:checked {
+    accent-color: #A7D9B4;
+}
+
+#emulateWindowSize {
+    font-size: 1em;
+    padding: 8px 12px;
+    border: 1px solid #A7D9B4;
+    border-radius: 5px;
+    background-color: #36453B;
+    color: #EFEBD8;
+    cursor: pointer;
+    
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* Add a custom SVG arrow */
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23EFEBD8" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+    padding-right: 30px;
+    transition: all 0.2s ease;
+}
+
+#emulateWindowSize:hover {
+    background-color: #6B8E23;
+    border-color: #EFEBD8;
+}
+
+#emulateWindowSize:focus {
+    border-color: #B85C2E;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(184, 92, 46, 0.5);
+}
+
+#emulateWindowSize option {
+    background-color: #36453B;
+    color: #EFEBD8;
+    font-size: 16px;
+    border-radius: 0;
+}

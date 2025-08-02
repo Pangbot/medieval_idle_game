@@ -41,6 +41,45 @@ export function loadCurrentResearchTab(tab) {
     updateResearches();
 }
 
+export function changeResearchTab(targetTab) {
+    if (!researchTabs.includes(targetTab)) {
+        console.error(`Tab ${targetTab} not found in researchTabs (${researchTabs}).`)
+    }
+
+    const tabContainer = document.getElementById("researchTabs");
+    console.log(tabContainer);
+    const tabButton = tabContainer.querySelector(`button[id="${targetTab}"]`);
+    if (tabButton.classList.contains("newEntry")) {
+        tabButton.classList.remove("newEntry");
+    }
+
+    if (currentResearchTab !== targetTab) {
+        const tabsContainer = document.querySelector("#researchTabs");
+
+        if (!tabsContainer) {
+            console.error("Research tabs container not found.");
+            return;
+        }
+
+        const oldTabObject = tabsContainer.querySelector("#" + currentResearchTab);
+        const newTabObject = tabsContainer.querySelector("#" + targetTab);
+
+        if (oldTabObject && oldTabObject.classList.contains("active-button")) {
+            oldTabObject.classList.remove("active-button");
+        }
+
+        currentResearchTab = targetTab;
+
+        if (newTabObject) {
+            newTabObject.classList.add("active-button");
+        } else {
+            console.error(`New tab button "${targetTab}" not found.`);
+        }
+
+        updateResearches();
+    }
+}
+
 export function updateResearches() {
     const dayNumber = player.resources.find(resource => resource.name === "day").amount;
     const previousAvailableResearches = availableResearches;
@@ -104,44 +143,6 @@ export function updateResearches() {
         updateActionButtons("researchBtns", researchesInTab, "researches");
     }
     
-}
-
-export function changeResearchTab(targetTab) {
-    if (!researchTabs.includes(targetTab)) {
-        console.error(`Tab ${targetTab} not found in researchTabs (${researchTabs}).`)
-    }
-
-    const tabContainer = document.getElementById("researchTabs");
-    const tabButton = tabContainer.querySelector(`button[id="${targetTab}"]`);
-    if (tabButton.classList.contains("newEntry")) {
-        tabButton.classList.remove("newEntry");
-    }
-
-    if (currentResearchTab !== targetTab) {
-        const tabsContainer = document.querySelector("#researchTabs");
-
-        if (!tabsContainer) {
-            console.error("Research tabs container not found.");
-            return;
-        }
-
-        const oldTabObject = tabsContainer.querySelector("#" + currentResearchTab);
-        const newTabObject = tabsContainer.querySelector("#" + targetTab);
-
-        if (oldTabObject && oldTabObject.classList.contains("active-button")) {
-            oldTabObject.classList.remove("active-button");
-        }
-
-        currentResearchTab = targetTab;
-
-        if (newTabObject) {
-            newTabObject.classList.add("active-button");
-        } else {
-            console.error(`New tab button "${targetTab}" not found.`);
-        }
-
-        updateResearches();
-    }
 }
 
 export function updateResearchProgress() {

@@ -1,0 +1,22 @@
+/* Modular layout make brain give happy chemicals */
+/* Make sure it's imported in the right order... -_- */
+
+/* base */
+@import url("css_imports/base/_base.css");
+
+/* layout */
+@import url("css_imports/layout/_game_layout.css");
+
+/* components */
+@import url("css_imports/components/_bars.css");
+@import url("css_imports/components/_buttons.css");
+@import url("css_imports/components/_loading.css");
+
+/* components-specific */
+@import url("css_imports/components_specific/_inventory.css");
+@import url("css_imports/components_specific/_journal.css");
+@import url("css_imports/components_specific/_overlay.css");
+@import url("css_imports/components_specific/_settings.css");
+
+/* animations */
+@import url("css_imports/animations/_animations.css");

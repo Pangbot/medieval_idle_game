@@ -1,0 +1,40 @@
+/* Only the animations */
+
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 8px 4px #FFD700B3;
+    }
+    100% {
+        box-shadow: 0 0 12px 6px #FFD700FF;
+    }
+}
+
+@keyframes upGlowAndFade {
+    0% {
+        background-color: transparent;
+        box-shadow: 0 0 0px #A7D9B400;
+    }
+    50% {
+        background-color: #A7D9B4B3;
+        box-shadow: 0 0 15px #A7D9B4FF;
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: 0 0 0px #A7D9B400;
+    }
+}
+
+@keyframes downGlowAndFade {
+    0% {
+        background-color: transparent;
+        box-shadow: 0 0 0px #FF000000;
+    }
+    50% {
+        background-color: #FF0000B3;
+        box-shadow: 0 0 15px #FF0000FF;
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: 0 0 0px #FF000000;
+    }
+}

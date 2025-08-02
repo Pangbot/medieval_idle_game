@@ -1,0 +1,37 @@
+/* Inventory by itself because it's a naughty boy */
+.inventory-box {
+    background-color: #36453B;
+    border: 1px solid #A7D9B4;
+    height: 300px;
+    padding: 10px; 
+    margin-top: 15px;
+    border-radius: 5px;
+}
+
+.inventory-container {
+    width: 100%;
+    text-align: left;
+    color: #EFEBD8;
+}
+
+.inventory-items {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    justify-items: center;
+}
+
+.inventory-item {
+    padding: 3px;
+}
+
+.inventory-item.up-glow-animation {
+    animation: upGlowAndFade 1s ease-out forwards;
+}
+
+.inventory-item.down-glow-animation {
+    animation: downGlowAndFade 1s ease-out forwards;
+}

@@ -10,6 +10,7 @@ import { changeResearchTab, currentResearchTab, updateResearches } from "./resea
 import { changeTaskTab, currentTaskTab, updateTasks } from "./tasks.js";
 import { addProgressElements, addCompletionProgressBar } from "./animations.js";
 import common from "./common.js";
+import { getDayProgress } from "./time.js";
 
 export let buttonClickSound = new Audio("../audio/button_click.mp3");
 let isSoundLoaded = true;
@@ -21,6 +22,9 @@ export function playButtonClickSound() {
 }
 
 export function addMainListeners() {
+    const dateElement = document.getElementById("date");
+    dateElement.addEventListener("click", getDayProgress);
+
     if (!buttonClickSound) {
         console.error("button_click.mp3 not found in audio folder.")
         isSoundLoaded = false;

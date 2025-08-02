@@ -1,0 +1,204 @@
+/* Tooltips, then all the buttons */
+
+/* Button tooltips */
+.custom-tooltip {
+    position: absolute;
+    background-color: #36453B;
+    border: 2px solid #6B8E23;
+    color: #EFEBD8;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    max-width: 300px;
+    word-wrap: break-word;
+    pointer-events: none;
+    z-index: 1000;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    transition: opacity 0.1s ease, transform 0.1s ease, visibility 0.1s ease;
+}
+
+/* Top bar */
+.top-bar .top-buttons button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: #A7D9B4;
+    color: #36453B;
+    border: 1px solid #36453B;
+    box-shadow: 0 0 0 0 transparent; 
+    transition: background-color 0.2s ease-in-out;
+}
+
+.top-bar .top-buttons button:hover {
+    background-color: #EFEBD8;
+}
+
+/* New entry */
+#journalBtn.newEntry, 
+.tab-button.newEntry {
+    background-color: #FFD700;
+    animation: pulse-glow 1.8s infinite alternate;
+    animation-delay: -0.9s;
+    transform: translateZ(0);
+}
+
+/* Tab buttons */
+#researchBtns,
+#taskBtns {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px;
+    margin: 0 auto;
+}
+
+.tab-button {
+    border-radius: 20px;
+    border-color: #36453B;
+    background-color: #A7D9B4;
+    box-shadow: 0 0 0 0 transparent; 
+    transition: background-color 0.2s ease-in-out;
+}
+
+.tab-button.active-button {
+    background-color: #EFEBD8;
+}
+
+.tab-button.selected-button {
+    background-color: #B85C2E;
+}
+
+/* Progress buttons */
+.progress-button {
+    background-color: #A7D9B4;
+    border: 1px solid #36453B;
+    padding: 10px 20px;
+    font-size: 16px;
+    position: relative;
+    overflow: hidden; 
+    border-radius: 10px;
+    color: #36453B;
+    display: block;
+    margin: 5px;
+    min-width: 150px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.unavailable-action {
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #A7D9B480 0px,
+        #A7D9B480 5px,
+        #EFEBD8 5px,
+        #EFEBD8 10px
+    );
+    cursor: not-allowed;
+}
+
+.progress-button:hover {
+    background-color: #EFEBD8;
+}
+
+.progress-button .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: #B85C2E;
+    z-index: 1;
+}
+
+.progress-button .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: #B85C2E;
+    z-index: 1;
+}
+
+.progress-button.in-progress .progress-fill {
+    width: 100%;
+}
+
+.progress-button span {
+    position: relative;
+    z-index: 2;
+    color: #36453B;
+}
+
+/* Selected buttons */
+.progress-button.selected-button {
+    background-color: #EFEBD8;
+    border-color: #36453B;
+}
+
+.progress-button.selected-button:hover {
+    background-color: #A7D9B4;
+}
+
+/* Settings buttons */
+.settings-container button {
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.setting-item button {
+    background-color: #A7D9B4;
+    color: #36453B;
+    border: 1px solid #6B8E23;
+}
+
+.setting-item button:hover {
+    background-color: #EFEBD8;
+}
+
+.setting-item-grid button {
+    background-color: #A7D9B4;
+    color: #36453B;
+    border: 1px solid #6B8E23;
+}
+
+.setting-item-grid button:hover {
+    background-color: #EFEBD8;
+}
+
+#analBtn {
+    height: 30px;
+}
+
+#delete-save-btn {
+    height: 30px;
+    background-color: #B22222;
+    color: #EFEBD8;
+}
+
+#delete-save-btn:hover {
+    background-color: #EFEBD8;
+    color: #B22222;
+}
+
+.close-button-container {
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.close-btn {
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #B85C2E;
+    color: #EFEBD8;
+}
+
+.close-btn:hover {
+    background-color: #E67A4F;
+    border-color: #A7D9B4;
+}

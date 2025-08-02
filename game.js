@@ -1,12 +1,12 @@
-import { addMainListeners, updateTabButtons } from "./buttons.js";
-import { updateResources } from "./resources.js";
-import { updateResearches } from "./research.js";
-import { updateTasks } from "./tasks.js";
-import { restartClockCheck, updateDate } from "./time.js";
-import { initialiseJournal } from "./journal.js";
-import { initialiseSettings } from "./settings.js";
-import { changeAutosaveInterval, loadGame } from "./save.js";
-import common from "./common.js";
+import { addMainListeners, updateTabButtons } from "./scripts/buttons.js";
+import { updateResources } from "./scripts/resources.js";
+import { updateResearches } from "./scripts/research.js";
+import { updateTasks } from "./scripts/tasks.js";
+import { restartClockCheck, updateDate } from "./scripts/time.js";
+import { initialiseJournal } from "./scripts/journal.js";
+import { initialiseSettings } from "./scripts/settings.js";
+import { changeAutosaveInterval, loadGame } from "./scripts/save.js";
+import common from "./scripts/common.js";
 
 export function startGame() {
 
@@ -19,6 +19,7 @@ export function startGame() {
         window.onload = () => {
 
             common.tabSize = parseInt(common.savedSettings.windowSize) / 30;
+            addMainListeners(); // Has to be done before loading, creates top bar and tab buttons
 
             if (localStorage.getItem("saveData")) {
                 console.log("Save data found, loading game...");
@@ -34,7 +35,6 @@ export function startGame() {
                 changeAutosaveInterval();
             }
 
-            addMainListeners();
             updateTabButtons("researchTabs");
             updateTabButtons("taskTabs");
             initialiseJournal();

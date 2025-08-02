@@ -1,0 +1,57 @@
+/* Overlay and help */
+
+/* Game overlay */
+.game-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(54, 69, 59, 0.8);
+    z-index: 999;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+.game-overlay.active {
+    display: block;
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Help */
+.help-text-entry {
+    position: absolute;
+    background-color: #EFEBD8;
+    color: #36453B;
+    padding: 8px 12px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-size: 0.9em;
+    pointer-events: none;
+    z-index: 1001;
+}
+
+.help-arrows {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.help-arrows line {
+    stroke: #A7D9B4;
+    stroke-width: 2;
+    fill: none;
+    marker-end: url(#arrowhead);
+}
+
+/* SVG Arrowhead Marker */
+.help-arrows defs marker {
+    overflow: visible;
+}

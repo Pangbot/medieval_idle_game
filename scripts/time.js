@@ -14,6 +14,11 @@ let dayProgress = 0;
 let tabLastVisibleTime = performance.now();
 let remainingRes = 0;
 let remainingTask = 0;
+let extraTime = 0;
+
+export function getDayProgress() {
+    console.log(`Day progress is: ${dayProgress}/${common.dayInMilliseconds}.`);
+}
 
 function advanceGameTime() {
     if (document.hidden) {
@@ -27,8 +32,13 @@ function advanceGameTime() {
 
     const now = performance.now();
     let deltaTime = now - lastTickTime;
-
     lastTickTime = now;
+
+    if (extraTime > 0) { // Only comes from offline time for short time periods
+        deltaTime += extraTime;
+        extraTime = 0;
+    }
+
     dayProgress += deltaTime;
 
     const currentResearch = common.researchMap.get(player.selectedResearchID);
@@ -189,7 +199,7 @@ function gameLoop() {
 }
 
 export function restartClockCheck() {
-    if( player.selectedResearchID && player.selectedTaskID ) {
+    if (player.selectedResearchID && player.selectedTaskID) {
         startClock();
     } 
 }
@@ -199,10 +209,13 @@ document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
         tabLastVisibleTime = visibilityChangeTime;
         stopClock();
+
     } else {
-        calculateOfflineProgress();
-        lastTickTime = performance.now();
-        restartClockCheck();
+        if (player.selectedResearchID !== null && player.selectedTaskID !== null) {
+            calculateOfflineProgress();
+            lastTickTime = performance.now();
+            restartClockCheck();
+        }
     }
 });
 
@@ -210,33 +223,35 @@ function calculateOfflineProgress() {
     const now = performance.now();
     const offlineDuration = now - tabLastVisibleTime;
 
-    if (offlineDuration < common.dayInMilliseconds || player.selectedResearchID === null || player.selectedTaskID === null) {
-        dayProgress = offlineDuration;
-        return;
-    }
-    else {
-        dayProgress = offlineDuration % common.dayInMilliseconds;
+    if (offlineDuration < common.dayInMilliseconds) {
+        extraTime = offlineDuration;
+        return; // Let advanceGameTime() handle it
     }
 
     let timeSimulated = 0;
-    
     let currentResearch = common.researchMap.get(player.selectedResearchID);
     let currentTask = common.taskMap.get(player.selectedTaskID);
 
     // Simulate offline time
-    while (true) {
+    while (timeSimulated < offlineDuration) {
 
         let remainingDayProgress = common.dayInMilliseconds - dayProgress;
         let remainingResProgress = common.dayInMilliseconds - currentResearch.workProgress;
         let remainingTaskProgress = common.dayInMilliseconds - currentTask.workProgress;
 
         // Get lowest remaining time chunk to finish running action or day
-        const timeToProgress = Math.min(remainingDayProgress, remainingResProgress, remainingTaskProgress);
+        let timeToNextEvent = Math.min(remainingDayProgress, remainingResProgress, remainingTaskProgress);
 
-        // Break out of loop if simulating this time chunk will be too much
-        if (timeSimulated + timeToProgress > offlineDuration) {
-            break;
+        // If a completion is pending and less than a day, that's the next event
+        if (currentResearch.progress === currentResearch.daysToComplete - 1 && remainingResProgress < common.dayInMilliseconds) {
+            timeToNextEvent = Math.min(timeToNextEvent, remainingResProgress);
         }
+        if (currentTask.progress === currentTask.daysToComplete - 1 && remainingTaskProgress < common.dayInMilliseconds) {
+            timeToNextEvent = Math.min(timeToNextEvent, remainingTaskProgress);
+        }
+
+        // Clamp the time to the remaining offline duration
+        const timeToProgress = Math.min(timeToNextEvent, offlineDuration - timeSimulated);
 
         dayProgress += timeToProgress;
         currentResearch.workProgress += timeToProgress;
@@ -248,6 +263,7 @@ function calculateOfflineProgress() {
             dayProgress -= common.dayInMilliseconds;
             adjustResource("day", 1);
             updateDate();
+            remainingDayProgress = common.dayInMilliseconds - dayProgress;
         }
 
         if (currentResearch.workProgress >= common.dayInMilliseconds) {
@@ -255,28 +271,27 @@ function calculateOfflineProgress() {
             updateResearchProgress();
         }
 
-        if(currentTask.workProgress >= common.dayInMilliseconds) {
+        if (currentTask.workProgress >= common.dayInMilliseconds) {
             currentTask.workProgress -= common.dayInMilliseconds;
             updateTaskProgress();
         }
 
         updateResources();
 
-        // Break loop if threshold reached
+        // End loop if threshold reached
         if (thresholdReached()) {
             updateAnimations(currentResearch, currentTask);
             unselectCurrentActions();
             stopClock();
-            break;
+            timeSimulated = offlineDuration;
         }
 
-        // Break loop if an action is unselected
+        // End loop if an action is unselected
         if (!(player.selectedResearchID) || !(player.selectedTaskID)) {
-            break;
+            timeSimulated = offlineDuration;
         }
     }
 
-    // Update animations
     updateAnimations(currentResearch, currentTask);
 }
 

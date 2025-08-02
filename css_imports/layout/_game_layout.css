@@ -1,0 +1,108 @@
+/* Game layout - top bar + panels (resources -> researches -> tasks -> logs) */
+
+/* Main layout */
+.game-layout {
+    display: flex;
+    height: calc(100% - 50px);
+    min-height: calc(100vh - 50px);
+}
+
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #6B8E23;
+    color: #EFEBD8;
+    padding: 5px;
+    border-bottom: 2px solid #36453B;
+}
+
+.top-bar .title {
+    font-size: 2em;
+}
+
+.top-bar .date {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+/* Resources panel */
+.resources {
+    width: 25%;
+    text-align: center;
+    color: #36453B;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
+    padding: 10px;
+    box-sizing: border-box;
+    border-right: 1px solid #36453B;
+}
+
+#money {
+    display: block;
+    font-size: 1.5em;
+    margin-top: 50px;
+}
+
+/* The Inventory header */
+.resources h2:last-of-type {
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+/* Research section */
+.research {
+    width: 25%;
+    text-align: center;
+    color: #EFEBD8;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
+    padding: 10px;
+    box-sizing: border-box;
+    border-left: 1px solid #36453B;
+    border-right: 1px solid #36453B;
+}
+
+/* Empty message styling */
+.empty-tab-message {
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #36453B;
+    color: #EFEBD8;
+    border: 2px solid #6B8E23;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Tasks section */
+.tasks {
+    width: 25%;
+    text-align: center;
+    color: #EFEBD8;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
+    padding: 10px;
+    box-sizing: border-box;
+    border-left: 1px solid #36453B;
+    border-right: 1px solid #36453B;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    justify-content: center;
+}
+
+/* Log section */
+.log {
+    width: 25%;
+    text-align: center;
+    color: #A7D9B4;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
+    padding: 10px;
+    box-sizing: border-box;
+    border-left: 1px solid #36453B;
+}
