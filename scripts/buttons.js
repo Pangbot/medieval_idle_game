@@ -12,7 +12,7 @@ import { addProgressElements, addCompletionProgressBar } from "./animations.js";
 import common from "./common.js";
 import { getDayProgress } from "./time.js";
 
-export let buttonClickSound = new Audio("../audio/button_click.mp3");
+export let buttonClickSound = new Audio("audio/button_click.mp3");
 let isSoundLoaded = true;
 
 export function playButtonClickSound() {
