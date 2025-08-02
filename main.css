@@ -2,21 +2,21 @@
 /* Make sure it's imported in the right order... -_- */
 
 /* base */
-@import url("css_imports/base/_base.css");
+@import url("css_imports/base/base.css");
 
 /* layout */
-@import url("css_imports/layout/_game_layout.css");
+@import url("css_imports/layout/game_layout.css");
 
 /* components */
-@import url("css_imports/components/_bars.css");
-@import url("css_imports/components/_buttons.css");
-@import url("css_imports/components/_loading.css");
+@import url("css_imports/components/bars.css");
+@import url("css_imports/components/buttons.css");
+@import url("css_imports/components/loading.css");
 
 /* components-specific */
-@import url("css_imports/components_specific/_inventory.css");
-@import url("css_imports/components_specific/_journal.css");
-@import url("css_imports/components_specific/_overlay.css");
-@import url("css_imports/components_specific/_settings.css");
+@import url("css_imports/components_specific/inventory.css");
+@import url("css_imports/components_specific/journal.css");
+@import url("css_imports/components_specific/overlay.css");
+@import url("css_imports/components_specific/settings.css");
 
 /* animations */
-@import url("css_imports/animations/_animations.css");
+@import url("css_imports/animations/animations.css");
