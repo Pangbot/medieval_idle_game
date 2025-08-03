@@ -1,11 +1,18 @@
 /* Only the animations */
 
+:root {
+    --vfx-intensity: 1;
+    --glow-spread: 12px;
+    --glow-size: 6px;
+    --fade-spread: 15px;
+}
+
 @keyframes pulse-glow {
     0% {
-        box-shadow: 0 0 8px 4px #FFD700B3;
+        box-shadow: 0 0 calc(var(--glow-spread) * var(--vfx-intensity) * 0.66) calc(var(--glow-size) * var(--vfx-intensity) * 0.66) #FFD700B3;
     }
     100% {
-        box-shadow: 0 0 12px 6px #FFD700FF;
+        box-shadow: 0 0 calc(var(--glow-spread) * var(--vfx-intensity)) calc(var(--glow-size) * var(--vfx-intensity)) #FFD700FF;
     }
 }
 
@@ -15,8 +22,8 @@
         box-shadow: 0 0 0px #A7D9B400;
     }
     50% {
-        background-color: #A7D9B4B3;
-        box-shadow: 0 0 15px #A7D9B4FF;
+        background-color: rgba(167, 217, 180, calc(var(--vfx-intensity) * 0.7));
+        box-shadow: 0 0 calc(var(--fade-spread) * var(--vfx-intensity)) #A7D9B4FF;
     }
     100% {
         background-color: transparent;
@@ -30,8 +37,8 @@
         box-shadow: 0 0 0px #FF000000;
     }
     50% {
-        background-color: #FF0000B3;
-        box-shadow: 0 0 15px #FF0000FF;
+        background-color: rgba(255, 0, 0, calc(var(--vfx-intensity) * 0.7));
+        box-shadow: 0 0 calc(var(--fade-spread) * var(--vfx-intensity)) #FF0000FF;
     }
     100% {
         background-color: transparent;

@@ -2,6 +2,8 @@
 import common from './common.js';
 
 let autosaveTimer = null; // Holds ID for autosave interval
+let countdownTimer;
+let secondsUntilNextSave;
 
 export function saveGame() {
     let state = common.getGameState();
@@ -107,12 +109,17 @@ function decodeSaveData(encodedData) {
 }
 
 export function changeAutosaveInterval(interval) {
-    startAutosave(interval)
+    startAutosave(interval);
 }
 
 function startAutosave(interval = null) {
     if (autosaveTimer) {
         clearInterval(autosaveTimer);
+        autosaveTimer = null;
+    }
+
+    if (countdownTimer) {
+        clearInterval(countdownTimer);
     }
 
     if(!(interval)) {
@@ -120,8 +127,36 @@ function startAutosave(interval = null) {
     }
 
     if (interval > 0) {
+        secondsUntilNextSave = interval;
+
+        // Start the main autosave timer
         autosaveTimer = setInterval(() => {
             saveGame();
+            // Reset the countdown timer
+            secondsUntilNextSave = interval;
         }, interval * 1000);
+
+        // Start the countdown timer that updates the button every second
+        countdownTimer = setInterval(() => {
+            secondsUntilNextSave--;
+            updateSaveButton();
+        }, 1000);
+    }
+
+    updateSaveButton();
+}
+
+function updateSaveButton() {
+    const saveButton = document.getElementById("saveBtn");
+    if (autosaveTimer) {
+        if (secondsUntilNextSave === 0) {
+            saveButton.innerHTML = `Saving now...`
+        }
+        else {
+            saveButton.innerHTML = `Saving in ${secondsUntilNextSave} seconds...`;
+        }
+    }
+    else {
+        saveButton.innerHTML = `Save`;
     }
 }

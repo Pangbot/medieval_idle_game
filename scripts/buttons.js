@@ -86,20 +86,9 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Use
             playButtonClickSound();
         });
 
-        button.addEventListener("mouseover", (event) => {
-            const description = event.currentTarget.dataset.description;
-            if (description) {
-                showCustomTooltip(description, event.clientX, event.clientY);
-            }
-        });
+        const description = button.dataset.description;
 
-        button.addEventListener("mousemove", (event) => {
-            showCustomTooltip(event.currentTarget.dataset.description, event.clientX, event.clientY);
-        });
-
-        button.addEventListener("mouseout", () => {
-            hideCustomTooltip();
-        });
+        addTooltip(button, description);
 
         button.appendChild(icon);
         container.appendChild(button);
@@ -198,7 +187,7 @@ export function createActionButtons(containerID, actions, type) {
             button.classList.remove("unavailable-action");
         }
 
-        button.dataset.description = description;
+        addTooltip(button, description);
 
         addProgressElements(button, action);
         addCompletionProgressBar(button, action);
@@ -244,21 +233,6 @@ export function createActionButtons(containerID, actions, type) {
                 changeResearch(action.id);
             }
             playButtonClickSound();
-        });
-
-        button.addEventListener("mouseover", (event) => {
-            const description = event.currentTarget.dataset.description;
-            if (description) {
-                showCustomTooltip(description, event.clientX, event.clientY);
-            }
-        });
-
-        button.addEventListener("mousemove", (event) => {
-            showCustomTooltip(event.currentTarget.dataset.description, event.clientX, event.clientY);
-        });
-
-        button.addEventListener("mouseout", () => {
-            hideCustomTooltip();
         });
 
         container.appendChild(button);
@@ -347,11 +321,11 @@ function addResourceInformation(action) {
     let resourceInfo = ``;
 
     const gainedResources = action.resources.filter(resource =>
-        resource.amount > 0
+        resource.value > 0
     );
 
     const spentResources = action.resources.filter(resource =>
-        resource.amount < 0
+        resource.value < 0
     );
 
     if (gainedResources.length > 0 || spentResources.length > 0) {
@@ -372,7 +346,7 @@ function addResourceInformation(action) {
         gainedResources.forEach(resource => {
             let resourceName = resource.name; // Don't want to change the actual name, just show the singular version
             resourceName = resourceName.charAt(0).toUpperCase() + resourceName.slice(1);
-            if (resource.amount === 1 && resourceName.endsWith("s")) {
+            if (resource.value === 1 && resourceName.endsWith("s")) {
                 resourceName = resourceName.slice(0, -1); 
             }
 
@@ -380,7 +354,7 @@ function addResourceInformation(action) {
                 providesContent += `A bad feeling...<br>`;
             }
             else {
-                providesContent += `${resource.amount} ${resourceName}<br>`;
+                providesContent += `${resource.value} ${resourceName}<br>`;
             }
         });
         providesContent += `</div>`;
@@ -392,7 +366,7 @@ function addResourceInformation(action) {
         spentResources.forEach(resource => {
             let resourceName = resource.name; // As above
             resourceName = resourceName.charAt(0).toUpperCase() + resourceName.slice(1);
-            if (resource.amount === -1 && resourceName.endsWith("s")) {
+            if (resource.value === -1 && resourceName.endsWith("s")) {
                 resourceName = resourceName.slice(0, -1);
             } 
             
@@ -400,7 +374,7 @@ function addResourceInformation(action) {
                 requiresContent += `A good(?) feeling...<br>`;
             }
             else {
-                requiresContent += `${Math.abs(resource.amount)} ${resourceName}<br>`;
+                requiresContent += `${Math.abs(resource.value)} ${resourceName}<br>`;
             }
         });
         requiresContent += `</div>`;
@@ -422,7 +396,7 @@ function ableToRunAction(action) {
         resource.name !== "health" &&
         resource.name !== "motivation" &&
         resource.name !== "DBH" &&
-        resource.amount < 0
+        resource.value < 0
     );
 
     if (!(requiredResources)) {
@@ -442,20 +416,34 @@ function ableToRunAction(action) {
 
 const customTooltip = document.getElementById("customTooltip");
 
-export function showCustomTooltip(message, x, y) {
+export function addTooltip(object, message) {
+    object.addEventListener("mouseover", (event) => {
+        showCustomTooltip(message, event.clientX, event.clientY);
+    });
+
+    object.addEventListener("mousemove", (event) => {
+        showCustomTooltip(message, event.clientX, event.clientY);
+    });
+
+    object.addEventListener("mouseout", () => {
+        hideCustomTooltip();
+    });
+}
+
+function showCustomTooltip(message, x, y) {
     if (!customTooltip) {
         return;
     }
     customTooltip.innerHTML = message;
     // Position it slightly offset from the mouse cursor
-    customTooltip.style.left = `${x + 15}px`;
-    customTooltip.style.top = `${y + 15}px`;
+    customTooltip.style.left = `${15 + x}px`;
+    customTooltip.style.top = `${15 + y}px`;
     customTooltip.style.opacity = 1;
     customTooltip.style.visibility = "visible";
     customTooltip.style.transform = "translateY(0)";
 }
 
-export function hideCustomTooltip() {
+function hideCustomTooltip() {
     if (!customTooltip) {
         return;
     }

@@ -110,6 +110,10 @@
     border: 1px solid #36453B;
 }
 
+.settings-container input[type="checkbox"] {
+    cursor: pointer;
+}
+
 .settings-container input[type="checkbox"]:checked {
     accent-color: #A7D9B4;
 }

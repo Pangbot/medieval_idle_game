@@ -20,6 +20,7 @@ const common = {
     researchMap,
     taskMap,
     savedSettings: { // Default settings
+        vfxStrength: 100,
         // musicVolume: 0,
         sfxVolume: 80,
         threshold: 10,

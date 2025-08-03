@@ -1,6 +1,6 @@
 // Handles various settings in the game (and opening/closing the menu)
 
-import { showCustomTooltip, hideCustomTooltip, buttonClickSound, playButtonClickSound, unselectCurrentActions } from "./buttons.js"; 
+import { addTooltip, buttonClickSound, playButtonClickSound, unselectCurrentActions } from "./buttons.js"; 
 import { changeAutosaveInterval, saveGame, importSave, exportSave, deleteSave } from "./save.js";
 import { restartClockCheck, stopClock, resetDayProgress } from "./time.js";
 import { resetAllResearchProgress } from "./research.js";
@@ -12,12 +12,24 @@ const settingsContainer = document.getElementById("settingsContainer");
 
 const restartWarning = settingsContainer.querySelector(".restart-warning");
 
+const root = document.documentElement;
+
+const vfxLabel = document.querySelector("label[for='vfxStrength']");
+const vfxStrengthInput = document.getElementById("vfxStrength");
+const vfxValueSpan = document.getElementById("vfxValue");
+const vfxTestButton = document.getElementById("vfxTestButton");
+
 // const musicVolumeInput = document.getElementById("musicVolume");
 // const musicVolumeValueSpan = document.getElementById("musicVolumeValue");
 
+const sfxLabel = document.querySelector("label[for='sfxVolume']");
 const sfxVolumeInput = document.getElementById("sfxVolume");
 const sfxVolumeValueSpan = document.getElementById("sfxVolumeValue");
 const sfxTestButton = document.getElementById("sfxTestButton");
+
+const autosaveLabel = document.querySelector("label[for='autosaveInterval']");
+const autosaveIntervalInput = document.getElementById("autosaveInterval");
+const autosaveIntervalValueSpan = document.getElementById("autosaveIntervalValue");
 
 const thresholdInput = document.getElementById("threshold");
 const thresholdValueSpan = document.getElementById("thresholdValue");
@@ -29,9 +41,6 @@ const emulateWindowSizeLabel = document.querySelector("label[for='emulateWindowS
 
 const analButton = document.getElementById("analBtn");
 
-const autosaveIntervalInput = document.getElementById("autosaveInterval");
-const autosaveIntervalValueSpan = document.getElementById("autosaveIntervalValue");
-
 const importSaveButton = settingsContainer.querySelector(".import-save-btn");
 const importSaveTextBox = document.getElementById("importSaveTextBox");
 const exportSaveButton = settingsContainer.querySelector(".export-save-btn");
@@ -41,22 +50,32 @@ const closeButton = document.getElementById("settingsCloseBtn");
 let restartRequired = false;
 let previousWidth;
 
+const vfxTooltip = `Makes things more/less <b>glowy</b>. If you're reducing this because you're seeing frame drops, please consider buying new hardware instead.`;
+
+const musicTooltip = ``;
+
+const sfxTooltip = `Makes buttons more/less clicky. Doesn't affect your <i>actual</i> mouse or keyboard.`;
+
+const autosaveTooltip = `How often the game saves for you. Gamers are so lazy these days.`;
+
 const thresholdTooltip = `This setting will automatically pause the game if you're close to losing while the tab is hidden. 
 The threshold will be active again when the resource that triggered it is double the threshold value. <br><br>
 
 Select the checkbox if you want it to apply this while the game is open as well.`;
 
-const emulateWindowTooltip = `This setting changes the apparent width of the game window, which affects the size of the tab buttons and help elements.<br>
+const emulateWindowTooltip = `Changes the apparent width of the game window, which affects the size of the tab buttons and help elements.<br>
 Each panel will always be 1/4 of your actual window width though.<br>
-This setting requires the game to restart (your progress will be saved first!), help elements may overlap if you emulate a very different window width to your true width.`;
+This requires the game to restart (your progress will be saved first!), help elements may overlap if you emulate a very different window width to your true width.`;
 
-const analTooltip = `This resets partial progress to 0 for all researches, tasks, and even the day.<br>
+const analTooltip = `Resets partial progress to 0 for all researches, tasks, and even the day.<br>
 It's good if you like things to stay in sync.`;
 
 const newAnalTooltip = `Just so you know, this is referred to as "analButton" in the code.`;
 
 export function initialiseSettings() {
     sfxTestButton.addEventListener("click", playButtonClickSound);
+    vfxTestButton.classList.add("newEntry");
+    vfxTestButton.classList.add("unavailable-action");
     
     importSaveButton.addEventListener("click", () => {
         playButtonClickSound();
@@ -87,10 +106,19 @@ export function initialiseSettings() {
 
     loadSettings(common.getGameState().savedSettings);
 
-    // Make sure volumes are updated with loaded settings
+    // Make sure values are updated with loaded settings
+    updateVFXStrength();
     // updateMusicVolume();
     updateSFXVolume();
 
+    vfxStrengthInput.addEventListener("input", (event) => {
+        const strength = event.target.value;
+        vfxValueSpan.textContent = `${strength}%`;
+        common.getGameState().savedSettings.vfxStrength = parseInt(strength);
+        updateVFXStrength();
+    });
+
+    addTooltip(vfxLabel, vfxTooltip);
     /*
     musicVolumeInput.addEventListener("input", (event) => {
         const volume = event.target.value;
@@ -106,23 +134,17 @@ export function initialiseSettings() {
         updateSFXVolume();
     });
 
+    addTooltip(sfxLabel, sfxTooltip);
+
     thresholdInput.addEventListener("input", (event) => {
         const threshold = event.target.value;
         thresholdValueSpan.textContent = `${threshold}%`;
         common.getGameState().savedSettings.threshold = parseInt(threshold);
     });
 
-    thresholdLabel.addEventListener("mouseover", (event) => {
-        showCustomTooltip(thresholdTooltip, event.clientX, event.clientY);
-    });
+    addTooltip(thresholdLabel, thresholdTooltip);
 
-    thresholdLabel.addEventListener("mousemove", (event) => {
-        showCustomTooltip(thresholdTooltip, event.clientX, event.clientY);
-    });
-
-    thresholdLabel.addEventListener("mouseout", () => {
-        hideCustomTooltip();
-    });
+    addTooltip(autosaveLabel, autosaveTooltip);
 
     thresholdAlwaysOnCheckbox.addEventListener("change", (event) => {
         common.getGameState().savedSettings.thresholdAlwaysOn = event.target.checked;
@@ -142,17 +164,7 @@ export function initialiseSettings() {
         common.getGameState().savedSettings.windowSize = width;
     });
 
-    emulateWindowSizeLabel.addEventListener("mouseover", (event) => {
-        showCustomTooltip(emulateWindowTooltip, event.clientX, event.clientY);
-    });
-
-    emulateWindowSizeLabel.addEventListener("mousemove", (event) => {
-        showCustomTooltip(emulateWindowTooltip, event.clientX, event.clientY);
-    });
-
-    emulateWindowSizeLabel.addEventListener("mouseout", () => {
-        hideCustomTooltip();
-    });
+    addTooltip(emulateWindowSizeLabel, emulateWindowTooltip);
 
     analButton.addEventListener("click", () => {
         buttonClickSound.play();
@@ -243,6 +255,10 @@ function handleAnalButtonTooltip(event) {
     }
 }
 
+function updateVFXStrength() {
+    let strength = common.savedSettings.vfxStrength;
+    root.style.setProperty('--vfx-intensity', strength / 100);
+}
 /*
 function updateMusicVolume() {
     console.log(`"updated" music volume.`)
@@ -251,4 +267,28 @@ function updateMusicVolume() {
 function updateSFXVolume() {
     let volume = common.savedSettings.sfxVolume;
     buttonClickSound.volume = volume/100;
+}
+
+const customTooltip = document.getElementById("customTooltip");
+
+function showCustomTooltip(message, x, y) {
+    if (!customTooltip) {
+        return;
+    }
+    customTooltip.innerHTML = message;
+    // Position it slightly offset from the mouse cursor
+    customTooltip.style.left = `${15 + x}px`;
+    customTooltip.style.top = `${15 + y}px`;
+    customTooltip.style.opacity = 1;
+    customTooltip.style.visibility = "visible";
+    customTooltip.style.transform = "translateY(0)";
+}
+
+function hideCustomTooltip() {
+    if (!customTooltip) {
+        return;
+    }
+    customTooltip.style.opacity = 0;
+    customTooltip.style.visibility = "hidden";
+    customTooltip.style.transform = "translateY(-5px)";
 }
