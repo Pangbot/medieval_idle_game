@@ -118,45 +118,43 @@ function startAutosave(interval = null) {
         autosaveTimer = null;
     }
 
-    if (countdownTimer) {
-        clearInterval(countdownTimer);
-    }
-
-    if(!(interval)) {
+    if (!interval) {
         interval = common.getGameState().savedSettings.autosaveInterval;
     }
 
     if (interval > 0) {
         secondsUntilNextSave = interval;
 
-        // Start the main autosave timer
         autosaveTimer = setInterval(() => {
-            saveGame();
-            // Reset the countdown timer
-            secondsUntilNextSave = interval;
-        }, interval * 1000);
-
-        // Start the countdown timer that updates the button every second
-        countdownTimer = setInterval(() => {
             secondsUntilNextSave--;
-            updateSaveButton();
-        }, 1000);
-    }
 
-    updateSaveButton();
+            if (secondsUntilNextSave === 0) {
+                // Temporarily show "Saving now..."
+                updateSaveButton();
+
+                // Perform the save
+                saveGame();
+
+                // Reset countdown after showing "Saving now..." for 1 tick
+                secondsUntilNextSave = interval;
+            } else {
+                updateSaveButton();
+            }
+        }, 1000);
+    } else {
+        updateSaveButton();
+    }
 }
 
 function updateSaveButton() {
     const saveButton = document.getElementById("saveBtn");
-    if (autosaveTimer) {
-        if (secondsUntilNextSave === 0) {
-            saveButton.innerHTML = `Saving now...`
-        }
-        else {
-            saveButton.innerHTML = `Saving in ${secondsUntilNextSave} seconds...`;
-        }
-    }
-    else {
+
+    if (!autosaveTimer) {
         saveButton.innerHTML = `Save`;
+    } else if (secondsUntilNextSave === 0) {
+        saveButton.innerHTML = `Saving now...`;
+    } else {
+        saveButton.innerHTML = `Saving in ${secondsUntilNextSave} seconds...`;
     }
 }
+
