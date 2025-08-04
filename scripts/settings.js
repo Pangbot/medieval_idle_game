@@ -6,6 +6,7 @@ import { restartClockCheck, stopClock, resetDayProgress } from "./time.js";
 import { resetAllResearchProgress } from "./research.js";
 import { resetAllTaskProgress } from "./tasks.js";
 import common from "./common.js";
+import { endRun } from "../game.js";
 
 const gameOverlay = document.getElementById("gameOverlay");
 const settingsContainer = document.getElementById("settingsContainer");
@@ -44,7 +45,10 @@ const analButton = document.getElementById("analBtn");
 const importSaveButton = settingsContainer.querySelector(".import-save-btn");
 const importSaveTextBox = document.getElementById("importSaveTextBox");
 const exportSaveButton = settingsContainer.querySelector(".export-save-btn");
+
+const suicideButton = settingsContainer.querySelector(".suicide-btn");
 const deleteSaveButton = settingsContainer.querySelector(".delete-save-btn");
+
 const closeButton = document.getElementById("settingsCloseBtn");
 
 let restartRequired = false;
@@ -86,6 +90,22 @@ export function initialiseSettings() {
     exportSaveButton.addEventListener("click", () => {
         playButtonClickSound();
         exportSave();
+    });
+
+    suicideButton.addEventListener("click", () => {
+        playButtonClickSound();
+        const reallyEnd = common.check(`Really commit suicide?`);
+        if (reallyEnd) {
+            const loadEarlier = common.check(`Do you want to start a new run? Or load an earlier save?`)
+            if (loadEarlier) {
+                // Load [secret] autosave? (X minutes ago)
+                // Or import a save: [______]
+                return;
+            } else {
+                endRun(true);
+            }
+        }
+        
     });
 
     deleteSaveButton.addEventListener("click", () => {

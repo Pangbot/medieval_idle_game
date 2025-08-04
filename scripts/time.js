@@ -298,7 +298,7 @@ function calculateOfflineProgress() {
 export function updateDate() {
     const dateElement = document.getElementById("date");
     const dayResource = player.resources.find(resource => resource.name === "day");
-    dateElement.innerHTML = calculateGameDate(dayResource.amount);
+    dateElement.innerHTML = calculateGameDate(dayResource.value);
 }
 
 function calculateGameDate(dayNumber) {

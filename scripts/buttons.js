@@ -407,7 +407,7 @@ function ableToRunAction(action) {
         const playerResource = player.resources.find(resource => resource.name === requiredResource.name);
 
         // If player doesn"t have the resource at all, or doesn"t have enough
-        if (!playerResource || playerResource.amount < Math.abs(requiredResource.amount)) {
+        if (!playerResource || playerResource.value < Math.abs(requiredResource.value)) {
             return false;
         }
     }

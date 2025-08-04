@@ -59,6 +59,25 @@ export function startGame() {
     });
 }
 
+export function endRun(suicide = false) { // Called on death/total loss of motivation
+    console.log(`Run is over. :(`);
+    if (!suicide) {
+        // Player's already been warned, don't offer an earlier save
+        const reallyEnd = common.check(`Do you accept this end? Or do you want to go back?`/*, `It's time.`,  `Send me back!` */);
+
+        if(!reallyEnd) {
+            // Load [secret] autosave? (X minutes ago)
+            // Or import a save: [______]
+            return;
+        }
+    }
+    // End accepted
+    // close any open menus/overlays
+    // set read/available attributes from data files to false
+    // run update functions? May not be necessary
+    // newPrestige(); // prestige.js(?)
+}
+
 function runDataValidation() {
     const isJournalValid = validateData(journalEntries, [journalSchema], "journalEntries");
     const isLogValid = validateData(logEntries, [logSchema], "logEntries");

@@ -74,7 +74,7 @@
     display: block;
 }
 
-/* Range elements */
+/* Input elements */
 .settings-container input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
@@ -156,4 +156,10 @@
     color: #EFEBD8;
     font-size: 16px;
     border-radius: 0;
+}
+
+.settings-container input[type="text"] {
+    height: 20px;
+    width: 187px;
+    border: 1px solid #6B8E23;
 }

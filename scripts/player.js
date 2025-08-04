@@ -23,11 +23,11 @@ export let player = {
     selectedResearchID: null,
     completed: new Set(),
     resources: [
-        { name: "day", amount: 0 },
-        { name: "money", amount: 0 },
-        { name: "health", amount: 100 },
-        { name: "motivation", amount: 100 },
-        { name: "DBH", amount: 0 }
+        { name: "day", value: 0 },
+        { name: "money", value: 0 },
+        { name: "health", value: 100 },
+        { name: "motivation", value: 100 },
+        { name: "DBH", value: 0 }
     ],
 };
 
@@ -35,36 +35,36 @@ export function loadPlayer(data) {
     player = data;
 }
 
-export function adjustResource(resourceName, amount) {
+export function adjustResource(resourceName, value) {
     const resourceObj = player.resources.find(resource => resource.name === resourceName);
 
     if (resourceObj) {
-        resourceObj.amount += amount;
+        resourceObj.value += value;
 
         if (resourceName === "health" || resourceName === "motivation") {
-            resourceObj.amount = Math.max(0, Math.min(resourceObj.amount, 100));
+            resourceObj.value = Math.max(0, Math.min(resourceObj.value, 100));
         }
         else if (resourceName === "DBH") {
-            resourceObj.amount = Math.max(0, Math.min(resourceObj.amount, 1));
+            resourceObj.value = Math.max(0, Math.min(resourceObj.value, 1));
         }
 
         if (common.savedSettings.thresholdAlwaysOn) {
-            if (resourceName === "health" && thresholdTriggeredResources.includes("health") && resourceObj.amount >= 2*common.savedSettings.threshold) {
+            if (resourceName === "health" && thresholdTriggeredResources.includes("health") && resourceObj.value >= 2*common.savedSettings.threshold) {
                 thresholdReset(resourceName);
-            } else if (resourceName === "motivation" && thresholdTriggeredResources.includes("motivation") &&  resourceObj.amount >= 2*common.savedSettings.threshold) {
+            } else if (resourceName === "motivation" && thresholdTriggeredResources.includes("motivation") &&  resourceObj.value >= 2*common.savedSettings.threshold) {
                 thresholdReset(resourceName);
-            } else if (resourceName === "DBH" && thresholdTriggeredResources.includes("DBH") && resourceObj.amount <= (100 - (2*common.savedSettings.threshold)) / 100) {
+            } else if (resourceName === "DBH" && thresholdTriggeredResources.includes("DBH") && resourceObj.value <= (100 - (2*common.savedSettings.threshold)) / 100) {
                 thresholdReset(resourceName);
             }
         }
 
     } else {
-        newResource(resourceName, amount);
+        newResource(resourceName, value);
     }
 }
 
-function newResource(resource, amount) {
-    player.resources.push({name: resource, amount: amount});
+function newResource(resource, value) {
+    player.resources.push({name: resource, value: value});
 }
 
 export function changeTask(taskID) {
@@ -93,9 +93,9 @@ export function thresholdReached() {
     let threshold = common.savedSettings.threshold;
     let thresholdTriggerLength = thresholdTriggeredResources.length;
 
-    let health = player.resources.find(resource => resource.name === "health").amount;
-    let motivation = player.resources.find(resource => resource.name === "motivation").amount;
-    let DBH = player.resources.find(resource => resource.name === "DBH").amount;
+    let health = player.resources.find(resource => resource.name === "health").value;
+    let motivation = player.resources.find(resource => resource.name === "motivation").value;
+    let DBH = player.resources.find(resource => resource.name === "DBH").value;
 
     if (health <= threshold && !thresholdTriggeredResources.includes("health")) {
         thresholdTriggeredResources.push("health");

@@ -47,7 +47,6 @@ export function changeResearchTab(targetTab) {
     }
 
     const tabContainer = document.getElementById("researchTabs");
-    console.log(tabContainer);
     const tabButton = tabContainer.querySelector(`button[id="${targetTab}"]`);
     if (tabButton.classList.contains("newEntry")) {
         tabButton.classList.remove("newEntry");
@@ -81,7 +80,7 @@ export function changeResearchTab(targetTab) {
 }
 
 export function updateResearches() {
-    const dayNumber = player.resources.find(resource => resource.name === "day").amount;
+    const dayNumber = player.resources.find(resource => resource.name === "day").value;
     const previousAvailableResearches = availableResearches;
     const previousAvailableResearchIDs = new Set(previousAvailableResearches.map(research => research.id));
 
@@ -159,7 +158,7 @@ export function updateResearchProgress() {
 
     if (currentResearch.progress % currentResearch.resourcePeriod == 0) {
         currentResearch.resources.forEach(resourceObj => {
-            adjustResource(resourceObj.name, resourceObj.amount);
+            adjustResource(resourceObj.name, resourceObj.value);
         });
     }
 

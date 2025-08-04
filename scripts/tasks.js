@@ -41,7 +41,7 @@ export function loadCurrentTaskTab(tab) {
 }
 
 export function updateTasks() {
-    const dayNumber = player.resources.find(resource => resource.name === "day").amount
+    const dayNumber = player.resources.find(resource => resource.name === "day").value
     const previousAvailableTasks = availableTasks;
     const previousAvailableTaskIDs = new Set(previousAvailableTasks.map(task => task.id));
 
@@ -156,7 +156,7 @@ export function updateTaskProgress() {
 
     if (currentTask.progress % currentTask.resourcePeriod == 0) {
         currentTask.resources.forEach(resourceObj => {
-            adjustResource(resourceObj.name, resourceObj.amount);
+            adjustResource(resourceObj.name, resourceObj.value);
         });
     }
 
