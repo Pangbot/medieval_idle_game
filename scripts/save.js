@@ -2,10 +2,12 @@
 import common from './common.js';
 
 let autosaveTimer = null; // Holds ID for autosave interval
-let countdownTimer;
 let secondsUntilNextSave;
+let secretSaveOneTimer;
+let secretSaveTwoTimer;
+let saveToOffer;
 
-export function saveGame() {
+export function saveGame(saveName = "saveData") {
     let state = common.getGameState();
 
     let playerCopy = { ...state.player };
@@ -14,9 +16,9 @@ export function saveGame() {
     playerCopy.completed = Array.from(playerCopy.completed);
     state.player = playerCopy;
 
-    localStorage.setItem("saveData", JSON.stringify(state))
-    console.log("Game saved")
-    console.log(state)
+    localStorage.setItem(saveName, JSON.stringify(state));
+    console.log(`Game saved (${saveName})`);
+    console.log(state);
 }
 
 export function loadGame() {
@@ -54,7 +56,7 @@ export function exportSave() {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
+        URL.revokeObjectURL(a.href); // Makes a hyperlink, forces a click (which starts the download), then destroys the element
         common.notify("Save exported successfully!");
     } else {
         common.notify("No save data to export!");
@@ -64,6 +66,8 @@ export function exportSave() {
 export function deleteSave() {
     if (common.check("Are you sure you want to delete your save? This cannot be undone!")) {
         localStorage.removeItem("saveData");
+        localStorage.removeItem("secretSave1");
+        localStorage.removeItem("secretSave2");
         location.reload();
     }
 }
@@ -158,3 +162,20 @@ function updateSaveButton() {
     }
 }
 
+export function startSecretSaves() {
+    saveGame("secretSave1");
+    saveToOffer = "secretSave1"; // Because it's the only save >.>
+
+    secretSaveOneTimer = setInterval(() => {
+        saveGame("secretSave1");
+        saveToOffer = "secretSave2";
+    }, 1000 * 60 * 20); // Saves after 20, 40, 60... mins
+
+    setTimeout(() => {
+        saveGame("secretSave2");
+        secretSaveTwoTimer = setInterval(() => {
+            saveGame("secretSave2");
+            saveToOffer = "secretSave1";
+        }, 1000 * 60 * 20); // Saves after 30, 50, 70... mins
+    }, 1000 * 60 * 10) // 10 minute offset
+}

@@ -5,7 +5,7 @@ import { updateTasks } from "./scripts/tasks.js";
 import { restartClockCheck, updateDate } from "./scripts/time.js";
 import { initialiseJournal } from "./scripts/journal.js";
 import { initialiseSettings } from "./scripts/settings.js";
-import { changeAutosaveInterval, loadGame } from "./scripts/save.js";
+import { changeAutosaveInterval, loadGame, startSecretSaves } from "./scripts/save.js";
 import common from "./scripts/common.js";
 import { journalSchema, journalEntries } from "./scripts/data/journalEntries.js";
 import { logSchema, logEntries } from "./scripts/data/logEntries.js";
@@ -44,6 +44,7 @@ export function startGame() {
             updateTabButtons("taskTabs");
             initialiseJournal();
             initialiseSettings();
+            startSecretSaves();
             console.log("Loaded!");
             resolve();
         };
