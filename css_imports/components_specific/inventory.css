@@ -10,7 +10,7 @@
 
 .inventory-container {
     width: 100%;
-    text-align: left;
+    text-align: center;
     color: #EFEBD8;
 }
 
@@ -21,17 +21,18 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 5px;
-    justify-items: center;
+    justify-items: stretch;
 }
 
 .inventory-item {
     padding: 3px;
+    width: 90%;
 }
 
 .inventory-item.up-glow-animation {
-    animation: upGlowAndFade 1s ease-out forwards;
+    animation: upGlowAndFade 1.5s ease-in-out;
 }
 
 .inventory-item.down-glow-animation {
-    animation: downGlowAndFade 1s ease-out forwards;
+    animation: downGlowAndFade 1.5s ease-in-out;
 }

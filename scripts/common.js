@@ -35,6 +35,7 @@ const common = {
 
     getGameState() {
         return {
+            timestamp: Date.now(), // Don't think it's needed but nice to have
             player,
             unlockedDBH: this.unlockedDBH,
             currentResearchTab,

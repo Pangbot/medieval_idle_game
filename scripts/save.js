@@ -164,7 +164,14 @@ function updateSaveButton() {
 
 export function startSecretSaves() {
     saveGame("secretSave1");
-    saveToOffer = "secretSave1"; // Because it's the only save >.>
+    if (!localStorage.getItem("secretSave2")) {
+        saveToOffer = "secretSave1"; // Because it's the only save >.>
+    }
+    else {
+        saveToOffer = "secretSave2"; // Older save from previous progress
+        // Some weird edge cases could happen with consecutive very short play sessions
+        // i.e. Never having a secret save over 10 minutes old
+    }
 
     secretSaveOneTimer = setInterval(() => {
         saveGame("secretSave1");
@@ -173,6 +180,7 @@ export function startSecretSaves() {
 
     setTimeout(() => {
         saveGame("secretSave2");
+        saveToOffer = "secretSave1";
         secretSaveTwoTimer = setInterval(() => {
             saveGame("secretSave2");
             saveToOffer = "secretSave1";

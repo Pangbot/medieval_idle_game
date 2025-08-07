@@ -1,6 +1,6 @@
 // Handles various settings in the game (and opening/closing the menu)
 
-import { addTooltip, buttonClickSound, playButtonClickSound, unselectCurrentActions } from "./buttons.js"; 
+import { addTooltip, buttonClickSound, playButtonClickSound, unselectCurrentActions, redrawTabButtons } from "./buttons.js"; 
 import { changeAutosaveInterval, saveGame, importSave, exportSave, deleteSave } from "./save.js";
 import { restartClockCheck, stopClock, resetDayProgress } from "./time.js";
 import { resetAllResearchProgress } from "./research.js";
@@ -68,7 +68,7 @@ The threshold will be active again when the resource that triggered it is double
 Select the checkbox if you want it to apply this while the game is open as well.`;
 
 const emulateWindowTooltip = `Changes the apparent width of the game window, which affects the size of the tab buttons and help elements.<br>
-Each panel will always be 1/4 of your actual window width though.<br>
+Each panel will always be 1/4 of your actual window width, ideally the tab buttons should be evenly spaced along a single row.<br>
 This requires the game to restart (your progress will be saved first!), help elements may overlap if you emulate a very different window width to your true width.`;
 
 const analTooltip = `Resets partial progress to 0 for all researches, tasks, and even the day.<br>
@@ -231,6 +231,7 @@ export function loadSettings(settingsData) {
     autosaveIntervalInput.value = settingsData.autosaveInterval;
     autosaveIntervalValueSpan.textContent = settingsData.autosaveInterval === 0 ? "Never" : `${settingsData.autosaveInterval} seconds`;
     changeAutosaveInterval(settingsData.autosaveInterval);
+    redrawTabButtons();
 }
 
 export function showSettings() {

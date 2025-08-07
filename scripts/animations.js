@@ -60,12 +60,12 @@ export function addUpGlowEffect(itemElement) { // Temporary inventory glow for i
     itemElement.classList.add("up-glow-animation");
     setTimeout(() => {
         itemElement.classList.remove("up-glow-animation");
-    }, 1000);
+    }, 2000);
 }
 
 export function addDownGlowEffect(itemElement) { // Temporary inventory glow for decreased amount
     itemElement.classList.add("down-glow-animation");
     setTimeout(() => {
         itemElement.classList.remove("down-glow-animation");
-    }, 1000);
+    }, 2000);
 }

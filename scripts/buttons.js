@@ -58,6 +58,11 @@ export function addMainListeners() {
     createTabButtons("taskTabs", taskTabs, changeTaskTab);
 }
 
+export function redrawTabButtons() {
+    createTabButtons("researchTabs", researchTabs, changeResearchTab);
+    createTabButtons("taskTabs", taskTabs, changeTaskTab);
+}
+
 function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Used for initialisation and updating tabSize
     const container = document.getElementById(containerID);
     if (!container) {
