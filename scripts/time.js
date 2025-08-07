@@ -10,7 +10,7 @@ import { updateJournal } from "./journal.js";
 
 let gameInterval = null;
 let lastTickTime = performance.now();
-let dayProgress = 0;
+export let dayProgress = 0;
 let tabLastVisibleTime = performance.now();
 let remainingRes = 0;
 let remainingTask = 0;
@@ -295,10 +295,11 @@ function calculateOfflineProgress() {
     updateAnimations(currentResearch, currentTask);
 }
 
-export function updateDate() {
+export function updateDate(progress = 0) {
     const dateElement = document.getElementById("date");
     const dayResource = player.resources.find(resource => resource.name === "day");
     dateElement.innerHTML = calculateGameDate(dayResource.value);
+    dayProgress = progress;
 }
 
 function calculateGameDate(dayNumber) {

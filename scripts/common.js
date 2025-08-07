@@ -7,7 +7,7 @@ import { journal, loadJournal } from "./journal.js";
 import { allResearches } from "./data/researchList.js";
 import { allTasks } from "./data/taskList.js";
 import { loadSettings } from "./settings.js";
-import { updateDate } from "./time.js";
+import { dayProgress, updateDate } from "./time.js";
 
 const researchMap = new Map(allResearches.map(research => [research.id, research]));
 const taskMap = new Map(allTasks.map(task => [task.id, task]));
@@ -36,6 +36,7 @@ const common = {
     getGameState() {
         return {
             timestamp: Date.now(), // Don't think it's needed but nice to have
+            dayProgress,
             player,
             unlockedDBH: this.unlockedDBH,
             currentResearchTab,
@@ -56,19 +57,19 @@ const common = {
         }
 
         this.tabSize = parseInt(state.savedSettings.windowSize) / 30;
+        if (state.savedSettings) {
+            Object.assign(this.savedSettings, state.savedSettings);
+        }
+        loadSettings(this.savedSettings);
         loadPlayer(state.player);
         this.setDBHUnlocked(state.unlockedDBH);
-        updateDate();
+        updateDate(state.dayProgress);
         loadCurrentResearchTab(state.currentResearchTab);
         loadCurrentTaskTab(state.currentTaskTab);
         updateResources();
         loadResearches(state.allResearchesUpdated);
         loadTasks(state.allTasksUpdated);
         loadJournal(state.journal);
-        if (state.savedSettings) {
-            Object.assign(this.savedSettings, state.savedSettings);
-        }
-        loadSettings(this.savedSettings);
 
         console.log("Loaded state.");
     },
