@@ -17,7 +17,7 @@ const helpData = {
     },
     "date-help": {
         message: "This is the in-game date. Time will only progress when both a research and task are selected.",
-        offset: [-5, 1]
+        offset: [-1, 1]
     },
     "save-button-help": {
         message: "Saves the game to your local storage.",

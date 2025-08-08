@@ -4,7 +4,7 @@
 .game-layout {
     display: flex;
     height: calc(100% - 50px);
-    min-height: calc(100vh - 50px);
+    min-height: calc(var(--window-height) - 50px);
 }
 
 /* Top bar */
@@ -45,13 +45,13 @@
 #money {
     display: block;
     font-size: 1.5em;
-    margin-top: 50px;
+    margin-top: calc(var(--window-width) / 38.4);
 }
 
 /* The Inventory header */
 .resources h2:last-of-type {
-    margin-top: 50px;
-    margin-bottom: 30px;
+    margin-top: calc(var(--window-width) / 38.4);
+    margin-bottom: calc(var(--window-width) / 64);
 }
 
 /* Research section */

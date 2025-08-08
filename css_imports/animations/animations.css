@@ -1,12 +1,5 @@
 /* Only the animations */
 
-:root {
-    --vfx-intensity: 1;
-    --glow-spread: 12px;
-    --glow-size: 6px;
-    --fade-spread: 15px;
-}
-
 @keyframes pulse-glow {
     0% {
         box-shadow: 0 0 calc(var(--glow-spread) * var(--vfx-intensity) * 0.66) calc(var(--glow-size) * var(--vfx-intensity) * 0.66) #FFD700B3;

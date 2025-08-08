@@ -8,15 +8,14 @@ import { allResearches } from "./data/researchList.js";
 import { allTasks } from "./data/taskList.js";
 import { loadSettings } from "./settings.js";
 import { dayProgress, updateDate } from "./time.js";
+import { globalTimeOffset } from "../game.js";
 
 const researchMap = new Map(allResearches.map(research => [research.id, research]));
 const taskMap = new Map(allTasks.map(task => [task.id, task]));
-const defaultTabSize = 64;
 
 const common = {
     dayInMilliseconds: 1000,
     unlockedDBH: false,
-    tabSize: defaultTabSize,
     researchMap,
     taskMap,
     savedSettings: { // Default settings
@@ -35,7 +34,7 @@ const common = {
 
     getGameState() {
         return {
-            timestamp: Date.now(), // Don't think it's needed but nice to have
+            timestamp: Date.now() + globalTimeOffset, // Used for offline progress, that's why it's Date, not performance
             dayProgress,
             player,
             unlockedDBH: this.unlockedDBH,
@@ -56,7 +55,6 @@ const common = {
             state.player.completed = new Set();
         }
 
-        this.tabSize = parseInt(state.savedSettings.windowSize) / 30;
         if (state.savedSettings) {
             Object.assign(this.savedSettings, state.savedSettings);
         }
@@ -70,7 +68,6 @@ const common = {
         loadResearches(state.allResearchesUpdated);
         loadTasks(state.allTasksUpdated);
         loadJournal(state.journal);
-
         console.log("Loaded state.");
     },
 
@@ -83,7 +80,5 @@ const common = {
         return confirm(message);
     }
 }
-
-common.tabSize = common.savedSettings.windowSize ? common.savedSettings.windowSize / 30 : defaultTabSize;
 
 export default common;

@@ -2,7 +2,7 @@ import { addMainListeners, updateTabButtons } from "./scripts/buttons.js";
 import { updateResources } from "./scripts/resources.js";
 import { updateResearches } from "./scripts/research.js";
 import { updateTasks } from "./scripts/tasks.js";
-import { restartClockCheck, updateDate } from "./scripts/time.js";
+import { getTrustedTimeOffset, addOfflineTime, restartClockCheck, updateDate } from "./scripts/time.js";
 import { initialiseJournal } from "./scripts/journal.js";
 import { initialiseSettings } from "./scripts/settings.js";
 import { changeAutosaveInterval, loadGame, startSecretSaves } from "./scripts/save.js";
@@ -12,23 +12,32 @@ import { logSchema, logEntries } from "./scripts/data/logEntries.js";
 import { researchSchema, allResearches } from "./scripts/data/researchList.js";
 import { taskSchema, allTasks } from "./scripts/data/taskList.js";
 
-export function startGame() {
+export let globalTimeOffset;
+
+export async function startGame() {
 
     const loadingScreen = document.getElementById('loading-screen');
     const minimumDisplayTime = 500;
 
     const minTimePromise = new Promise(resolve => setTimeout(resolve, minimumDisplayTime));
     
-    const gameInitPromise = new Promise(resolve => {
-        window.onload = () => {
+    const gameInitPromise = new Promise(async (resolve) => {
+        window.onload = async() => {
+            globalTimeOffset = await getTrustedTimeOffset();
 
             common.tabSize = parseInt(common.savedSettings.windowSize) / 30;
             addMainListeners(); // Has to be done before loading, creates top bar and tab buttons
             runDataValidation(); // Checks all of the List/Entries files have the right format
+            const hasSave = localStorage.getItem("saveData");
 
-            if (localStorage.getItem("saveData")) {
+            if (hasSave) {
                 console.log("Save data found, loading game...");
+                const savedTimestamp = JSON.parse(hasSave).timestamp;
+                
                 loadGame();
+                if(common.check("Simulate offline time?")) {
+                    addOfflineTime(savedTimestamp); // Offset calculated in calculateOfflineTime()
+                }
                 restartClockCheck();
             }
             else {
@@ -38,12 +47,12 @@ export function startGame() {
                 updateTasks();
                 restartClockCheck();
                 changeAutosaveInterval();
+                initialiseJournal();
             }
 
+            initialiseSettings();
             updateTabButtons("researchTabs");
             updateTabButtons("taskTabs");
-            initialiseJournal();
-            initialiseSettings();
             startSecretSaves();
             console.log("Loaded!");
             resolve();

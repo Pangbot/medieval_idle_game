@@ -13,6 +13,18 @@ const closeButton = document.getElementById("journalCloseBtn");
 
 let journalMap = new Map();
 
+export let journal = {
+    allRelevantEntries: [], // Only read from
+    entriesInJournal: [],
+    readEntries: [],
+    openPage: null,
+};
+
+export function loadJournal(data) {
+    journal = data;
+    initialiseJournal();
+}
+
 export function initialiseJournal() {
 
     journalContainer.addEventListener("click", (event) => {
@@ -46,18 +58,6 @@ export function initialiseJournal() {
             console.warn(`Attempted to map non-existent entry ID: ${entryID}`);
         }
     });
-
-    updateJournal(); // In case of loading data
-}
-
-export let journal = {
-    allRelevantEntries: [], // Only read from
-    entriesInJournal: [],
-    openPage: null,
-};
-
-export function loadJournal(data) {
-    journal = data;
     updateJournal();
 }
 
@@ -66,40 +66,60 @@ export function updateJournal() {
 
     // Loop through filtered journal entries
     journal.allRelevantEntries.forEach(entryID => {
-        // Skip entries already in the journal
-        if (journal.entriesInJournal.includes(entryID)) {
-            return;
-        }
-
         const entry = journalMap.get(entryID);
-        let conditionsMet = true;
-
-        // Check if gameConditions met
-        entry.gameConditions.every(condition => {
-            const requiredValue = condition.value;
-            let currentValue;
-
-            // Fill out other conditions as I think of them :P
-            // Maybe location when travel is implemented, for example?
-            // Ooh, definitely certain tasks/researches completed, like examine arrival area.
-            switch (condition.name) {
-                case "day":
-                    currentValue = player.resources.find(resource => resource.name === "day");
-                    if (currentValue < requiredValue) {
-                        conditionsMet = false;
-                    }
-                    break;
-                default:
-                    console.error(`${condition.name} not accounted for in updateJournal.`);
+        const allEntryButtons = journalEntriesContainer.querySelectorAll("button");
+        const isButtonAlreadyCreated = Array.from(allEntryButtons).some(button => button.id === entryID);
+        
+        // Add entries already in the journal if not present
+        if (journal.entriesInJournal.includes(entryID)) {
+            if (isButtonAlreadyCreated) { 
+                return;
             }
-        });
+            const indexOfNextEntry = allEntryButtons.length + 1;
 
-        // Game doesn't meet this entry's conditions, continue
-        if (!conditionsMet) {
-            return;
+            const buttonText = `Entry #` + indexOfNextEntry + `: <b>` + entry.title + `</b>`;
+
+            const entryButton = document.createElement("button");
+            entryButton.innerHTML = buttonText;
+            entryButton.classList.add("journal-item");
+            if (!journal.readEntries.includes(entryID)) {
+                entryButton.classList.add("newEntry");
+            }
+            entryButton.id = entry.id;
+
+            entryButton.addEventListener('click', () => {
+                showJournalEntry(entryID);
+            });
+
+            journalEntriesContainer.appendChild(entryButton);
         }
         else {
-            entriesToAdd.push(entryID);
+            let conditionsMet = true;
+
+            // Check if gameConditions met
+            entry.gameConditions.every(condition => {
+                const requiredValue = condition.value;
+                let currentValue;
+
+                // Fill out other conditions as I think of them :P
+                // Maybe location when travel is implemented, for example?
+                // Ooh, definitely certain tasks/researches completed, like examine arrival area.
+                switch (condition.name) {
+                    case "day":
+                        currentValue = player.resources.find(resource => resource.name === "day");
+                        if (currentValue < requiredValue) {
+                            conditionsMet = false;
+                        }
+                        break;
+                    default:
+                        console.error(`${condition.name} not accounted for in updateJournal.`);
+                }
+            });
+
+            // If conditions met, add to container
+            if (conditionsMet) {
+                entriesToAdd.push(entryID);
+            }
         }
 
     });
@@ -109,8 +129,9 @@ export function updateJournal() {
         entriesToAdd.forEach(entryID => {
             journal.entriesInJournal.push(entryID);
             const entry = journalMap.get(entryID);
+            const indexOfNextEntry = journalEntriesContainer.querySelectorAll("button").length + 1;
 
-            const buttonText = `Entry #` + journal.entriesInJournal.length + `: <b>` + entry.title + `</b>`;
+            const buttonText = `Entry #` + indexOfNextEntry + `: <b>` + entry.title + `</b>`;
 
             const entryButton = document.createElement("button");
             entryButton.innerHTML = buttonText;
@@ -123,15 +144,19 @@ export function updateJournal() {
             });
 
             journalEntriesContainer.appendChild(entryButton);
-            console.log(`New journal entry: ${entryID}`);
         });
+        startJournalGlow();
+    }
+
+    const allEntryButtons = journalEntriesContainer.querySelectorAll("button");
+    const allEntriesOpened = Array.from(allEntryButtons).every(button => journal.readEntries.includes(button.id));
+    if (!allEntriesOpened && !journalButton.classList.contains("newEntry")) {
         startJournalGlow();
     }
 }
 
 export function showJournal() {
     stopClock();
-    stopJournalGlow();
     gameOverlay.classList.add("active");
     journalContainer.classList.add("active");
 }
@@ -188,15 +213,18 @@ function showJournalEntry(entryID) {
     const entryButton = document.getElementById(entryID);
     if (entryButton.classList.contains("newEntry")) {
         entryButton.classList.remove("newEntry");
+        journal.readEntries.push(entryID);
+    }
+
+    const allEntryButtons = journalEntriesContainer.querySelectorAll("button");
+    const allEntriesOpened = Array.from(allEntryButtons).every(button => journal.readEntries.includes(button.id));
+    if (allEntriesOpened) {
+        stopJournalGlow();
     }
 
     entryTextContainer.classList.add("active");
 
-    entryTextContainer.innerHTML = "";
-
     entryTextContainer.innerHTML = entry.text.replace(/\r?\n/g, '<br>');
-
-    entry.read = true;
 
 }
 

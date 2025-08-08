@@ -4,10 +4,10 @@
 .journal-container {
     display: none;
     position: fixed;
-    top: 10%;
+    top: 5%;
     left: 35%;
     width: 30%;
-    max-height: 70vh;
+    max-height: calc(var(--window-height) * 0.7);
 
     background-color: #36453B;
     border: 2px solid #6B8E23;
@@ -51,14 +51,32 @@
 #entryTextContainer {
     display: none;
     position: absolute;
-    top: 10%;
+    top: 5%;
     left: 10%;
     height: 80%;
     width: 80%;
     z-index: 2000;
 
-    color: #FFFFFF;
-    background-color: #000000;
+    background-color: #f7f4e9;
+    
+    /* Page styling */
+    background-image: 
+        linear-gradient(to right, transparent 49.5%, rgba(0, 0, 0, 0.3) 50%, transparent 50.5%),
+        linear-gradient(to bottom, #d2c8c4 1px, transparent 1px);
+    background-size: 100% 100%, 100% calc(var(--window-width) / 55); /* Adjust 20px for line spacing */
+
+    /* Text columns */
+    column-count: 2;
+    column-gap: calc(var(--window-width) / 48);
+
+    /* Text styling */
+    color: #333;
+    font-family: 'Times New Roman', serif;
+    font-size: calc(var(--window-width) / 64);
+    padding: calc(var(--window-width) / 50);
+    overflow-y: auto;
+    
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.75); /* Small edge shadow to fake extra pages */
 }
 
 #entryTextContainer.active {
@@ -70,4 +88,12 @@
     animation: pulse-glow 1.8s infinite alternate;
     animation-delay: -0.9s;
     transform: translateZ(0);
+}
+
+.navigation-arrow {
+    background-color: #FFD700;
+}
+
+#return-entry-btn {
+    background-color: #FFD700;
 }

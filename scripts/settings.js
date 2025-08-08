@@ -130,6 +130,11 @@ export function initialiseSettings() {
     updateVFXStrength();
     // updateMusicVolume();
     updateSFXVolume();
+    const width = common.getGameState().savedSettings.windowSize;
+    document.documentElement.style.setProperty('--window-width', `${width}px`);
+    const height = width * 9 / 16;
+    document.documentElement.style.setProperty('--window-height', `${height}px`);
+    
 
     vfxStrengthInput.addEventListener("input", (event) => {
         const strength = event.target.value;
@@ -171,15 +176,10 @@ export function initialiseSettings() {
     });
 
     windowSizeSelect.addEventListener("change", (event) => {
-        let width = parseInt(event.target.value);
-
-        if (width !== previousWidth) {
-            restartWarning.classList.add("active");
-            restartRequired = true;
-        } else {
-            restartWarning.classList.remove("active");
-            restartRequired = false;
-        }
+        const width = parseInt(event.target.value);
+        document.documentElement.style.setProperty('--window-width', `${width}px`);
+        const height = width * 9 / 16;
+        document.documentElement.style.setProperty('--window-height', `${height}px`);
 
         common.getGameState().savedSettings.windowSize = width;
     });

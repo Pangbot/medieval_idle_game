@@ -63,7 +63,7 @@ export function redrawTabButtons() {
     createTabButtons("taskTabs", taskTabs, changeTaskTab);
 }
 
-function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Used for initialisation and updating tabSize
+function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Used for initialisation
     const container = document.getElementById(containerID);
     if (!container) {
         console.error(`Container with ID "${containerID}" not found for tab buttons.`);
@@ -82,8 +82,6 @@ function createTabButtons(containerID, tabDataArray, changeTabFunction) { // Use
         const icon = document.createElement("img");
         icon.src = `icons/` + tabID + `.png`;
         icon.alt = tabID.replace("-", " ") + " icon";
-        icon.width = common.tabSize;
-        icon.height = common.tabSize;
         icon.draggable = false;
 
         button.addEventListener("click", () => {

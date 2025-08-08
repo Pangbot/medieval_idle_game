@@ -2,7 +2,7 @@
 .inventory-box {
     background-color: #36453B;
     border: 1px solid #A7D9B4;
-    height: 300px;
+    height: calc(var(--window-width) / 6.4);
     padding: 10px; 
     margin-top: 15px;
     border-radius: 5px;
@@ -15,7 +15,7 @@
 }
 
 .inventory-items {
-    max-height: 300px;
+    max-height: calc(var(--window-width) / 6.4);
     overflow-y: auto;
     padding-right: 5px;
     display: grid;

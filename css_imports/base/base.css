@@ -1,16 +1,25 @@
 /* Mr. Worldwide rules */
 
+:root {
+    --vfx-intensity: 1;
+    --glow-spread: 12px;
+    --glow-size: 6px;
+    --fade-spread: 15px;
+    --window-width: 100vw;
+    --window-height: 100vh;
+}
+
 body {
     height: 100%;
-    min-height: 100vh;
+    min-height: var(--window-height);
     margin: 0;
     font-family: sans-serif;
     user-select: none;
 }
 
 h2 {
-    margin-bottom: 30px;
-    font-size: 30px;
+    margin-bottom: calc(var(--window-width) / 64);
+    font-size: calc(var(--window-width) / 64);
     color: #36453B;
 }
 

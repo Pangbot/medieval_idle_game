@@ -6,10 +6,10 @@
     background-color: #36453B;
     border: 2px solid #6B8E23;
     color: #EFEBD8;
-    padding: 5px 10px;
+    padding: calc(var(--window-width) / 384) calc(var(--window-width) / 192);
     border-radius: 4px;
-    font-size: 14px;
-    max-width: 300px;
+    font-size: calc(var(--window-width) / 137);
+    max-width: calc(var(--window-width) / 6.4);
     word-wrap: break-word;
     pointer-events: none;
     z-index: 1000;
@@ -22,9 +22,9 @@
 
 /* Top bar */
 .top-bar .top-buttons button {
-    margin-left: 10px;
-    padding: 5px 10px;
-    border-radius: 10px;
+    margin-left: calc(var(--window-width) / 192);
+    padding: calc(var(--window-width) / 384) calc(var(--window-width) / 192);
+    border-radius: calc(var(--window-width) / 192);
     background-color: #A7D9B4;
     color: #36453B;
     border: 1px solid #36453B;
@@ -50,17 +50,25 @@
     width: 60%;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: calc(var(--window-width) / 240);
     padding: 5px;
     margin: 0 auto;
 }
 
 .tab-button {
-    border-radius: 20px;
+    width: calc(var(--window-width) / 25.3);
+    height: calc(var(--window-width) / 25.3);
+    border-radius: calc(var(--window-width) / 96);
     border-color: #36453B;
     background-color: #A7D9B4;
     box-shadow: 0 0 0 0 transparent; 
     transition: background-color 0.2s ease-in-out;
+}
+
+.tab-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Proper icon placement */
 }
 
 .tab-button.active-button {
@@ -75,15 +83,15 @@
 .progress-button {
     background-color: #A7D9B4;
     border: 1px solid #36453B;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: calc(var(--window-width) / 192) calc(var(--window-width) / 96);
+    font-size: calc(var(--window-width) / 120);
     position: relative;
     overflow: hidden; 
-    border-radius: 10px;
+    border-radius: calc(var(--window-width) / 192);
     color: #36453B;
     display: block;
     margin: 5px;
-    min-width: 150px;
+    min-width: calc(var(--window-width) / 13);
     text-align: center;
     transition: background-color 0.3s ease;
 }
@@ -101,16 +109,6 @@
 
 .progress-button:hover {
     background-color: #EFEBD8;
-}
-
-.progress-button .progress-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0;
-    background-color: #B85C2E;
-    z-index: 1;
 }
 
 .progress-button .progress-fill {
@@ -170,18 +168,18 @@
 }
 
 #analBtn {
-    height: 30px;
+    height: calc(var(--window-width) / 64);
 }
 
 .export-save-btn,
 .import-save-btn {
-    height: 25px;
-    width: 95px;
+    height: calc(var(--window-width) / 77);
+    width: calc(var(--window-width) / 20);
 }
 
 #delete-save-btn,
 #suicide-btn {
-    height: 30px;
+    height: calc(var(--window-width) / 64);
     background-color: #B22222;
     color: #EFEBD8;
 }
@@ -193,7 +191,7 @@
 }
 
 .close-button-container {
-    padding: 20px 0;
+    padding: calc(var(--window-width) / 96) 0;
     display: flex;
     justify-content: space-around;
 }

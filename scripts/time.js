@@ -164,7 +164,7 @@ function advanceGameTime() {
 
     while (dayProgress >= common.dayInMilliseconds) {
         adjustResource("day", 1);
-        updateDate();
+        updateDate(dayProgress);
         updateResources(); // In case there are effects to resources not caused directly from actions
         updateJournal();
         dayProgress -= common.dayInMilliseconds;
@@ -219,9 +219,12 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
-function calculateOfflineProgress() {
-    const now = performance.now();
+function calculateOfflineProgress(now = null) {
+    if (!now) {
+        now = performance.now(); // Currently use performance.now() for invisible tab time, Date.now() for offline time :/ 
+    }
     const offlineDuration = now - tabLastVisibleTime;
+    console.log(`Simulating ${offlineDuration}ms.`)
 
     if (offlineDuration < common.dayInMilliseconds) {
         extraTime = offlineDuration;
@@ -262,7 +265,7 @@ function calculateOfflineProgress() {
         if (dayProgress >= common.dayInMilliseconds) {
             dayProgress -= common.dayInMilliseconds;
             adjustResource("day", 1);
-            updateDate();
+            updateDate(dayProgress);
             remainingDayProgress = common.dayInMilliseconds - dayProgress;
         }
 
@@ -326,4 +329,33 @@ function getOrdinalSuffix(day) {
 
 export function resetDayProgress() {
     dayProgress = 0;
+}
+
+// These functions are for loading the game at a later date:
+
+export function addOfflineTime(prevTimestamp) { // Only to be called on loading the tab with previous save info
+    console.log(`Selected: ${player.selectedResearchID}, ${player.selectedTaskID}`);
+    if (player.selectedResearchID !== null && player.selectedTaskID !== null) {
+        tabLastVisibleTime = prevTimestamp;
+        calculateOfflineProgress(Date.now());
+        lastTickTime = performance.now();
+    }
+}
+
+export async function getTrustedTimeOffset() {
+    try {
+        const response = await fetch("http://worldtimeapi.org/api/timezone/Europe/London");
+        const data = await response.json();
+        const serverTime = new Date(data.datetime).getTime();
+        const localTime = Date.now();
+        const offset = serverTime - localTime;
+        return offset;
+    } catch (error) {
+        console.error("Failed to get trusted time:", error);
+        return 0;
+    }
+}
+
+export function getTrustedTimestamp() {
+    return ;
 }

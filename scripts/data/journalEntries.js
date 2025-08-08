@@ -9,7 +9,6 @@ export const journalSchema = {
     title: "string",
     playerConditions: [conditionSchema],
     gameConditions: [conditionSchema],
-    read: boolean,
     text: `string`
 }
 
@@ -25,7 +24,6 @@ export const journalEntries = [
         [
             { name: "day", value: 0 },
         ],
-        read: false,
         text: `Well it's official. I'm dead.
 
         I was tinkering with my time machine and... well now I'm stuck here. Wherever - and whenever - this is. I went through the standard checks.
@@ -58,7 +56,6 @@ export const journalEntries = [
         [
             { name: "day", value: 0 },
         ],
-        read: false,
         text: `Well it's official. I'm dead.
 
         I was tinkering with my time machine and... well now I'm stuck here. Wherever - and whenever - this is. I went through the standard checks.
@@ -91,7 +88,6 @@ export const journalEntries = [
         [
             { name: "day", value: 0 },
         ],
-        read: false,
         text: `Well it's official. I'm dead.
 
         I was tinkering with my time machine and... well now I'm stuck here. Wherever - and whenever - this is. I went through the standard checks.
@@ -125,7 +121,6 @@ export const journalEntries = [
         [
             { name: "day", value: 0 },
         ],
-        read: false,
         text: `This is a placeholder!`
     },
     
