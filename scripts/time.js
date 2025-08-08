@@ -344,7 +344,7 @@ export function addOfflineTime(prevTimestamp) { // Only to be called on loading 
 
 export async function getTrustedTimeOffset() {
     try {
-        const response = await fetch("http://worldtimeapi.org/api/timezone/Europe/London");
+        const response = await fetch("https://worldtimeapi.org/api/timezone/Europe/London");
         const data = await response.json();
         const serverTime = new Date(data.datetime).getTime();
         const localTime = Date.now();
