@@ -343,23 +343,32 @@ export function addOfflineTime(prevTimestamp) { // Only to be called on loading 
 }
 
 export async function getTrustedTimeOffset() {
-    try {
-        const response = await fetch("https://worldtimeapi.org/api/timezone/Europe/London");
-        if (!response) {
-            common.notify("Couldn't figure out the time, try turning off your adblocker? There are no ads here!");
-            return 0;
+    for (let i = 0; i < 3; i++) {
+        try {
+            const response = await fetch("https://corsproxy.io/?http://worldtimeapi.org/api/timezone/Europe/London");
+            
+            if (response.ok) {
+                const data = await response.json();
+                const serverTime = new Date(data.datetime).getTime();
+                const localTime = Date.now();
+                return serverTime - localTime;
+            }
+            
+            console.warn(`Attempt ${i + 1} failed with HTTP status: ${response.status}`);
+            
+        } catch (error) {
+            console.warn(`Attempt ${i + 1} failed: ${error.message}`);
         }
-        const data = await response.json();
-        const serverTime = new Date(data.datetime).getTime();
-        const localTime = Date.now();
-        const offset = serverTime - localTime;
-        return offset;
-    } catch (error) {
-        console.error("Failed to get trusted time:", error);
-        return 0;
+
+        if (i < 2) {
+            await asyncDelay(500); 
+        }
     }
+
+    common.notify(`Could not fetch the time. :( Try refreshing the page. If this keeps happening, try disabling your adblocker. There are no ads here!`);
+    return 0;
 }
 
-export function getTrustedTimestamp() {
-    return ;
+function asyncDelay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
