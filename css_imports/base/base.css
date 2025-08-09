@@ -11,7 +11,8 @@
 
 body {
     height: 100%;
-    min-height: var(--window-height);
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #A7D9B4, #6B8E23);
     margin: 0;
     font-family: sans-serif;
     user-select: none;
@@ -24,6 +25,7 @@ h2 {
 }
 
 h3 {
+    font-size: calc(var(--window-width) / 102.6);
     margin-bottom: 0px;
 }
 

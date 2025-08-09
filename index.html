@@ -13,115 +13,124 @@
     </div>
     
     <div id="customTooltip" class="custom-tooltip"></div>
-    <!-- Top bar -->
-    <header class="top-bar">
-        <div class="title" data-help-id="title-help">Back to the Present</div>
-        <div class="date" id="date" data-help-id="date-help">In-game Date</div>
-        <div class="top-buttons">
-            <button id="saveBtn" data-help-id="save-button-help">Save</button>
-            <button id="helpBtn" data-help-id="help-button-help">?</button>
-            <button id="journalBtn" data-help-id="journal-button-help">Journal</button>
-            <button id="settingsBtn" data-help-id="settings-button-help">Settings</button>
-        </div>
-    </header>
 
     <!-- Main game layout -->
     <main class="game-layout">
-    <!-- Left: Resources -->
-    <section class="resources" data-help-id="resources-panel-help">
-        <h2>Resources</h2>
-        <span id="money"></span>
 
-    <div class="resource-bar-container" data-help-id="health-bar-help">
-        <h3>Health</h3>
-        <div id="healthBarContainer" class="bar-background">
-            <div id="healthBarFill" class="bar-fill"></div>
-            <span id="healthBarText" class="bar-text"></span>
-        </div>
-    </div>
-
-    <div class="resource-bar-container" data-help-id="motivation-bar-help">
-        <h3>Motivation</h3>
-        <div id="motivationBarContainer" class="bar-background">
-            <div id="motivationBarFill" class="bar-fill"></div>
-            <span id="motivationBarText" class="bar-text"></span>
-        </div>
-    </div>
-
-    <div class="resource-bar-container" data-help-id="DBH-bar-help" id="dbhBarContainerWrapper" hidden>
-        <h3>DBH</h3>
-        <div id="DBHBarContainer" class="bar-background">
-            <div id="DBHBarFill" class="bar-fill"></div>
-            <span id="DBHBarText" class="bar-text"></span>
-        </div>
-    </div>
-
-    <h2>Inventory</h2>
-    <div class="inventory-box">
-        <div class="inventory-container" data-help-id="inventory-help">
-            <div class="inventory-items">
-                <!-- Dynamically add inventory items -->
+        <!-- Top bar -->
+        <header class="top-bar">
+            <div class="title" data-help-id="title-help">Back to the Present</div>
+            <div class="date" id="date" data-help-id="date-help">In-game Date</div>
+            <div class="top-buttons">
+                <button id="saveBtn" data-help-id="save-button-help">Save</button>
+                <button id="helpBtn" data-help-id="help-button-help">?</button>
+                <button id="journalBtn" data-help-id="journal-button-help">Journal</button>
+                <button id="settingsBtn" data-help-id="settings-button-help">Settings</button>
             </div>
-        </div>
-    </div>
-    </section>
+        </header>
 
-    <!-- Centre-left: Research -->
-    <section class="research" data-help-id="research-panel-help">
-        <h2>Research</h2>
-        <div class="tabs" id="researchTabs">
-            <!-- Dynamically add research tabs -->
-        </div>
-        <div class="buttons" id="researchBtns">
-            <!-- Buttons of a specfic tab shown here -->
-        </div>
-    </section>
+        <div id="panelWrapper">
+            <!-- Left: Resources -->
+            <section class="resources" data-help-id="resources-panel-help">
+                <h2>Resources</h2>
+                <span id="money"></span>
 
-    <!-- Centre-right: Tasks -->
-    <section class="tasks" data-help-id="tasks-panel-help">
-        <h2>Tasks</h2>
-        <div class="tabs" id="taskTabs">
-            <!-- Dynamically add task tabs -->
-        </div>
-        <div class="buttons" id="taskBtns">
-            <!-- Buttons of a specfic tab shown here -->
-        </div>
-    </section>
+            <div class="resource-bar-container" data-help-id="health-bar-help">
+                <h3>Health</h3>
+                <div id="healthBarContainer" class="bar-background">
+                    <div id="healthBarFill" class="bar-fill"></div>
+                    <span id="healthBarText" class="bar-text"></span>
+                </div>
+            </div>
 
-    <!-- Right: Log -->
-    <section class="log" data-help-id="log-panel-help">
-        <h2>Log</h2>
-        <div class="logEntries">
-            <!-- Logs inserted dynamically -->
+            <div class="resource-bar-container" data-help-id="motivation-bar-help">
+                <h3>Motivation</h3>
+                <div id="motivationBarContainer" class="bar-background">
+                    <div id="motivationBarFill" class="bar-fill"></div>
+                    <span id="motivationBarText" class="bar-text"></span>
+                </div>
+            </div>
+
+            <div class="resource-bar-container" data-help-id="DBH-bar-help" id="dbhBarContainerWrapper" hidden>
+                <h3>DBH</h3>
+                <div id="DBHBarContainer" class="bar-background">
+                    <div id="DBHBarFill" class="bar-fill"></div>
+                    <span id="DBHBarText" class="bar-text"></span>
+                </div>
+            </div>
+
+            <h2>Inventory</h2>
+            <div class="inventory-box">
+                <div class="inventory-container" data-help-id="inventory-help">
+                    <div class="inventory-items">
+                        <!-- Dynamically add inventory items -->
+                    </div>
+                </div>
+            </div>
+            </section>
+
+            <!-- Centre-left: Research -->
+            <section class="research" data-help-id="research-panel-help">
+                <h2>Research</h2>
+                <div class="tabs" id="researchTabs">
+                    <!-- Dynamically add research tabs -->
+                </div>
+                <div class="buttons" id="researchBtns">
+                    <!-- Buttons of a specfic tab shown here -->
+                </div>
+            </section>
+
+            <!-- Centre-right: Tasks -->
+            <section class="tasks" data-help-id="tasks-panel-help">
+                <h2>Tasks</h2>
+                <div class="tabs" id="taskTabs">
+                    <!-- Dynamically add task tabs -->
+                </div>
+                <div class="buttons" id="taskBtns">
+                    <!-- Buttons of a specfic tab shown here -->
+                </div>
+            </section>
+
+            <!-- Right: Log -->
+            <section class="log" data-help-id="log-panel-help">
+                <h2>Log</h2>
+                <div class="logEntries">
+                    <!-- Logs inserted dynamically -->
+                </div>
+            </section>
         </div>
-    </section>
     </main>
 
     <!-- Overlayed content (Journal, Settings, Help)-->
     <div id="gameOverlay" class="game-overlay">
         <!-- Journal -->
         <div id="journalContainer" class="journal-container">
-            <h1 class="journal-title">My Journal</h1>
+            <h2 class="journal-title">My Journal</h2>
 
             <div id="journalEntriesContainer">
                 <!-- Journal entries generated here -->
             </div>
-
-            <button class="close-btn" id="journalCloseBtn">Close</button>
+            <div class="close-button-container">
+                <button class="close-btn" id="journalCloseBtn">Close</button>
+            </div>
         </div>
         
         <!-- Contains the actual text of the current open entry -->
-        <div id="entryTextContainer">
-            <button id="previous-entry-btn" hidden></button>
-            <button class="navigation-arrow" id="next-entry-btn" hidden></button>
-            <button class="navigation-arrow" id="return-entry-btn" hidden></button>
+        <div id="entryWrapper">
+            <div id="entryTextContainer">
+                <div id="page1"></div>
+                <div id="page2"></div>
+            </div>
+            <div id="navigationButtons">
+                <button class="navigation-arrow" id="previous-entry-btn"></button>
+                <button id="return-btn">Journal</button>
+                <button class="navigation-arrow" id="next-entry-btn"></button>
+            </div>
         </div>
 
         <!-- Settings -->
         <div id="settingsContainer" class="settings-container">
-            <h2 class="restart-warning">Game will restart after closing!</h2>
-
-            <h1 class="settings-title">Settings</h1>
+            <h2 class="settings-title">Settings</h2>
 
             <!-- Commenting out music option for now
             <div class="setting-item-grid">
@@ -188,7 +197,7 @@
                 <span id="analTooltip" hidden></span>
             </div>
 
-            <div class="setting-item">
+            <div class="setting-item" id="save-settings">
                 <span class="save-buttons-wrapper">
                     <button class="export-save-btn">Export Save</button>
                     <button class="import-save-btn">Import Save</button>

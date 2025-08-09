@@ -29,7 +29,7 @@ export const journalEntries = [
         I was tinkering with my time machine and... well now I'm stuck here. Wherever - and whenever - this is. I went through the standard checks.
 
         Environment: Earth-like gravity, low-none radiation levels, breathable air.
-        Sun-like star: Present. 
+        Stars: One, Sun-like.
         Natural satellites: Earth-like Moon, (still) intact.
         Local flora: Earth-like. Seems like I'm in some kind of forest. 
         Local fauna: Primarily Earth-like insects, some Earth-like rodents, noises suggest larger mammal-like animals in the vicinity.
@@ -40,10 +40,11 @@ export const journalEntries = [
         Long term goal: Assume for now that I'm on Earth and refine my date estimate. 
         Comments: If I'm not on Earth, I'll at least die having discovered the most habitable extrasolar planet to date. If I'm on Earth, I can only hope humans are around in some capacity.
         
-        All those years ahead of me and now I'm stuck in this trash heap? I've barely had a chance to truly live and now this is what I have to put up with?
+        ---PAGEBREAK---All those years ahead of me and now I'm stuck in this trash heap? I've barely had a chance to truly live and now this is what I have to put up with?
         You know what? Screw that. I'm getting back. 
         If this is Earth, I can find iron, copper, all sorts. It doesn't matter how long it takes if I never came here in the first place.
-        But first things first, better make sure I survive the night.`
+
+        But first things first, I better make sure I survive the night.`
     },
     {
         id: "start_middle",
@@ -61,7 +62,7 @@ export const journalEntries = [
         I was tinkering with my time machine and... well now I'm stuck here. Wherever - and whenever - this is. I went through the standard checks.
 
         Environment: Earth-like gravity, low-none radiation levels, breathable air.
-        Sun-like star: Present. 
+        Stars: One, Sun-like.
         Natural satellites: Earth-like Moon, (still) intact.
         Local flora: Earth-like. Seems like I'm in some kind of forest. 
         Local fauna: Primarily Earth-like insects, some Earth-like rodents, noises suggest larger mammal-like animals in the vicinity.
@@ -72,10 +73,11 @@ export const journalEntries = [
         Long term goal: Assume for now that I'm on Earth and refine my date estimate. 
         Comments: If I'm not on Earth, I'll at least die having discovered the most habitable extrasolar planet to date. If I'm on Earth, I can only hope humans are around in some capacity.
         
-        It felt like I was just getting started in life. All those years in education, trying to get a good job, finding a partner. Wasted.
+        ---PAGEBREAK---It felt like I was just getting started in life. All those years in education, trying to get a good job, finding a partner. Wasted.
         You know what? Screw that. I'm getting back. 
         If this is Earth, I can find iron, copper, all sorts. It doesn't matter how long it takes if I never came here in the first place.
-        But first things first, better make sure I survive the night.`
+
+        But first things first, I better make sure I survive the night.`
     },
     {
         id: "start_old",
@@ -93,7 +95,7 @@ export const journalEntries = [
         I was tinkering with my time machine and... well now I'm stuck here. Wherever - and whenever - this is. I went through the standard checks.
 
         Environment: Earth-like gravity, low-none radiation levels, breathable air.
-        Sun-like star: Present. 
+        Stars: One, Sun-like.
         Natural satellites: Earth-like Moon, (still) intact.
         Local flora: Earth-like. Seems like I'm in some kind of forest. 
         Local fauna: Primarily Earth-like insects, some Earth-like rodents, noises suggest larger mammal-like animals in the vicinity.
@@ -104,14 +106,210 @@ export const journalEntries = [
         Long term goal: Assume for now that I'm on Earth and refine my date estimate. 
         Comments: If I'm not on Earth, I'll at least die having discovered the most habitable extrasolar planet to date. If I'm on Earth, I can only hope humans are around in some capacity.
 
-        It's been a good run, I suppose. Can't be too upset... I think.
+        ---PAGEBREAK---It's been a good run, I suppose. Can't be too upset... I think.
         How long will it be until I miss my spouse? Forget them? My children? My friends? My pets?
         You know what? Screw that. I'm getting back. 
         If this is Earth, I can find iron, copper, all sorts. It doesn't matter how long it takes if I never came here in the first place.
-        But first things first, better make sure I survive the night.`
+
+        But first things first, I better make sure I survive the night.`
     },
     {
         id: "entry_placeholder",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder1",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder2",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder3",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder4",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder5",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder6",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder7",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder8",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder9",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder10",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder11",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder12",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder13",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder14",
+        title: "Placeholder",
+        playerConditions: 
+        [
+            { name: "age", value: "young" },
+        ],
+        gameConditions:
+        [
+            { name: "day", value: 0 },
+        ],
+        text: `This is a placeholder!`
+    },
+    {
+        id: "entry_placeholder15",
         title: "Placeholder",
         playerConditions: 
         [

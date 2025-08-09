@@ -8,13 +8,16 @@ const journalButton = document.getElementById("journalBtn");
 const gameOverlay = document.getElementById("gameOverlay");
 const journalContainer = document.getElementById("journalContainer");
 const journalEntriesContainer = document.getElementById("journalEntriesContainer");
-const entryTextContainer = document.getElementById("entryTextContainer");
+const entryWrapper = document.getElementById("entryWrapper");
+const returnButton = document.getElementById("return-btn");
+const previousEntryButton = document.getElementById("previous-entry-btn");
+const nextEntryButton = document.getElementById("next-entry-btn");
 const closeButton = document.getElementById("journalCloseBtn");
 
 let journalMap = new Map();
 
 export let journal = {
-    allRelevantEntries: [], // Only read from
+    allRelevantEntries: [], // Only read from, after building
     entriesInJournal: [],
     readEntries: [],
     openPage: null,
@@ -31,13 +34,29 @@ export function initialiseJournal() {
         event.stopPropagation();
     });
 
-    entryTextContainer.addEventListener("click", (event) => {
+    entryWrapper.addEventListener("click", (event) => {
         event.stopPropagation();
     });
 
     closeButton.addEventListener("click", () => {
         playButtonClickSound();
         hideJournal();
+    });
+
+    returnButton.addEventListener("click", () => {
+        playButtonClickSound();
+        hideJournalEntry();
+        journal.openPage = null;
+    });
+
+    previousEntryButton.addEventListener("click", () => {
+        playButtonClickSound();
+        showPreviousEntry();
+    });
+
+    nextEntryButton.addEventListener("click", () => {
+        playButtonClickSound();
+        showNextEntry();
     });
 
     gameOverlay.addEventListener("click", hideJournal);
@@ -159,6 +178,9 @@ export function showJournal() {
     stopClock();
     gameOverlay.classList.add("active");
     journalContainer.classList.add("active");
+    if (journal.openPage) {
+        showJournalEntry(journal.openPage);
+    }
 }
 
 function hideJournal() {
@@ -209,6 +231,7 @@ function stopJournalGlow() {
 
 function showJournalEntry(entryID) {
     const entry = journalMap.get(entryID);
+    journal.openPage = entryID;
 
     const entryButton = document.getElementById(entryID);
     if (entryButton.classList.contains("newEntry")) {
@@ -222,12 +245,56 @@ function showJournalEntry(entryID) {
         stopJournalGlow();
     }
 
-    entryTextContainer.classList.add("active");
+    entryWrapper.classList.add("active");
 
-    entryTextContainer.innerHTML = entry.text.replace(/\r?\n/g, '<br>');
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    
+    // Get the text and split it for distribution
+    const textContent = entry.text.replace(/\r?\n/g, '<br>');
+    const pages = textContent.split('---PAGEBREAK---');
+    
+    page1.innerHTML = '';
+    page2.innerHTML = '';
 
+    page1.innerHTML = pages[0]; 
+    page2.innerHTML = pages[1] || ''; // If no split, all text goes to page 1
+
+    updateNavigationArrows();
 }
 
 function hideJournalEntry() {
-    entryTextContainer.classList.remove("active");
+    entryWrapper.classList.remove("active");
+}
+
+function updateNavigationArrows() {
+    const currentIndex = journal.entriesInJournal.indexOf(journal.openPage);
+    
+    if (currentIndex === 0) {
+        previousEntryButton.classList.add('hidden');
+    } else {
+        previousEntryButton.classList.remove('hidden');
+    }
+
+    if (currentIndex === journal.entriesInJournal.length - 1) {
+        nextEntryButton.classList.add('hidden');
+    } else {
+        nextEntryButton.classList.remove('hidden');
+    }
+}
+
+function showPreviousEntry() {
+    const currentIndex = journal.entriesInJournal.indexOf(journal.openPage);
+    if (currentIndex > 0) {
+        const previousEntryId = journal.entriesInJournal[currentIndex - 1];
+        showJournalEntry(previousEntryId);
+    }
+}
+
+function showNextEntry() {
+    const currentIndex = journal.entriesInJournal.indexOf(journal.openPage);
+    if (currentIndex < journal.entriesInJournal.length - 1) {
+        const nextEntryId = journal.entriesInJournal[currentIndex + 1];
+        showJournalEntry(nextEntryId);
+    }
 }

@@ -3,8 +3,7 @@
     background-color: #36453B;
     border: 1px solid #A7D9B4;
     height: calc(var(--window-width) / 6.4);
-    padding: 10px; 
-    margin-top: 15px;
+    padding: calc(var(--window-width) / 192);
     border-radius: 5px;
 }
 
@@ -17,15 +16,15 @@
 .inventory-items {
     max-height: calc(var(--window-width) / 6.4);
     overflow-y: auto;
-    padding-right: 5px;
+    padding-right: calc(var(--window-width) / 384);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
+    gap: calc(var(--window-width) / 384);
     justify-items: stretch;
 }
 
 .inventory-item {
-    padding: 3px;
+    padding: calc(var(--window-width) / 640);
     width: 90%;
 }
 

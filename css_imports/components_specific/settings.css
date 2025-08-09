@@ -3,15 +3,18 @@
 /* Settings */
 .settings-title {
     text-align: center;
+    color: #A7D9B4;
 }
 
 .settings-container {
     position: fixed;
-    top: 5%;
-    left: 35%;
-    width: 30%;
+    top: calc(var(--window-height) * 0.05);
+    left: calc(var(--window-width) * 0.35);
+    width: calc(var(--window-width) * 0.3);
     max-height: calc(var(--window-height) * 0.7);
     display: none;
+
+    font-size: calc(var(--window-width) / 120);
 
     background-color: #36453B;
     border: 2px solid #6B8E23;
@@ -41,7 +44,7 @@
 /* Music/SFX/Autosave/Threshold */
 .setting-item-grid {
     display: grid;
-    grid-template-columns: calc(var(--window-width) / 21.3) 2fr calc(var(--window-width) / 38.4) calc(var(--window-width) / 21.3);
+    grid-template-columns: calc(var(--window-width) / 21.3) calc(var(--window-width) / 5.6) calc(var(--window-width) / 38.4) calc(var(--window-width) / 21.3);
     align-items: center;
     padding: calc(var(--window-width) / 96) 0;
     border-bottom: 1px dashed #6B8E23;
@@ -62,6 +65,14 @@
     padding: calc(var(--window-width) / 96) 0;
     gap: 5px;
     border-bottom: 1px dashed #6B8E23;
+}
+
+#save-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: calc(var(--window-width) / 192);
 }
 
 .restart-warning {
@@ -112,6 +123,8 @@
 
 .settings-container input[type="checkbox"] {
     cursor: pointer;
+    width: calc(var(--window-width) / 96);
+    height: calc(var(--window-width) / 96);
 }
 
 .settings-container input[type="checkbox"]:checked {
@@ -119,7 +132,7 @@
 }
 
 #emulateWindowSize {
-    font-size: 1em;
+    font-size: calc(var(--window-width) / 120);
     padding: calc(var(--window-width) / 240) calc(var(--window-width) / 160);
     border: 1px solid #A7D9B4;
     border-radius: 5px;
@@ -135,8 +148,8 @@
     background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23EFEBD8" d="M7 10l5 5 5-5z"/></svg>');
     background-repeat: no-repeat;
     background-position: right calc(var(--window-width) / 192) center;
-    background-size: 1em;
-    padding-right: 30px;
+    background-size: calc(var(--window-width) / 120);
+    padding-right: calc(var(--window-width) / 64);
     transition: all 0.2s ease;
 }
 
@@ -160,6 +173,7 @@
 
 .settings-container input[type="text"] {
     height: calc(var(--window-width) / 96);
-    width: calc(var(--window-width) / 10.3);
+    width: calc(var(--window-width) / 10);
     border: 1px solid #6B8E23;
+    font-size: calc(var(--window-width) / 120);
 }
