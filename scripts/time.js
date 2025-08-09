@@ -345,7 +345,7 @@ export function addOfflineTime(prevTimestamp) { // Only to be called on loading 
 export async function getTrustedTimeOffset() {
     for (let i = 0; i < 3; i++) {
         try {
-            const response = await fetch("https://corsproxy.io/?http://worldtimeapi.org/api/timezone/Europe/London");
+            const response = await fetch("https://worldtimeapi.org/api/timezone/Europe/London");
             
             if (response.ok) {
                 const data = await response.json();
