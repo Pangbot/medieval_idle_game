@@ -8,16 +8,16 @@ let thresholdTriggeredResources = [];
 
 export let player = {
     stats: [
+        // Impact the game
         { name: "age", value: "young" }, // Planned: young/middle/old
         { name: "science", value: "physicist" }, // Planned: physicist/chemist/biologist
-        { name: "hobby", value: "linguist" }, // Planned: linguist/artist/naturist
+        { name: "hobby", value: "linguist" }, // Planned: linguist/artist/naturalist
 
+        // Impact the journal entries
         { name: "reproductiveCapacity", value: "male" }, // Planned: (fertile) male/(fertile) female/infertile
         { name: "genderIdentity", value: "man" }, // Planned: man/woman/nonbinary
         { name: "pronouns", value: "hehim" }, // Planned: hehim/sheher/theythem
         { name: "romanticPreference", value: "women" }, // Planned: men/women/all/aromantic
-
-        { name: "temperament", value: "pragmatic"}, // Planned: optimistic/pragmatic/resilient
     ],
     selectedTaskID: null,
     selectedResearchID: null,

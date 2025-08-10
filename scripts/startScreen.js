@@ -4,20 +4,23 @@ import { playButtonClickSound } from "./buttons.js";
 const startScreen = document.getElementById("start-screen");
 const questionElement = document.getElementById("question");
 const startBtnWrapper = document.getElementById("start-btn-wrapper");
-const questions = ["How old are you?"];
+const questions = ["How old are you?", "What science do you know?", "What hobby do you pursue?"];
 let questionIndex = 0;
 
-export function runStartScreen() {
+export function showStartScreen() {
     startScreen.classList.remove("hidden");
 
+    questionElement.classList.add("fade-out");
     questionElement.innerHTML = questions[questionIndex];
 
     let buttonHTMLs = [];
+    let titles;
+    let buttonDescriptions;
 
     switch (questionIndex) {
         case 0: 
-            const ages = [`<div><b>Young Adult</b></div><br>`, `<div><b>Middle Age</b></div><br>`, `<div><b>Retired</b></div><br>`];
-            const ageDescriptions = [
+            titles = [`<div><b>Young Adult</b></div><br>`, `<div><b>Middle Age</b></div><br>`, `<div><b>Retired</b></div><br>`];
+            buttonDescriptions = [
                 `<div>You're in your prime, physically.<br>
                 You may not know much,<br>but you're quick to use what you do learn.
                 </div>
@@ -71,35 +74,146 @@ export function runStartScreen() {
                 <ul><li>You're more likely to get sick and recover slowly.</li>
                 <li>Physical tasks take a heavy toll on your health.</li>
                 <li>Without modern medicine, you have less time.</li></ul>`
-            ]
-            for (let i = 0; i < ages.length; i++) {
-                buttonHTMLs.push(ages[i] + ageDescriptions[i]);
-            }
+            ];
             break;
         case 1:
+            titles = [`<div><b>Biology</b></div><br>`, `<div><b>Chemistry</b></div><br>`, `<div><b>Physics</b></div><br>`];
+            buttonDescriptions = [
+                `<div>The science of life and living organisms.</div>
+                
+                <span style="color: #006400;"><b>Benefits:</b></span>
+                <ul><li>You may pass yourself off as a doctor.</li>
+                <li>Allows you to develop advanced medicines.</li>
+                <li>You will recover from sickness quicker.</li></ul>`,
 
+                `<div>The science of materials and reactions.</div>
+                
+                <span style="color: #006400;"><b>Benefits:</b></span>
+                <ul><li>Any chemical-based creations will be more efficient.</li>
+                <li>Allows you to develop advanced cleaning products.</li>
+                <li>It is easier to sell products and methods.</li></ul>`,
+
+                `<div>The science of energy, time, and space.</div>
+                
+                <span style="color: #006400;"><b>Benefits:</b></span>
+                <ul><li>Big projects will require fewer materials.</li>
+                <li>Allows you to develop advanced constructions.</li>
+                <li>Time machine-related research will be quicker.</li></ul>`
+            ];
+            break;
+        case 2:
+            titles = [`<div><b>Artist</b></div><br>`, `<div><b>Linguist</b></div><br>`, `<div><b>Naturalist</b></div><br>`];
+            buttonDescriptions = [
+                `<div>You're a musician, storyteller, and a patron of the visual arts.</div>
+                
+                <span style="color: #006400;"><b>Unique interactions and ways to earn money.</b></span>`,
+
+                `<div>Be it dialects, Deutsch, or Dansk, you pick up languages in a flash.</div>
+                
+                <span style="color: #006400;"><b>Unique interactions and ways to earn money.</b></span>`,
+
+                `<div>No, not a nudist. You're both a lover of nature and handy with a bow.</div>
+                
+                <span style="color: #006400;"><b>Unique interactions and ways to earn money.</b></span>`
+            ];
+            break;
+    }
+
+    for (let i = 0; i < titles.length; i++) {
+        buttonHTMLs.push(titles[i] + buttonDescriptions[i]);
     }
 
     buttonHTMLs.forEach((buttonHTML, index) => {
         const button = document.createElement("button");
         button.classList.add("start-btn");
-        button.id = `button-${index}`;
+        button.classList.add("fade-out");
 
         button.addEventListener("click", () => {
             playButtonClickSound();
-            showNextScreen(button.id);
+            showNextScreen(index);
         });
 
         button.innerHTML = buttonHTML;
         startBtnWrapper.appendChild(button);
     });
-    
+
+    questionElement.classList.remove("fade-out");
+    const buttons = document.querySelectorAll(".start-btn");
+    buttons.forEach(button => {
+        button.classList.remove("fade-out");
+    });
 }
 
-function showNextScreen(chosenButtonID) {
-    switch (questionIndex) {
+function showNextScreen(chosenButton) {
+    const buttons = document.querySelectorAll(".start-btn");
+    buttons.forEach(button => {
+        button.classList.add("fade-out");
+    });
+
+    questionElement.classList.add("fade-out");
+
+    setTimeout(() => {
+        switch (questionIndex) {
+            case 0:
+                addAgeToPlayer(chosenButton);
+                break;
+            case 1:
+                addScienceToPlayer(chosenButton);
+                break;
+            case 2:
+                addHobbyToPlayer(chosenButton);
+                break;
+        }
+        questionIndex += 1;
+        startBtnWrapper.innerHTML = "";
+
+        if (questionIndex < questions.length) {
+            showStartScreen();
+        }
+        else {
+            startScreen.classList.add("hidden");
+        }
+    }, 500);
+}
+
+function addAgeToPlayer(chosenButton) {
+    switch (chosenButton) {
         case 0:
-            
+            player.stats.find(stat => stat.name === "age").value = "young";
+            break;
+        case 1:
+            player.stats.find(stat => stat.name === "age").value = "middle";
+            break;
+        case 2:
+            player.stats.find(stat => stat.name === "age").value = "retired";
+            break;
     }
-    questionIndex += 1;
+}
+
+function addScienceToPlayer(chosenButton) {
+    switch (chosenButton) {
+        case 0:
+            player.stats.find(stat => stat.name === "science").value = "biologist";
+            break;
+        case 1:
+            player.stats.find(stat => stat.name === "science").value = "chemist";
+            break;
+        case 2:
+            player.stats.find(stat => stat.name === "science").value = "physicist";
+            break;
+    }
+}
+
+function addHobbyToPlayer(chosenButton) {
+    switch (chosenButton) {
+        case 0:
+            player.stats.find(stat => stat.name === "hobby").value = "artist";
+            break;
+        case 1:
+            player.stats.find(stat => stat.name === "hobby").value = "linguist";
+            break;
+        case 2:
+            player.stats.find(stat => stat.name === "hobby").value = "naturist";
+            break;
+    }
 }

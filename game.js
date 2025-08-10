@@ -11,7 +11,7 @@ import { journalSchema, journalEntries } from "./scripts/data/journalEntries.js"
 import { logSchema, logEntries } from "./scripts/data/logEntries.js";
 import { researchSchema, allResearches } from "./scripts/data/researchList.js";
 import { taskSchema, allTasks } from "./scripts/data/taskList.js";
-import { runStartScreen } from "./scripts/startScreen.js";
+import { showStartScreen } from "./scripts/startScreen.js";
 
 export let globalTimeOffset;
 
@@ -63,7 +63,7 @@ export async function startGame() {
 
     Promise.all([minTimePromise, gameInitPromise]).then(() => {
         if (!hasSave) {
-            runStartScreen();
+            showStartScreen();
         }
 
         if (loadingScreen) {
