@@ -8,11 +8,19 @@
     <link rel="stylesheet" href="main.css" />
 </head>
 <body>
-    <div id="loading-screen">
+    <div id="loading-screen" class="fullscreen">
         Loading Game...
     </div>
     
     <div id="customTooltip" class="custom-tooltip"></div>
+
+    <!-- Questionnaire at start of game -->
+    <div id="start-screen" class="hidden fullscreen">
+        <div id="question">How old are you?</div>
+        
+        <!-- Holds the answer buttons -->
+        <div id="start-btn-wrapper"></div>
+    </div>
 
     <!-- Main game layout -->
     <main class="game-layout">

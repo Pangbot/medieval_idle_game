@@ -10,7 +10,7 @@
 /* components */
 @import url("css_imports/components/bars.css");
 @import url("css_imports/components/buttons.css");
-@import url("css_imports/components/loading.css");
+@import url("css_imports/components/fullscreen.css");
 
 /* components-specific */
 @import url("css_imports/components_specific/inventory.css");

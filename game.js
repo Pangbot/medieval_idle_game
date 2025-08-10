@@ -11,6 +11,7 @@ import { journalSchema, journalEntries } from "./scripts/data/journalEntries.js"
 import { logSchema, logEntries } from "./scripts/data/logEntries.js";
 import { researchSchema, allResearches } from "./scripts/data/researchList.js";
 import { taskSchema, allTasks } from "./scripts/data/taskList.js";
+import { runStartScreen } from "./scripts/startScreen.js";
 
 export let globalTimeOffset;
 
@@ -18,6 +19,7 @@ export async function startGame() {
 
     const loadingScreen = document.getElementById('loading-screen');
     const minimumDisplayTime = 500;
+    let hasSave; // Need to define it here for start screen condition lower
 
     const minTimePromise = new Promise(resolve => setTimeout(resolve, minimumDisplayTime));
     
@@ -28,7 +30,7 @@ export async function startGame() {
             common.tabSize = parseInt(common.savedSettings.windowSize) / 30;
             addMainListeners(); // Has to be done before loading, creates top bar and tab buttons
             runDataValidation(); // Checks all of the List/Entries files have the right format
-            const hasSave = localStorage.getItem("saveData");
+            hasSave = null; //localStorage.getItem("saveData");
 
             if (hasSave) {
                 console.log("Save data found, loading game...");
@@ -60,13 +62,19 @@ export async function startGame() {
     });
 
     Promise.all([minTimePromise, gameInitPromise]).then(() => {
+        if (!hasSave) {
+            runStartScreen();
+        }
+
         if (loadingScreen) {
             loadingScreen.classList.add('hidden');
             loadingScreen.addEventListener('transitionend', () => {
                 loadingScreen.remove();
             }, { once: true });
         }
+
     });
+
 }
 
 export function endRun(suicide = false) { // Called on death/total loss of motivation

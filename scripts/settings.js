@@ -1,6 +1,6 @@
 // Handles various settings in the game (and opening/closing the menu)
 
-import { addTooltip, buttonClickSound, playButtonClickSound, unselectCurrentActions, redrawTabButtons } from "./buttons.js"; 
+import { addTooltip, buttonClickSound, playButtonClickSound, unselectCurrentActions, redrawTabButtons, updateTabButtons } from "./buttons.js"; 
 import { changeAutosaveInterval, saveGame, importSave, exportSave, deleteSave } from "./save.js";
 import { restartClockCheck, stopClock, resetDayProgress } from "./time.js";
 import { resetAllResearchProgress } from "./research.js";
@@ -182,6 +182,9 @@ export function initialiseSettings() {
         document.documentElement.style.setProperty('--window-height', `${height}px`);
 
         common.getGameState().savedSettings.windowSize = width;
+        // Fix highlighting after redraw
+        updateTabButtons("taskTabs");
+        updateTabButtons("researchTabs");
     });
 
     addTooltip(emulateWindowSizeLabel, emulateWindowTooltip);
@@ -240,6 +243,9 @@ export function showSettings() {
     settingsContainer.classList.add("active");
     previousWidth = common.getGameState().savedSettings.windowSize;
     loadSettings(common.getGameState().savedSettings);
+    // Fix highlighting after redraw
+    updateTabButtons("taskTabs");
+    updateTabButtons("researchTabs");
 }
 
 function hideSettings() {
