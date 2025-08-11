@@ -4,6 +4,15 @@ import { playButtonClickSound } from "./buttons.js";
 const startScreen = document.getElementById("start-screen");
 const questionElement = document.getElementById("question");
 const startBtnWrapper = document.getElementById("start-btn-wrapper");
+const firstPreferenceLabel = document.getElementById("first-preference-label");
+const secondPreferenceLabel = document.getElementById("second-preference-label");
+const thirdPreferenceLabel = document.getElementById("third-preference-label");
+const fourthPreferenceLabel = document.getElementById("fourth-preference-label");
+const firstPreferenceWrapper = document.getElementById("first-preference-wrapper");
+const secondPreferenceWrapper = document.getElementById("second-preference-wrapper");
+const thirdPreferenceWrapper = document.getElementById("third-preference-wrapper");
+const fourthPreferenceWrapper = document.getElementById("fourth-preference-wrapper");
+const confirmBtnWrapper = document.getElementById("confirm-btn-wrapper");
 const questions = ["How old are you?", "What science do you know?", "What hobby do you pursue?"];
 let questionIndex = 0;
 
@@ -137,11 +146,13 @@ export function showStartScreen() {
         startBtnWrapper.appendChild(button);
     });
 
-    questionElement.classList.remove("fade-out");
-    const buttons = document.querySelectorAll(".start-btn");
-    buttons.forEach(button => {
-        button.classList.remove("fade-out");
-    });
+    setTimeout(() => {
+        questionElement.classList.remove("fade-out");
+        const buttons = document.querySelectorAll(".start-btn");
+        buttons.forEach(button => {
+            button.classList.remove("fade-out");
+        });
+    }, 10); // Slight delay to ensure fading is synced
 }
 
 function showNextScreen(chosenButton) {
@@ -171,7 +182,7 @@ function showNextScreen(chosenButton) {
             showStartScreen();
         }
         else {
-            startScreen.classList.add("hidden");
+            showPronounScreen();
         }
     }, 500);
 }
@@ -216,4 +227,117 @@ function addHobbyToPlayer(chosenButton) {
             player.stats.find(stat => stat.name === "hobby").value = "naturist";
             break;
     }
+}
+
+function showPronounScreen() {
+    questionElement.classList.remove("fade-out");
+    questionElement.innerHTML = `Finally, personalise your character.<br>
+    <small><small>(This will not affect gameplay meaningfully.)</small></small>`
+
+    firstPreferenceLabel.innerHTML = `<div>Gender identity</div>`
+    let buttonHTMLs = [`Man`, `Woman`, `Nonbinary`];
+
+    buttonHTMLs.forEach(buttonHTML => {
+        const button = document.createElement("button");
+        button.classList.add("preference-btn");
+
+        button.addEventListener("click", () => {
+            playButtonClickSound();
+            handlePreferenceButton(button, firstPreferenceWrapper);
+        });
+
+        button.innerHTML = buttonHTML;
+        firstPreferenceWrapper.appendChild(button);
+    });
+
+    secondPreferenceLabel.innerHTML = `<div>Pronouns</div>`
+    buttonHTMLs = [`He/Him`, `She/Her`, `They/Them`];
+
+    buttonHTMLs.forEach(buttonHTML => {
+        const button = document.createElement("button");
+        button.classList.add("preference-btn");
+
+        button.addEventListener("click", () => {
+            playButtonClickSound();
+            handlePreferenceButton(button, secondPreferenceWrapper);
+        });
+
+        button.innerHTML = buttonHTML;
+        secondPreferenceWrapper.appendChild(button);
+    });
+
+    thirdPreferenceLabel.innerHTML = `<div>Romantic preference</div>`
+    buttonHTMLs = [`Men`, `Women`, `All`, `None`];
+
+    buttonHTMLs.forEach(buttonHTML => {
+        const button = document.createElement("button");
+        button.classList.add("preference-btn");
+
+        button.addEventListener("click", () => {
+            playButtonClickSound();
+            handlePreferenceButton(button, thirdPreferenceWrapper);
+        });
+
+        button.innerHTML = buttonHTML;
+        thirdPreferenceWrapper.appendChild(button);
+    });
+
+    fourthPreferenceLabel.innerHTML = `<div>Reproductive capacity</div>`
+    buttonHTMLs = [`Fertile (male)`, `Fertile (female)`, `Infertile`];
+
+    buttonHTMLs.forEach(buttonHTML => {
+        const button = document.createElement("button");
+        button.classList.add("preference-btn");
+
+        button.addEventListener("click", () => {
+            playButtonClickSound();
+            handlePreferenceButton(button, fourthPreferenceWrapper);
+        });
+
+        button.innerHTML = buttonHTML;
+        fourthPreferenceWrapper.appendChild(button);
+    });
+}
+
+function handlePreferenceButton(button, preferenceWrapper) {
+    clearSelectedFromPreference(preferenceWrapper);
+    button.classList.add("selected");
+    if (allPreferencesSelected() && isNoConfirmButton()) {
+        showConfirmButton();
+    }
+}
+
+function clearSelectedFromPreference(preferenceWrapper) { // Loops over wrapper buttons, removes "selected" from each button
+    const buttons = preferenceWrapper.querySelectorAll(".preference-btn");
+
+    for (let i = 0; i < buttons.length; i++) {
+        if (buttons[i].classList.contains("selected")) {
+            buttons[i].classList.remove("selected");
+        }
+    }
+}
+
+function allPreferencesSelected() {
+    const firstChosen = Array.from(firstPreferenceWrapper.querySelectorAll(".preference-btn")).some(button => button.classList.contains("selected"));
+    const secondChosen = Array.from(secondPreferenceWrapper.querySelectorAll(".preference-btn")).some(button => button.classList.contains("selected"));
+    const thirdChosen = Array.from(thirdPreferenceWrapper.querySelectorAll(".preference-btn")).some(button => button.classList.contains("selected"));
+    const fourthChosen = Array.from(fourthPreferenceWrapper.querySelectorAll(".preference-btn")).some(button => button.classList.contains("selected"));
+
+    return firstChosen && secondChosen && thirdChosen && fourthChosen;
+}
+
+function isNoConfirmButton() {
+    return confirmBtnWrapper.innerHTML === ``;
+}
+
+function showConfirmButton() {
+    const button = document.createElement("button");
+    button.classList.add("preference-btn");
+    button.innerHTML = `Confirm`;
+
+    button.addEventListener("click", () => {
+        playButtonClickSound();
+    });
+
+    confirmBtnWrapper.appendChild(button);
 }

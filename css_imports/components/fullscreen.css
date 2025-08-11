@@ -25,6 +25,8 @@
 }
 
 #start-screen {
+    display: flex; 
+    flex-direction: column;
     opacity: 1;
     z-index: 9998;
 }
@@ -36,7 +38,6 @@
 
 #start-btn-wrapper {
     display: flex;
-    flex: 1;
     flex-direction: row;
     justify-content: space-around;
     align-items: stretch;
@@ -52,6 +53,25 @@
 
 #question.fade-out {
     opacity: 0;
+}
+
+#preference-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    justify-items: center;
+}
+
+.preference-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.preference-btn-wrapper {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-around;
 }
 
 .start-btn {
@@ -75,12 +95,45 @@
     background-color: #EFEBD8;
 }
 
+.start-btn.selected {
+    background-color: #B85C2E;
+}
+
 .start-btn.fade-out {
     opacity: 0;
 }
 
 .start-btn span {
     margin-top: calc(var(--window-width) / 192);
+}
+
+.preference-btn {
+    padding: calc(var(--window-width) / 192);
+    margin: calc(var(--window-width) / 48);
+    gap: calc(var(--window-width) / 192);
+    border-radius: calc(var(--window-width) / 38.4);
+    border: calc(var(--window-width) / 192) solid #84ab8e;
+    background-color: #A7D9B4;
+
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.preference-btn:hover {
+    background-color: #EFEBD8;
+}
+
+.preference-btn.selected {
+    background-color: #B85C2E;
+}
+
+.preference-btn.fade-out {
+    opacity: 0;
+}
+
+#confirm-btn-wrapper {
+    grid-column: 1 / 3;
+    justify-self: center;
 }
 
 ul {

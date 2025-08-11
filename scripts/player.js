@@ -14,10 +14,10 @@ export let player = {
         { name: "hobby", value: "linguist" }, // Planned: linguist/artist/naturalist
 
         // Impact the journal entries
-        { name: "reproductiveCapacity", value: "male" }, // Planned: (fertile) male/(fertile) female/infertile
         { name: "genderIdentity", value: "man" }, // Planned: man/woman/nonbinary
         { name: "pronouns", value: "hehim" }, // Planned: hehim/sheher/theythem
         { name: "romanticPreference", value: "women" }, // Planned: men/women/all/aromantic
+        { name: "reproductiveCapacity", value: "male" }, // Planned: (fertile) male/(fertile) female/infertile
     ],
     selectedTaskID: null,
     selectedResearchID: null,
